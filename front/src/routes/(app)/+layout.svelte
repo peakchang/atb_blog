@@ -115,16 +115,16 @@
 		</div>
 		<div class="col-span-2 mt-2 text-center text-sm">
 			<span class="inline-block"
-				>주소 : 경기도 부천시 성주로 86-3 /
+				>주소 : 경기도 부천시 경인로 37 /
 			</span>
 			<span class="inline-block">사이트명 : {siteName} / </span>
-			<span class="inline-block">담당자 : 이수정 </span>
-			<button
+			<span class="inline-block">담당자 : 김승아 </span>
+			<!-- <button
 				class="bg-blue-500 focus:bg-blue-600 text-white text-xs px-2 py-1 rounded-lg"
 				on:click={testTimeFunc}
 			>
 				체크하기
-			</button>
+			</button> -->
 		</div>
 	</div>
 </div>
