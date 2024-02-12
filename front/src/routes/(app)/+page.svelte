@@ -109,21 +109,10 @@
         {#each posts as post}
             <a href="/view/{post.bo_id}">
                 <div
-                    class="flex h-26 overflow-hidden border border-gray-300 rounded-lg mb-2 suit-font"
+                    class="border suit-font py-2 px-5 rounded-lg"
                 >
                     <div
-                        class="float-left w-2/6"
-                        style="max-width: 220px; max-height:100px;"
-                    >
-                        <div
-                            class="h-full flex items-center justify-center overflow-hidden"
-                        >
-                            <img src={post.img_link} alt="asdfasdf" />
-                        </div>
-                    </div>
-
-                    <div
-                        class=" w-4/6 px-4 py-1 flex flex-col justify-center gap-2 text-sm"
+                        class="flex flex-col justify-center gap-2 text-sm"
                     >
                         <div>
                             <span class="font-semibold text-base truncate">
@@ -134,7 +123,7 @@
                             </span>
                         </div>
                         <div
-                            class="h-10 text-ellipsis overflow-hidden box-over"
+                            class="text-ellipsis overflow-hidden box-over"
                         >
                             {post.text}
                         </div>
