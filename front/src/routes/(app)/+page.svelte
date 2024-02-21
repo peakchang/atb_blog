@@ -98,45 +98,29 @@
                 </span>
                 <span> 글추가하기 </span>
             </button>
-
-            
         </div>
 
         {siteName} 최신글 리스트
     </div>
 
-    <div data-sveltekit-preload-data="tap" data-sveltekit-reload>
+    <div
+        data-sveltekit-preload-data="tap"
+        data-sveltekit-reload
+        class="grid grid-cols-2 md:grid-cols-4 suit-font gap-1"
+    >
         {#each posts as post}
             <a href="/view/{post.bo_id}">
-                <div
-                    class="flex h-26 overflow-hidden border border-gray-300 rounded-lg mb-2 suit-font"
-                >
+                <div class="border rounded-md overflow-hidden">
                     <div
-                        class="float-left w-2/6"
-                        style="max-width: 220px; max-height:100px;"
+                        class="w-full h-32 overflow-hidden flex justify-center items-center"
                     >
-                        <div
-                            class="h-full flex items-center justify-center overflow-hidden"
-                        >
-                            <img src={post.img_link} alt="asdfasdf" />
-                        </div>
+                        <img src={post.img_link} alt="asdfasdf" />
                     </div>
 
-                    <div
-                        class=" w-4/6 px-4 py-1 flex flex-col justify-center gap-2 text-sm"
-                    >
-                        <div>
-                            <span class="font-semibold text-base truncate">
-                                {post.bo_subject}
-                            </span>
-                            <span class="text-xs text-gray-600"
-                                >{post.category} / {post.date_str}
-                            </span>
-                        </div>
-                        <div
-                            class="h-10 text-ellipsis overflow-hidden box-over"
-                        >
-                            {post.text}
+                    <div class="p-2 flex flex-col gap-2">
+                        <div class="truncate">{post.bo_subject}</div>
+                        <div class="text-xs">
+                            {post.category} / {post.date_str}
                         </div>
                     </div>
                 </div>

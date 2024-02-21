@@ -35,40 +35,30 @@
         {category} 최신글 리스트
     </div>
 
-    {#each postList as val}
-        <a data-sveltekit-reload href="/view/{val.bo_id}">
-            <div
-                class="flex h-26 overflow-hidden border border-gray-300 rounded-lg mb-2 suit-font"
-            >
-                <div
-                    class="float-left w-2/6"
-                    style="max-width: 220px; max-height:100px;"
-                >
+    <div
+        data-sveltekit-preload-data="tap"
+        data-sveltekit-reload
+        class="grid grid-cols-2 md:grid-cols-4 suit-font gap-1"
+    >
+        {#each postList as post}
+            <a href="/view/{post.bo_id}">
+                <div class="border rounded-md overflow-hidden">
                     <div
-                        class="h-full flex items-center justify-center overflow-hidden"
+                        class="w-full h-32 overflow-hidden flex justify-center items-center"
                     >
-                        <img src={val.img_link} alt="asdfasdf" />
+                        <img src={post.img_link} alt="asdfasdf" />
                     </div>
-                </div>
 
-                <div
-                    class=" w-4/6 px-4 py-1 flex flex-col justify-center gap-2 text-sm"
-                >
-                    <div>
-                        <span class="font-semibold text-base truncate">
-                            {val.bo_subject}
-                        </span>
-                        <span class="text-xs text-gray-600"
-                            >{val.category} / {val.date_str}
-                        </span>
-                    </div>
-                    <div class="h-10 text-ellipsis overflow-hidden box-over">
-                        {val.text}
+                    <div class="p-2 flex flex-col gap-2">
+                        <div class="truncate">{post.bo_subject}</div>
+                        <div class="text-xs">
+                            {post.category} / {post.date_str}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    {/each}
+            </a>
+        {/each}
+    </div>
 </div>
 
 <style>
