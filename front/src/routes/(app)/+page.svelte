@@ -110,6 +110,7 @@
     >
         {#each posts as post}
             <a href="/view/{post.bo_id}">
+
                 <div class="border rounded-md overflow-hidden">
                     <div
                         class="w-full h-32 overflow-hidden flex justify-center items-center"
@@ -121,7 +122,7 @@
                         <div class="truncate">{post.bo_subject}</div>
                         <div class="text-xs">
                             {post.category} / {post.date_str}
-                        </div>
+
                     </div>
                 </div>
             </a>
