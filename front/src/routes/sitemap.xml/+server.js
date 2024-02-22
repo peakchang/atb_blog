@@ -20,7 +20,7 @@ export async function GET({ url }) {
 
             let template = `
             <url>
-            <loc>${url.origin}/blog/${boardList[i]['bo_id']}</loc>
+            <loc>${url.origin}/view/${boardList[i]['bo_id']}</loc>
                 <lastmod>${getDate}</lastmod>
                 <changefreq>monthly</changefreq>
                 <priority>0.5</priority>
