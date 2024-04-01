@@ -1,4 +1,11 @@
 <script>
+    import Swiper from "swiper";
+    import { Navigation, Pagination, Autoplay } from "swiper/modules";
+    // import Swiper and modules styles
+    import "swiper/css";
+    import "swiper/css/navigation";
+    import "swiper/css/pagination";
+
     import { Modal, Button, Label, Input, Checkbox } from "flowbite-svelte";
     import axios from "axios";
     import { onMount, tick, beforeUpdate } from "svelte";
@@ -15,6 +22,16 @@
     let postNum = 10;
     let listStatus = true;
     let posts = [];
+    let bannerSwiper;
+    let loading = true;
+
+    let bannerList = [
+        { src: "/banner/bn_1.webp" },
+        { src: "/banner/bn_2.webp" },
+        { src: "/banner/bn_3.webp" },
+        { src: "/banner/bn_4.webp" },
+        { src: "/banner/bn_5.webp" },
+    ];
 
     export let data;
 
@@ -25,6 +42,30 @@
 
     afterNavigate(() => {
         invalidateAll();
+    });
+
+    onMount(() => {
+        loading = false;
+        // init Swiper:
+        const swiper = new Swiper(bannerSwiper, {
+            // configure Swiper to use modules
+
+            modules: [Autoplay, Navigation, Pagination],
+            // centeredSlides: true,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+
+            navigation: {
+                nextEl: ".right-btn",
+                prevEl: ".left-btn",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+            },
+        });
     });
 
     async function goWrite(e) {
@@ -72,6 +113,35 @@
 
 <svelte:head></svelte:head>
 
+<div class="swiper my-5 relative max_screen mx-auto" bind:this={bannerSwiper}>
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper relative">
+        {#each bannerList as banner}
+            <div class="swiper-slide">
+                <img src={banner.src} alt="" />
+            </div>
+        {/each}
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+
+    <div class="left-btn top-1/2 z-20 left-7">
+        <button
+            class="w-7 h-7 md:w-10 md:h-10 text-sm md:text-base bg-white flex justify-center items-center rounded-full text-gray-500"
+        >
+            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="right-btn top-1/2 z-20 right-7">
+        <button
+            class="w-7 h-7 md:w-10 md:h-10 text-sm md:text-base bg-white flex justify-center items-center rounded-full text-gray-500"
+        >
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="swiper-scrollbar"></div>
+</div>
+
 <div class="max_screen mx-auto px-2 pb-8 mt-2">
     <h1 class="sr-only">{siteName}</h1>
     <div class="my-6 kbo-font text-2xl text-gray-700 text-center relative">
@@ -103,31 +173,31 @@
         {siteName} 최신글 리스트
     </div>
 
-    <div
-        data-sveltekit-preload-data="tap"
-        data-sveltekit-reload
-        class="grid grid-cols-2 md:grid-cols-4 suit-font gap-1"
-    >
+    <div data-sveltekit-preload-data="tap" data-sveltekit-reload class="suit-font">
         {#each posts as post}
             <a href="/view/{post.bo_id}">
-
-                <div class="border rounded-md overflow-hidden">
-                    <div
-                        class="w-full h-32 overflow-hidden flex justify-center items-center"
-                    >
-                        <img src={post.img_link} alt="asdfasdf" />
-                    </div>
-
-                    <div class="p-2 flex flex-col gap-2">
-                        <div class="truncate">{post.bo_subject}</div>
-                        <div class="text-xs">
-                            {post.category} / {post.date_str}
-
-                    </div>
+                <div class="border mb-2 p-2 rounded-md border-gray-100">
+                    <div class="mb-1 text-xs">{post.category} / {post.date_str}</div>
+                    <div class="text-sm">{post.bo_subject}</div>
                 </div>
             </a>
         {/each}
     </div>
+
+    <!-- <div class="border rounded-md overflow-hidden">
+        <div
+            class="w-full h-32 overflow-hidden flex justify-center items-center"
+        >
+            <img src={post.img_link} alt="asdfasdf" />
+        </div>
+
+        <div class="p-2 flex flex-col gap-2">
+            <div class="truncate">{post.bo_subject}</div>
+            <div class="text-xs">
+                {post.category} / {post.date_str}
+            </div>
+        </div>
+    </div> -->
 
     {#if listStatus}
         <div class="text-center mt-6">
@@ -176,5 +246,15 @@
         margin: -1px;
         border: 0;
         clip: rect(0, 0, 0, 0);
+    }
+
+    .right-btn {
+        position: absolute;
+        transform: translate(50%, -50%);
+    }
+
+    .left-btn {
+        position: absolute;
+        transform: translate(-50%, -50%);
     }
 </style>
