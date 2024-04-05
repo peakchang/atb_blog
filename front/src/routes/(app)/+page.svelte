@@ -176,7 +176,7 @@
     <div
         data-sveltekit-preload-data="tap"
         data-sveltekit-reload
-        class="suit-font grid grid-cols-2 md:grid-cols-3 gap-3"
+        class="suit-font grid grid-cols-2 md:grid-cols-4 gap-3"
     >
         {#each posts as post}
             <a href="/view/{post.bo_id}">
