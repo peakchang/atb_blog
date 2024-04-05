@@ -13,6 +13,7 @@
 
     export let data;
     let category = "";
+    let categoryType = "";
     let postList = [];
 
     console.log($page);
@@ -21,6 +22,8 @@
 
     function setData() {
         category = data.category;
+        categoryType = data.categoryType;
+        console.log(category);
         postList = [...data.posts].reverse();
     }
 </script>
@@ -34,17 +37,36 @@
     <div
         data-sveltekit-preload-data="tap"
         data-sveltekit-reload
-        class="suit-font"
+        class="suit-font grid grid-cols-2 md:grid-cols-3 gap-3"
     >
         {#each postList as post}
-            <a href="/view/{post.bo_id}">
-                <div class="border mb-2 p-2 rounded-md border-gray-100">
-                    <div class="mb-1 text-xs">
-                        {post.category} / {post.date_str}
+            {#if categoryType == "img"}
+                <a href="/view/{post.bo_id}">
+                    <div class="border rounded-md overflow-hidden">
+                        <div
+                            class="w-full h-32 overflow-hidden flex justify-center items-center"
+                        >
+                            <img src={post.img_link} alt="asdfasdf" />
+                        </div>
+
+                        <div class="p-2 flex flex-col gap-2">
+                            <div class="truncate">{post.bo_subject}</div>
+                            <div class="text-xs">
+                                {post.category} / {post.date_str}
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-sm">{post.bo_subject}</div>
-                </div>
-            </a>
+                </a>
+            {:else}
+                <a href="/view/{post.bo_id}">
+                    <div class="border mb-2 p-2 rounded-md border-gray-100">
+                        <div class="mb-1 text-xs">
+                            {post.category} / {post.date_str}
+                        </div>
+                        <div class="text-sm">{post.bo_subject}</div>
+                    </div>
+                </a>
+            {/if}
         {/each}
     </div>
 </div>

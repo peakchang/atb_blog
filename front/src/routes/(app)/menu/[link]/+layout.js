@@ -10,6 +10,7 @@ export const load = async ({ params, fetch, url }) => {
 
     const { link } = params
     let category = ""
+    let categoryType = ""
     let posts = [];
     let seoValue = {
         title: "",
@@ -52,6 +53,7 @@ export const load = async ({ params, fetch, url }) => {
 
         const getCategoryObj = category_list.find(v => v.link === link);
         category = getCategoryObj['name']
+        categoryType = getCategoryObj['type']
 
         seoValue.title = `${siteName} - ${category}`
 
@@ -68,5 +70,5 @@ export const load = async ({ params, fetch, url }) => {
 
 
 
-    return { posts, category, seoValue }
+    return { posts, category, seoValue, categoryType }
 }
