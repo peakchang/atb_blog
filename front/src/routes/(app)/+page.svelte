@@ -179,20 +179,22 @@
         class="suit-font grid grid-cols-2 md:grid-cols-3 gap-3"
     >
         {#each posts as post}
-            <div class="border rounded-md overflow-hidden">
-                <div
-                    class="w-full h-32 overflow-hidden flex justify-center items-center"
-                >
-                    <img src={post.img_link} alt="asdfasdf" />
-                </div>
+            <a href="/view/{post.bo_id}">
+                <div class="border rounded-md overflow-hidden">
+                    <div
+                        class="w-full h-32 overflow-hidden flex justify-center items-center"
+                    >
+                        <img src={post.img_link} alt="asdfasdf" />
+                    </div>
 
-                <div class="p-2 flex flex-col gap-2">
-                    <div class="truncate">{post.bo_subject}</div>
-                    <div class="text-xs">
-                        {post.category} / {post.date_str}
+                    <div class="p-2 flex flex-col gap-2">
+                        <div class="truncate">{post.bo_subject}</div>
+                        <div class="text-xs">
+                            {post.category} / {post.date_str}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         {/each}
     </div>
 
