@@ -63,7 +63,7 @@
                         <div class="mb-1 text-xs">
                             {post.category} / {post.date_str}
                         </div>
-                        <div class="text-sm">{post.bo_subject}</div>
+                        <div class="text-sm truncate">{post.bo_subject}</div>
                     </div>
                 </a>
             {/if}
