@@ -100,7 +100,7 @@
 	<div
 		class="max_screen mx-auto my-4 suit-font grid grid-cols-1 md:grid-cols-3 px-3"
 	>
-		<div>
+		<nav class="gnb">
 			<ul class="flex gap-2 text-xs justify-center">
 				{#each category_list as category}
 					<li class="cursor-pointer">
@@ -112,11 +112,9 @@
 					</li>
 				{/each}
 			</ul>
-		</div>
+		</nav>
 		<div class="col-span-2 mt-2 text-center text-sm">
-			<span class="inline-block"
-				>주소 : 경기도 부천시 경인로 37 /
-			</span>
+			<span class="inline-block">주소 : 경기도 부천시 경인로 37 / </span>
 			<span class="inline-block">사이트명 : {siteName} / </span>
 			<span class="inline-block">담당자 : 김승아 </span>
 			<!-- <button
