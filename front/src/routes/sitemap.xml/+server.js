@@ -4,7 +4,28 @@ import moment from "moment-timezone";
 
 export async function GET({ url }) {
 
-    let boardXmlStr = ""
+    console.log(category_list);
+
+    let boardXmlStr = `
+    <url>
+        <loc>${url.origin}</loc>
+        <lastmod>2023-12-08</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    `
+
+    for (let i = 0; i < category_list.length; i++) {
+        const categoryTamplate = `
+        <url>
+            <loc>${url.origin}/${category_list[i]['link']}</loc>
+            <lastmod>2023-12-08</lastmod>
+            <changefreq>monthly</changefreq>
+            <priority>0.8</priority>
+        </url>
+        `
+        boardXmlStr = boardXmlStr + categoryTamplate
+    }
 
     try {
         const getBoardListQuery = "SELECT * FROM board ORDER BY bo_id DESC";
@@ -26,14 +47,13 @@ export async function GET({ url }) {
                 <priority>0.5</priority>
             </url>
             `
-            console.log(template);
             boardXmlStr = boardXmlStr + template
         }
 
     } catch (error) {
 
     }
-    
+
     return new Response(
         `
         <?xml version="1.0" encoding="UTF-8" ?>
