@@ -37,36 +37,25 @@
     <div
         data-sveltekit-preload-data="tap"
         data-sveltekit-reload
-        class="suit-font grid grid-cols-2 md:grid-cols-4 gap-3"
+        class="grid grid-cols-2 md:grid-cols-4 suit-font gap-1"
     >
         {#each postList as post}
-            {#if categoryType == "img"}
-                <a href="/view/{post.bo_id}">
-                    <div class="border rounded-md overflow-hidden">
-                        <div
-                            class="w-full h-32 overflow-hidden flex justify-center items-center"
-                        >
-                            <img src={post.img_link} alt="asdfasdf" />
-                        </div>
-
-                        <div class="p-2 flex flex-col gap-2">
-                            <div class="truncate">{post.bo_subject}</div>
-                            <div class="text-xs">
-                                {post.category} / {post.date_str}
-                            </div>
-                        </div>
+            <a href="/view/{post.bo_id}">
+                <div class="border rounded-md overflow-hidden">
+                    <div
+                        class="w-full h-32 overflow-hidden flex justify-center items-center"
+                    >
+                        <img src={post.img_link} alt="asdfasdf" />
                     </div>
-                </a>
-            {:else}
-                <a href="/view/{post.bo_id}">
-                    <div class="border mb-2 p-2 rounded-md border-gray-100">
-                        <div class="mb-1 text-xs">
+
+                    <div class="p-2 flex flex-col gap-2">
+                        <div class="truncate">{post.bo_subject}</div>
+                        <div class="text-xs">
                             {post.category} / {post.date_str}
                         </div>
-                        <div class="text-sm truncate">{post.bo_subject}</div>
                     </div>
-                </a>
-            {/if}
+                </div>
+            </a>
         {/each}
     </div>
 </div>
