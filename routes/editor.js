@@ -22,6 +22,21 @@ const upload = multer({
     // limits: { fileSize: 10 * 1024 * 1024 },
 });
 
+editorRouter.post('/onimg_upload', upload.single('onimg'), async (req, res, next) => {
+    console.log('이쪽은 들어오는거야?!?!?!?');
+    let baseUrl
+    let saveUrl
+    if (req.method === 'POST') {
+        const lastFolderArr = req.file.destination.split('/');
+        const lastFolder = lastFolderArr[lastFolderArr.length - 1];
+        const currentUrl = req.protocol + '://' + req.get('host')
+        ;
+        baseUrl = currentUrl + '/editor/' + lastFolder + '/' + req.file.filename;
+        saveUrl = req.file.path
+    }
+    res.json({ baseUrl, saveUrl })
+})
+
 
 editorRouter.post('/img_upload', upload.single('editorimg'), async (req, res, next) => {
     console.log('이쪽은 들어오는거야?!?!?!?');

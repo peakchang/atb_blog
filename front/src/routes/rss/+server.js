@@ -9,6 +9,26 @@ export async function GET({ url }) {
     let lastBuildDate = ""
 
     try {
+
+        const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC";
+        const getSiteList = await sql_con.promise().query(getSiteListQuery);
+        const siteList = getSiteList[0];
+
+        console.log(siteList);
+
+        for (let i = 0; i < siteList.length; i++) {
+            let template = `
+            <item>
+                <title>${siteList[i]['st_name']}</title>
+                <link>${url.origin}/site/${siteList[i]['st_id']}</link>
+                <description>${siteList[i]['st_description']}</description>
+                <guid>${url.origin}/site/${siteList[i]['st_id']}</guid>
+            </item>
+            `
+            postXmlStr = postXmlStr + template
+        }
+
+
         const getBoardListQuery = "SELECT * FROM board ORDER BY bo_id DESC";
         const getBoardList = await sql_con.promise().query(getBoardListQuery);
         boardList = getBoardList[0]
@@ -17,14 +37,12 @@ export async function GET({ url }) {
             if(l == 0){
                 lastBuildDate = boardList[l]['bo_created_at']
             }
-            const textOnly = boardList[l]['bo_content'].replace(/<[^>]+>/g, ' ');
-            boardList[l]['content_txt'] = textOnly.replace(/\s+/g, ' ').trim();
 
             const template = `
             <item>
                 <title>${boardList[l]['bo_subject']}</title>
                 <link>${url.origin}/view/${boardList[l]['bo_id']}</link>
-                <description>${boardList[l]['content_txt']}</description>
+                <description>${removeImgAndBrTags(boardList[l]['bo_content'])}</description>
                 <guid>${url.origin}/view/${boardList[l]['bo_id']}</guid>
                 
             </item>
@@ -58,4 +76,10 @@ export async function GET({ url }) {
             }
         }
     );
+}
+
+
+function removeImgAndBrTags(html) {
+    // 정규식을 사용하여 이미지 태그를 제거합니다.
+    return html.replace(/<img[^>]*>|<br[^>]*>/g, '');
 }

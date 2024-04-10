@@ -12,6 +12,15 @@
 <meta property="og:type" content="blog" />
 <meta property="og:description" content={seoValue.description} />
 <meta property="og:image" content={seoValue.image} />
-<meta name="date" content={seoValue.date} />
-<meta property="article:published_time" content={seoValue.published_time} />
-<meta name="naver-site-verification" content="e76e91aceb433f2f606f921a42335f78cfaa0996" />
+
+{#if seoValue.date}
+    <meta name="date" content={seoValue.date} />
+{/if}
+
+{#if seoValue.published_time}
+    <meta property="article:published_time" content={seoValue.published_time} />
+{/if}
+<meta
+    name="naver-site-verification"
+    content="e76e91aceb433f2f606f921a42335f78cfaa0996"
+/>

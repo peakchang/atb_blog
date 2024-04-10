@@ -7,6 +7,23 @@ export async function GET({ url }) {
     let boardXmlStr = ""
 
     try {
+
+        const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC";
+        const getSiteList = await sql_con.promise().query(getSiteListQuery);
+        const siteList = getSiteList[0];
+
+        for (let i = 0; i < siteList.length; i++) {
+            let template = `
+            <url>
+            <loc>${url.origin}/site/${siteList[i]['st_id']}</loc>
+                <changefreq>monthly</changefreq>
+                <priority>0.5</priority>
+            </url>
+            `
+            boardXmlStr = boardXmlStr + template
+        }
+
+
         const getBoardListQuery = "SELECT * FROM board ORDER BY bo_id DESC";
         const getBoardList = await sql_con.promise().query(getBoardListQuery);
         const boardList = getBoardList[0]

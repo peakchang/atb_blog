@@ -22,6 +22,15 @@
 
     onMount(() => {
         if (modifyImageList) {
+            let tempImgArr = [];
+            for (let i = 0; i < modifyImageList.length; i++) {
+                const imgObj = {
+                    src: modifyImageList[i],
+                    id: crypto(),
+                };
+                tempImgArr.push(imgObj);
+            }
+            imgArr = tempImgArr;
         }
         // For Lists
         sortableLists = new Sortable(listsEl, {
@@ -154,7 +163,7 @@
                     // console.log(fileName);
 
                     axios
-                        .post(`${back_api}/editor/img_upload`, imgForm, {
+                        .post(`${back_api}/editor/onimg_upload`, imgForm, {
                             headers: {
                                 "Content-Type": "multipart/form-data",
                             },

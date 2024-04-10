@@ -20,6 +20,8 @@ import { subdomainRouter } from './routes/subdomain.js';
 import { subviewRouter } from './routes/subview.js';
 
 
+import { siteRouter } from './routes/site.js';
+
 
 
 // import { apiRouter } from "./routes/exapi.js"
@@ -62,12 +64,16 @@ app.enable('trust proxy');
 app.use('/api/v3/subview', subviewRouter);
 app.use('/api/v3/subdomain', subdomainRouter);
 
+app.use('/api/v3/site', siteRouter);
+
 app.use('/api/v3/res', resRouter);
 app.use('/api/v3/adm', admRouter);
 app.use('/api/v3/board', boardRouter);
 app.use('/api/v3/editor', editorRouter);
 app.use('/api/v3/main', mainRouter);
 app.use('/api/v3', apiRouter);
+
+
 
 
 app.use('/chk', (req, res) => {
