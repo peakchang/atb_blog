@@ -53,4 +53,25 @@ CREATE TABLE IF NOT EXISTS sub_board(
     sb_updated_at DATETIME
 );
 
+CREATE TABLE IF NOT EXISTS site(
+    st_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    st_name VARCHAR(100),
+    st_house_num VARCHAR(50),
+    st_area_size VARCHAR(50),
+    st_scale VARCHAR(50),
+    st_constructer VARCHAR(50),
+    st_construct_date VARCHAR(100),
+    st_developer VARCHAR(50),
+    st_supply_location VARCHAR(50),
+    st_movein_date VARCHAR(50),
+    st_inquiry VARCHAR(50),
+    st_parcel_price VARCHAR(50),
+    st_description TEXT,
+    st_main_img VARCHAR(255),
+    st_imgs TEXT,
+    st_floor_plan TEXT,
+    st_created_at DATETIME,
+    st_updated_at DATETIME
+);
+
 */
