@@ -108,10 +108,21 @@
             });
         } catch (error) {}
     }
+
+
+    // ********************************** 위에는 일반 블로그
+
+    let writeType = "blog"
+
+
+
+
+
 </script>
 
 <svelte:head>
 </svelte:head>
+
 
 <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">
     <div class="pt-6">
