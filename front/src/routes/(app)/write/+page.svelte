@@ -74,12 +74,12 @@
                 )
             ) {
                 const deleteArr = contentArr;
-                const del_list_cookie = deleteArr.join(",");
-                Cookies.set("del_list_cookie", del_list_cookie); // 혹시 모르니까 쿠키에 저장
+                const del_libo_cookie = deleteArr.join(",");
+                Cookies.set("del_libo_cookie", del_libo_cookie); // 혹시 모르니까 쿠키에 저장
                 await axios
                     .post(`${back_api}/editor/nosave_del`, { deleteArr })
                     .then(() => {
-                        Cookies.remove("del_list_cookie");
+                        Cookies.remove("del_libo_cookie");
                     });
             } else {
                 cancel();
@@ -90,7 +90,7 @@
     // F5키를 누르는 경우 삭제할 이미지 리스트 쿠키 바로 저장
     function onKeyDown(e) {
         if (e.keyCode == 116) {
-            Cookies.set("del_list_cookie", contentArr);
+            Cookies.set("del_libo_cookie", contentArr);
         }
     }
 
@@ -102,7 +102,143 @@
     let allData = {};
     let stImgs = [];
     let tempSaveImgs = []; // 임시저장 이미지 리스트, 새로고침 / 뒤로가기시 싹 삭제됨
-    const stId = $page.url.searchParams.get("st_id");
+    const stId = $page.url.searchParams.get("bo_id");
+
+    // 이미지를 선택하면 사이즈 변경 (최대 1200px) 및 webp 변경 후 업로드
+    const uploadMainImgAct = (e) => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", ".png,.jpg,.jpeg");
+        input.click();
+
+        // input change
+        input.onchange = async (e) => {
+            const maxWidth = 1200;
+            const img_file = e.target.files[0];
+            const options = {
+                maxSizeMB: 0.7,
+                // maxWidthOrHeight: 1920,
+                useWebWorker: true,
+            };
+
+            const reader = new FileReader();
+            reader.readAsDataURL(img_file);
+            reader.onload = function (r) {
+                let setWidth = 0;
+                let setHeight = 0;
+                const img = new Image();
+                img.src = r.target.result;
+                img.onload = async function (e) {
+                    if (img.width >= maxWidth) {
+                        var share = img.width / maxWidth;
+                        var setHeight = Math.floor(img.height / share);
+                        var setWidth = maxWidth;
+                    } else {
+                        setWidth = img.width;
+                        setHeight = img.height;
+                    }
+
+                    var canvas = document.createElement("canvas");
+                    canvas.width = setWidth;
+                    canvas.height = setHeight;
+                    canvas.display = "inline-block";
+                    canvas
+                        .getContext("2d")
+                        .drawImage(img, 0, 0, setWidth, setHeight);
+
+                    var getReImgUrl = canvas.toDataURL("image/webp");
+
+                    const resultImage = dataURItoBlob(getReImgUrl);
+
+                    let imgForm = new FormData();
+
+                    const timestamp = new Date().getTime();
+                    const fileName = `${timestamp}${Math.random()
+                        .toString(36)
+                        .substring(2, 11)}.webp`;
+                    imgForm.append("onimg", resultImage, fileName);
+
+                    axios
+                        .post(`${back_api}/editor/onimg_upload`, imgForm, {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                            },
+                        })
+                        .then((res) => {
+                            allData["bo_main_img"] = res.data.baseUrl;
+                        })
+                        .catch((err) => {
+                            console.error();
+                            alert(`${err.message} 에러가 발생 했습니다.`);
+                        });
+                };
+            };
+        };
+    };
+
+    async function deleteMainImgAct() {
+        const mainImgUrlArr = allData["bo_main_img"].split("/");
+        const mainImgUrlPath = `public/uploads/${mainImgUrlArr[3]}/${mainImgUrlArr[4]}/${mainImgUrlArr[5]}`;
+
+        try {
+            const res = await axios.post(`${back_api}/board/delete_mainimg`, {
+                mainImgUrlPath,
+            });
+            if (res.data.status) {
+                alert("로고가 삭제 되었습니다.");
+                invalidateAll();
+                allData["bo_main_img"] = "";
+            } else {
+                console.log("????");
+            }
+        } catch (error) {
+            alert("에러가 발생 했습니다.");
+        }
+    }
+
+    function updateMainImgList(e) {
+        const imgList = e.detail.imgArr;
+        stImgs = setImgArr(imgList);
+    }
+
+    async function updateLandAct() {
+
+        const type = this.value;
+
+        if (stImgs) {
+            allData["st_imgs"] = stImgs.join(",");
+        }
+
+        console.log(allData);
+
+        try {
+            const res = await axios.post(`${back_api}/board/upload_land_data`, {
+                allData,
+                type,
+            });
+
+            if (res.data.status) {
+                alert("업로드가 완료 되었습니다.");
+                // goto("/adm/site", { invalidateAll: true });
+            }
+        } catch (error) {}
+    }
+
+    function setImgArr(imgList) {
+        const imgArr = imgList;
+        let tempImgArr = [];
+
+        let tempSaveImgsTemp = [...tempSaveImgs];
+        for (let i = 0; i < imgArr.length; i++) {
+            const imgObj = imgArr[i];
+            tempImgArr.push(imgObj["src"]);
+            if (!tempSaveImgsTemp.includes(imgObj["src"])) {
+                tempSaveImgsTemp.push(imgObj["src"]);
+            }
+        }
+        tempSaveImgs = tempSaveImgsTemp;
+        return tempImgArr;
+    }
 </script>
 
 <!-- <input type="number" bind:value on:change={onChange}> -->
@@ -119,7 +255,7 @@
     </div>
 
     {#if writeType == "land"}
-        <div class="w-full overflow-auto ">
+        <div class="w-full overflow-auto">
             <div class="w-full min-w-[700px] suit-font">
                 <div class="mb-2 pl-3">※ 기본정보</div>
                 <table class="w-full text-sm">
@@ -129,7 +265,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_name"]}
+                                bind:value={allData["bo_subject"]}
                             />
                         </td>
                         <th class="border p-2">세대수</th>
@@ -137,7 +273,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_house_num"]}
+                                bind:value={allData["bo_house_num"]}
                             />
                         </td>
                     </tr>
@@ -148,7 +284,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_area_size"]}
+                                bind:value={allData["bo_area_size"]}
                             />
                         </td>
                         <th class="border p-2">규모</th>
@@ -156,7 +292,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_scale"]}
+                                bind:value={allData["bo_scale"]}
                             />
                         </td>
                     </tr>
@@ -167,7 +303,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_construct_date"]}
+                                bind:value={allData["bo_construct_date"]}
                             />
                         </td>
                         <th class="border p-2">시행사</th>
@@ -175,7 +311,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_developer"]}
+                                bind:value={allData["bo_developer"]}
                             />
                         </td>
                     </tr>
@@ -186,7 +322,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_supply_location"]}
+                                bind:value={allData["bo_supply_location"]}
                             />
                         </td>
                         <th class="border p-2">입주예정</th>
@@ -194,7 +330,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_movein_date"]}
+                                bind:value={allData["bo_movein_date"]}
                             />
                         </td>
                     </tr>
@@ -205,7 +341,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_inquiry"]}
+                                bind:value={allData["bo_inquiry"]}
                             />
                         </td>
                         <th class="border p-2">분양가</th>
@@ -213,7 +349,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["st_parcel_price"]}
+                                bind:value={allData["bo_parcel_price"]}
                             />
                         </td>
                     </tr>
@@ -227,7 +363,7 @@
                 <textarea
                     rows="7"
                     class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md rounded-md border-gray-300"
-                    bind:value={allData["st_description"]}
+                    bind:value={allData["bo_description"]}
                 ></textarea>
             </div>
         </div>
@@ -235,23 +371,25 @@
         <div class="mt-5 suit-font">
             <div class="mb-2 pl-3 text-base">※ 메인이미지</div>
             <div>
-                {#if allData["st_main_img"]}
+                {#if allData["bo_main_img"]}
                     <div class="mb-3 border p-1 rounded-md">
-                        <img src={allData["st_main_img"]} alt="" />
+                        <img src={allData["bo_main_img"]} alt="" />
                     </div>
                 {:else}
                     <div class="mb-3">이미지를 추가해주세요</div>
                 {/if}
 
-                {#if allData["st_main_img"]}
+                {#if allData["bo_main_img"]}
                     <button
                         class="py-1 px-3 text-xs text-white rounded-md bg-red-500 active:bg-red-600"
+                        on:click={deleteMainImgAct}
                     >
                         메인이미지 삭제
                     </button>
                 {:else}
                     <button
                         class="py-1 px-3 text-xs text-white rounded-md bg-blue-500 active:bg-blue-600"
+                        on:click={uploadMainImgAct}
                     >
                         메인이미지 업로드
                     </button>
@@ -267,6 +405,7 @@
         <div class="py-5 px-3 border rounded-md mt-5 suit-font">
             <span class="text-sm">▣ 이미지 리스트</span>
             <SortableImg
+                on:updateImgeList={updateMainImgList}
                 modifyImageList={stImgs}
             />
         </div>
@@ -276,6 +415,7 @@
                 <button
                     class="text-lg text-white py-1.5 px-10 bg-green-600 active:bg-green-700 rounded-lg"
                     value="update"
+                    on:click={updateLandAct}
                 >
                     업로드
                 </button>
@@ -283,6 +423,7 @@
                 <button
                     class="text-lg text-white py-1.5 px-10 bg-green-600 active:bg-green-700 rounded-lg"
                     value="upload"
+                    on:click={updateLandAct}
                 >
                     업로드
                 </button>
@@ -294,9 +435,6 @@
                 }}>xptmxm</button
             >
         </div>
-
-
-
     {:else if writeType == "blog"}
         <input
             type="text"

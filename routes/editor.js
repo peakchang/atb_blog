@@ -82,7 +82,21 @@ editorRouter.post('/nosave_del', async (req, res, next) => {
     res.json({})
 })
 
+editorRouter.post('/delete_img', async (req, res, next) => {
+    let status = true;
+    const body = req.body;
+    const delPath = `public\\uploads\\editor\\${body.getFolder}\\${body.getImgName}`
+    
+    try {
+        await fs.unlink(delPath, (err) => {
 
+        })
+    } catch (error) {
+        status = false
+        console.error(error);
+    }
+    res.json({ status })
+})
 
 function fonderChk() {
     let setFolder
