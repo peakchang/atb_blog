@@ -12,10 +12,11 @@
     import { afterNavigate, goto } from "$app/navigation";
     import { authStatus } from "$lib/store";
 
-    import { page } from "$app/stores";
-
     import { invalidateAll } from "$app/navigation";
     import { back_api, siteName } from "$lib/const";
+
+    import { extractFirstImageSrc } from "$lib/lib";
+    import moment from "moment-timezone";
 
     let chkModalVal = false;
     let pwdVal;
@@ -184,13 +185,22 @@
                     <div
                         class="w-full h-32 overflow-hidden flex justify-center items-center"
                     >
-                        <img src={post.img_link} alt="asdfasdf" />
+                        {#if post.bo_content}
+                            <img
+                                src={extractFirstImageSrc(post.bo_content)}
+                                alt="asdfasdf"
+                            />
+                        {:else}
+                            <img src={post.bo_main_img} alt="asdfasdf" />
+                        {/if}
                     </div>
 
                     <div class="p-2 flex flex-col gap-2">
                         <!-- <div class="truncate">{post.bo_subject}</div> -->
                         <div class="text-xs">
-                            {post.category} / {post.date_str}
+                            {post.category} / {moment(
+                                post.bo_created_at,
+                            ).format("YY-MM-DD HH:mm")}
                         </div>
                     </div>
                 </div>

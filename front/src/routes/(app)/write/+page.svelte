@@ -206,7 +206,7 @@
         const type = this.value;
 
         if (stImgs) {
-            allData["st_imgs"] = stImgs.join(",");
+            allData["bo_imgs"] = stImgs.join(",");
         }
 
         console.log(allData);
@@ -219,7 +219,7 @@
 
             if (res.data.status) {
                 alert("업로드가 완료 되었습니다.");
-                // goto("/adm/site", { invalidateAll: true });
+                goto("/", { invalidateAll: true });
             }
         } catch (error) {}
     }
@@ -273,7 +273,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_house_num"]}
+                                bind:value={allData["bo_housenum"]}
                             />
                         </td>
                     </tr>

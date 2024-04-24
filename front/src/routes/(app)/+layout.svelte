@@ -7,6 +7,8 @@
 	import { page } from "$app/stores";
 	import SeoMeta from "$src/lib/components/SeoMeta.svelte";
 
+
+
 	let seoValue = {};
 	export let data;
 
