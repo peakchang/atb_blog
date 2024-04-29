@@ -18,6 +18,10 @@
     import { extractFirstImageSrc } from "$lib/lib";
     import moment from "moment-timezone";
 
+    import Cookies from "js-cookie";
+
+    // console.log(Cookies.get("auth_status"));
+
     let chkModalVal = false;
     let pwdVal;
     let postNum = 10;
@@ -75,6 +79,9 @@
 
             if (res.data.validPassword) {
                 $authStatus = "ok";
+
+                Cookies.set("auth_status", "ok");
+
                 alert("인증 완료! 글쓰기로 넘어갑니다!");
                 goto("/write");
             } else {

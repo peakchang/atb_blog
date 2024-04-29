@@ -7,6 +7,8 @@
     import Reply from "$lib/components/Reply.svelte";
     import { back_api } from "$lib/const";
 
+    console.log($authStatus);
+
     export let data;
 
     let replyData = [];
@@ -21,7 +23,6 @@
         content = data.content;
         previousPosts = data.previousPosts;
         nextPosts = data.nextPost;
-
     }
 
     let getId = $page.params.id;
@@ -109,20 +110,10 @@
         } catch (error) {}
     }
 
-
     // ********************************** 위에는 일반 블로그
 
-    let writeType = "blog"
-
-
-
-
-
+    let writeType = "blog";
 </script>
-
-<svelte:head>
-</svelte:head>
-
 
 <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">
     <div class="pt-6">
@@ -139,15 +130,15 @@
                     history.back();
                 }}
             >
-                <i class="fa-solid fa-angle-left" /> 뒤로가기
+                <i class="fa fa-angle-double-left" aria-hidden="true"></i> 뒤로가기
             </button>
 
             {#if $authStatus}
-                <a href="/modify/{getId}">
+                <a href="/write?id={getId}">
                     <button
                         class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white"
                     >
-                        <i class="fa-solid fa-gear" /> 수정하기
+                        <i class="fa fa-cog" aria-hidden="true"></i> 수정하기
                     </button>
                 </a>
                 <button
@@ -204,7 +195,6 @@
                     <div
                         class="py-2 px-4 mb-2 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
                     >
-
                         <textarea
                             rows="6"
                             class="px-0 w-full h-20 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none resize-none"

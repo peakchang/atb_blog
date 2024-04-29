@@ -10,9 +10,21 @@
     import { dataURItoBlob } from "$src/lib/lib";
 
     import { page } from "$app/stores";
+    console.log($page.url.searchParams.get("id"));
+
+    export let data;
+    let allData = {};
+
+    $: data, setData();
+
+    function setData() {
+        if (data.all_data) {
+            allData = data.all_data;
+            stImgs = allData.bo_imgs.split(',');
+        }
+    }
 
     let contentArr;
-    let modifyVal;
     let content;
 
     let workStatus = false; // 값이 true 면 새로고침시 체크
@@ -22,8 +34,11 @@
     let keyword;
     let description;
 
-    const uploadContent = async () => {
-        if (!subject || !category) {
+    const uploadContent = async (e) => {
+        console.log(allData);
+        const type = e.target.value;
+        console.log(type);
+        if (!allData["bo_subject"] || !allData["bo_category"]) {
             alert("제목 or 카테고리 미선택! 선택해주세여");
             return false;
         }
@@ -38,15 +53,14 @@
             }
 
             var kkk = ttt[ttt.length - 1];
-            if (content.includes(kkk)) {
+            if (allData["bo_content"].includes(kkk)) {
                 contentArr[i] = "";
             }
         }
 
         const res = await axios.post(`${back_api}/board/write`, {
-            subject,
-            category,
-            content,
+            type,
+            allData,
             contentArr,
         });
 
@@ -58,8 +72,8 @@
     };
 
     const getEditorContent = (e) => {
-        content = e.detail.editorContent;
-        if (!content || content == "<p><br></p>") {
+        allData["bo_content"] = e.detail.editorContent;
+        if (!allData["bo_content"] || allData["bo_content"] == "<p><br></p>") {
             workStatus = false;
         } else {
             workStatus = true;
@@ -96,11 +110,9 @@
 
     // ********************************* 위에는 일반 블로그 글쓰기
 
-    let writeType = "land";
-
-    export let data;
-    let allData = {};
     let stImgs = [];
+
+    console.log(allData["bo_imgs"]);
     let tempSaveImgs = []; // 임시저장 이미지 리스트, 새로고침 / 뒤로가기시 싹 삭제됨
     const stId = $page.url.searchParams.get("bo_id");
 
@@ -202,8 +214,9 @@
     }
 
     async function updateLandAct() {
-
         const type = this.value;
+
+        console.log(type);
 
         if (stImgs) {
             allData["bo_imgs"] = stImgs.join(",");
@@ -247,14 +260,14 @@
     <div class="mb-5">
         <select
             class="p-1 text-xs border-gray-300 rounded-sm"
-            bind:value={writeType}
+            bind:value={allData["bo_type"]}
         >
             <option value="blog">블로그</option>
             <option value="land">부동산</option>
         </select>
     </div>
 
-    {#if writeType == "land"}
+    {#if allData["bo_type"] == "land"}
         <div class="w-full overflow-auto">
             <div class="w-full min-w-[700px] suit-font">
                 <div class="mb-2 pl-3">※ 기본정보</div>
@@ -411,7 +424,7 @@
         </div>
 
         <div class="mt-5 pb-10 text-center suit-font">
-            {#if data.getId}
+            {#if $page.url.searchParams.get("id")}
                 <button
                     class="text-lg text-white py-1.5 px-10 bg-green-600 active:bg-green-700 rounded-lg"
                     value="update"
@@ -435,17 +448,17 @@
                 }}>xptmxm</button
             >
         </div>
-    {:else if writeType == "blog"}
+    {:else if allData["bo_type"] == "blog"}
         <input
             type="text"
             class="py-2 mb-1 w-full rounded-sm border-gray-300 text-sm"
             placeholder="제목을 입력하세요"
-            bind:value={subject}
+            bind:value={allData["bo_subject"]}
         />
 
         <select
             class="py-2 mb-1 w-full rounded-sm border-gray-300 text-sm"
-            bind:value={category}
+            bind:value={allData["bo_category"]}
         >
             <option value="">선택하세요</option>
             {#each category_list as category}
@@ -455,18 +468,29 @@
 
         <Editor
             on:getEditorContent={getEditorContent}
-            {modifyVal}
+            modifyVal={allData["bo_content"]}
             bind:contentArr
             height="500px"
         />
 
         <div class="mt-3 text-center">
-            <button
-                class="bg-sky-700 py-2 px-10 rounded-lg text-white suit-font"
-                on:click={uploadContent}
-            >
-                등록하기
-            </button>
+            {#if $page.url.searchParams.get("id")}
+                <button
+                    class="bg-sky-700 py-2 px-10 rounded-lg text-white suit-font"
+                    value="update"
+                    on:click={uploadContent}
+                >
+                    등록하기
+                </button>
+            {:else}
+                <button
+                    class="bg-sky-700 py-2 px-10 rounded-lg text-white suit-font"
+                    value="upload"
+                    on:click={uploadContent}
+                >
+                    등록하기
+                </button>
+            {/if}
         </div>
     {/if}
 </div>
