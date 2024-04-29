@@ -6,6 +6,7 @@
 	import { back_api, category_list, siteName } from "$src/lib/const";
 	import { page } from "$app/stores";
 	import SeoMeta from "$src/lib/components/SeoMeta.svelte";
+    import { onMount } from "svelte";
 
 	let seoValue = {};
 	export let data;
@@ -15,6 +16,13 @@
 	function setData() {
 		seoValue = data.seoValue;
 	}
+
+	onMount(() => {
+		const getAuthStatus = Cookies.get("auth_status");
+		if(getAuthStatus){
+			$authStatus = 'ok'
+		}
+	})
 
 	afterNavigate(async () => {
 		const delArr = Cookies.get("del_list_cookie");
@@ -107,8 +115,9 @@
 						<a
 							href={category.link}
 							on:click|preventDefault={goCateMenu}
-							>{category.name}</a
 						>
+							{category.name}
+						</a>
 					</li>
 				{/each}
 			</ul>

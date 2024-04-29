@@ -3,6 +3,7 @@ import moment from "moment-timezone";
 import bcrypt from "bcrypt";
 import { sql_con } from '../back-lib/db.js'
 import {  getQueryStr } from "../back-lib/lib.js";
+import fs from 'fs'
 
 const admRouter = express.Router();
 
@@ -109,9 +110,12 @@ admRouter.post('/upload_data', async (req, res, next) => {
 
 admRouter.post('/delete_mainimg', async (req, res, next) => {
 
+    console.log('');
+
     let status = true;
     const delPath = req.body.logoUrlPath;
     const ldId = req.body.ld_id;
+    
     try {
         await fs.unlink(delPath, (err) => {
             console.log(err);

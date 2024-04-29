@@ -1,3 +1,13 @@
+import { authStatus } from "$lib/store";
+
+export const chkAuthStatus = () => {
+
+    const getAuthStatus = Cookies.get('auth_status')
+    if(getAuthStatus){
+        authStatus.set('ok')
+    }
+}
+
 export const extractFirstImageSrc = (htmlString) => {
     // 정규식 패턴을 사용하여 첫 번째 이미지 태그를 찾습니다.
     const pattern = /<img[^>]*src="([^"]*)"/;
