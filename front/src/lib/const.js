@@ -4,7 +4,7 @@
 export const category_list = [
     {link : 'health', name : '건강뉴스', type : 'img'},
     {link : 'estate', name : '기타뉴스', type : 'board'},
-    {link : 'news', name : '분양뉴스', type : 'img'},
+    {link : 'land', name : '분양뉴스', type : 'img'},
 ]
 
 export const siteName = '분양의모든것'

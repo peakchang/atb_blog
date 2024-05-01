@@ -192,13 +192,13 @@
                     <div
                         class="w-full h-32 overflow-hidden flex justify-center items-center"
                     >
-                        {#if post.bo_content}
+                        {#if post.bo_main_img}
+                            <img src={post.bo_main_img} alt="asdfasdf" />
+                        {:else}
                             <img
                                 src={extractFirstImageSrc(post.bo_content)}
                                 alt="asdfasdf"
                             />
-                        {:else}
-                            <img src={post.bo_main_img} alt="asdfasdf" />
                         {/if}
                     </div>
 

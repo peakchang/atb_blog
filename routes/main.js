@@ -40,6 +40,7 @@ mainRouter.post('/get_reply', async (req, res, next) => {
 })
 
 mainRouter.post('/detail', async (req, res, next) => {
+    let status = true
     let content;
     const id = req.body.id
     let get_previous_post = []
@@ -58,9 +59,10 @@ mainRouter.post('/detail', async (req, res, next) => {
         get_next_post = getNextPost[0]
     } catch (error) {
         console.error(error.message);
+        status = false;
     }
 
-    res.json({ content, get_previous_post, get_next_post })
+    res.json({ content, get_previous_post, get_next_post, status })
 })
 
 mainRouter.post('/menu', async (req, res, next) => {

@@ -20,7 +20,9 @@
     function setData() {
         if (data.all_data) {
             allData = data.all_data;
-            stImgs = allData.bo_imgs.split(',');
+            if (allData.bo_imgs) {
+                stImgs = allData.bo_imgs.split(",");
+            }
         }
     }
 
