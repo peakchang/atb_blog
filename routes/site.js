@@ -11,12 +11,8 @@ const siteRouter = express.Router();
 
 siteRouter.post('/get_site_info', async (req, res, next) => {
     let status = true;
-
     let siteInfo = {}
-
-    console.log(req.body);
     const pageId = req.body.pageId;
-    console.log(`pageId~~~~~~~~~~~~~~ : ${pageId}`);
 
     try {
         const getSiteInfoQuery = "SELECT * FROM site WHERE st_id = ?"

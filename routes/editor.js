@@ -23,7 +23,6 @@ const upload = multer({
 });
 
 editorRouter.post('/onimg_upload', upload.single('onimg'), async (req, res, next) => {
-    console.log('이쪽은 들어오는거야?!?!?!?');
     let baseUrl
     let saveUrl
     if (req.method === 'POST') {
@@ -39,7 +38,6 @@ editorRouter.post('/onimg_upload', upload.single('onimg'), async (req, res, next
 
 
 editorRouter.post('/img_upload', upload.single('editorimg'), async (req, res, next) => {
-    console.log('이쪽은 들어오는거야?!?!?!?');
     let baseUrl
     let saveUrl
     if (req.method === 'POST') {

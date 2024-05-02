@@ -56,12 +56,9 @@ admRouter.post('/load_site_modify', async (req, res, next) => {
         const loadLandModifyQuery = "SELECT * FROM site WHERE st_id = ?"
         const loadLandModify = await sql_con.promise().query(loadLandModifyQuery, [getId]);
         land_modify_val = loadLandModify[0][0]
-        console.log(land_modify_val);
     } catch (error) {
         status = false;
     }
-
-    console.log(getId);
 
     res.json({ status, land_modify_val })
 })
@@ -69,13 +66,10 @@ admRouter.post('/load_site_modify', async (req, res, next) => {
 admRouter.post('/upload_data', async (req, res, next) => {
     let status = true;
     let body = req.body.allData;
-    console.log(body);
 
     const st_id = body['st_id'];
     const type = req.body.type;
     delete body['st_id'];
-
-    console.log(st_id);
 
     if (type == "upload") {
         try {
@@ -92,11 +86,8 @@ admRouter.post('/upload_data', async (req, res, next) => {
 
         try {
             const queryData = getQueryStr(body, 'update', 'st_updated_at');
-            console.log(queryData);
             queryData.values.push(st_id);;
             const updateLandQuery = `UPDATE site SET ${queryData.str} WHERE st_id = ?`;
-
-            console.log(updateLandQuery);
             await sql_con.promise().query(updateLandQuery, queryData.values);
         } catch (err) {
             console.error(err.message);
@@ -110,15 +101,13 @@ admRouter.post('/upload_data', async (req, res, next) => {
 
 admRouter.post('/delete_mainimg', async (req, res, next) => {
 
-    console.log('');
-
     let status = true;
     const delPath = req.body.logoUrlPath;
     const ldId = req.body.ld_id;
     
     try {
         await fs.unlink(delPath, (err) => {
-            console.log(err);
+            console.error(err);
         })
         const deleteLogoQuery = "UPDATE land SET ld_logo = '' WHERE ld_id = ?";
         await sql_con.promise().query(deleteLogoQuery, [ldId]);

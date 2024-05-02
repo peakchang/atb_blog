@@ -23,14 +23,13 @@ resRouter.use('/add_work_list', async (req, res, next) => {
 
 resRouter.use('/update_faulty_site', async (req, res, next) => {
     let status = 'success';
-    console.log('앙뇽하세요');
     const nowNum = req.query.now_row
     const nowMemo = req.query.now_memo
     try {
         const updateFaultyQuery = "UPDATE backlinks SET bl_status = false, bl_memo = ? WHERE bl_id = ?";
         await sql_con.promise().query(updateFaultyQuery, [nowMemo, nowNum]);
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         status = 'fail'
     }
     res.json({ status })
@@ -40,8 +39,6 @@ resRouter.use('/update_faulty_site', async (req, res, next) => {
 resRouter.use('/test_data', async (req, res, next) => {
     let nowNum = 0;
     const testData = 'gogogogogo'
-    console.log('요기는 들어오는고지??');
-    console.log(req.query);
     let get_work = {}
     nowNum = req.query.now_row
 
@@ -73,8 +70,6 @@ resRouter.use('/test_data', async (req, res, next) => {
     } catch (error) {
 
     }
-
-    // console.log(get_work);
     res.json({ work_list, get_work })
 })
 

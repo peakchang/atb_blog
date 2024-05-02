@@ -10,20 +10,13 @@ const apiRouter = express.Router();
 
 apiRouter.get('/test_time', (req, res, next) => {
 
-    console.log('아예 못들어오는거야?!?!?!?');
+
 
 
     const now1 = koreaTime.format('YYYY-MM-DD HH:mm:ss');
-    console.log(now1);
-    console.log("△ 코리아타임 --------------------------------");
-
     const now2 = moment().format('YYYY-MM-DD HH:mm:ss')
-    console.log(now2);
-    console.log("△ 모먼트기본 --------------------------------");
     let today = new Date();
     const now3 = moment.tz(today, 'Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
-    console.log(now3);
-    console.log("△ 현재시간변환 --------------------------------");
 
     res.json({ status: true })
 

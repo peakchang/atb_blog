@@ -70,9 +70,20 @@ mainRouter.post('/menu', async (req, res, next) => {
     let posts;
     const cateLink = req.body.link
 
+    let addSqlLine = ""
+    let sqlArr = []
+    
+    if(cateLink == 'land'){
+        sqlArr = [cateLink, 'news']
+        addSqlLine = "bo_category = ? OR bo_category = ?"
+    }else{
+        sqlArr = [cateLink, 'news']
+        addSqlLine = "bo_category = ?"
+    }
+
     try {
-        const getCategoryContentQuery = "SELECT * FROM board WHERE bo_category = ?"
-        const getCategoryContent = await sql_con.promise().query(getCategoryContentQuery, [cateLink]);
+        const getCategoryContentQuery = `SELECT * FROM board WHERE ${addSqlLine}`
+        const getCategoryContent = await sql_con.promise().query(getCategoryContentQuery, sqlArr);
         posts = getCategoryContent[0]
 
     } catch (error) {

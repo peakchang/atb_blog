@@ -23,7 +23,6 @@ subdomainRouter.post('/write', async (req, res, next) => {
 })
 
 subdomainRouter.get('/get_subdomain_list', async (req, res, next) => {
-    console.log('서브 도메인 리스트는 오지?!?!?!');
     let status = true;
     let sub_domain_list = [];
     try {
@@ -33,7 +32,6 @@ subdomainRouter.get('/get_subdomain_list', async (req, res, next) => {
     } catch (error) {
         status = false;
     }
-    console.log(sub_domain_list);
     res.json({ status, sub_domain_list })
 })
 subdomainRouter.post('/add_subdomain', async (req, res, next) => {

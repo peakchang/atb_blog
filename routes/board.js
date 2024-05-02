@@ -8,7 +8,6 @@ import moment from "moment-timezone";
 
 boardRouter.post('/load_content', async (req, res, next) => {
     let status = true;
-    console.log('alsjdfilajsldifj');
     const getId = req.body.getId
     let all_data = {}
 
@@ -119,7 +118,6 @@ boardRouter.post('/write', async (req, res, next) => {
     const body = req.body;
     if (body.type == 'upload') {
         const queryData = getQueryStr(body.allData, 'insert', 'bo_created_at');
-        console.log(queryData);
 
         try {
             const insertBoardQuery = `INSERT INTO board (${queryData.str}) VALUES (${queryData.question})`
@@ -167,8 +165,6 @@ boardRouter.post('/delete_mainimg', async (req, res, next) => {
     const delPath = req.body.mainImgUrlPath;
     // const ldId = req.body.ld_id;
 
-    console.log(delPath);
-
     try {
         await fs.unlink(delPath, (err) => {
             console.log(err);
@@ -186,15 +182,10 @@ boardRouter.post('/delete_mainimg', async (req, res, next) => {
 boardRouter.post('/upload_land_data', async (req, res, next) => {
     let status = true;
     let body = req.body.allData;
-    console.log(body);
 
     const bo_id = body['bo_id'];
     const type = req.body.type;
     delete body['bo_id'];
-
-    // console.log(st_id);
-
-    console.log(type);
 
     if (type == "upload") {
         try {
@@ -206,7 +197,6 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
             status = false;
         }
     } else {
-        console.log('여기서는 업데이트!!!!!');
         delete body['bo_created_at'];
         delete body['bo_updated_at'];
         try {
