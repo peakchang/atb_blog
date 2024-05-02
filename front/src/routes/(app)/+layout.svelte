@@ -72,6 +72,7 @@
 </svelte:head>
 
 <header>
+
 	<div
 		class="mt-8 pb-4 text-4xl text-center border-b border-gray-300 title-font relative"
 		data-sveltekit-preload-data="tap"
@@ -83,7 +84,7 @@
 			</div>
 		</a>
 	</div>
-	<div class="border-b border-gray-300 suit-font font-medium">
+	<div class="border-b border-gray-300 suit-font">
 		<nav>
 			<ul
 				class="flex justify-center gap-8 py-2"
@@ -161,7 +162,7 @@
 	}
 
 	:global(.suit-font) {
-		font-family: "SUIT";
+		font-family: "SUIT" !important;
 	}
 
 	:global(.max_screen) {

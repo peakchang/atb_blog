@@ -281,7 +281,7 @@
             <img src="{contentData.bo_main_img}" alt="" class="w-full mx-auto">
         </div>
 
-        <div class="pt-10 grid md:grid-cols-2">
+        <div class="pt-10 grid md:grid-cols-2 suit-font">
             <table class="w-full">
                 <tr>
                     <th class="border p-2 text-sm">현장명</th>

@@ -52,7 +52,7 @@ export const load = async ({ params, url }) => {
         }else{
             seoValue = {
                 title: contentData.bo_subject,
-                description: contentData.bo_description,
+                description: `${contentData.bo_subject} 홈페이지 | ${contentData.bo_subject} 분양가 | ${contentData.bo_subject} 모델하우스 | 주소 | 견본주택 | 홍보관 안내 | ${contentData.bo_description}`,
                 url: url.href,
                 image: contentData.bo_main_img,
                 icon: `${url.origin}/favicon.png`,

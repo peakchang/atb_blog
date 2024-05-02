@@ -220,6 +220,9 @@
 
         console.log(type);
 
+        allData['bo_category'] = "land";
+
+
         if (stImgs) {
             allData["bo_imgs"] = stImgs.join(",");
         }
