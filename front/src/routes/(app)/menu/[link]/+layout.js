@@ -38,8 +38,7 @@ export const load = async ({ params, fetch, url }) => {
             const dateStr = moment.tz(getTimeStr, 'Asia/Seoul');
             posts[i]["date_str"] = dateStr.format('YYYY-MM-DD HH:mm:ss');
 
-            console.log(';ksf;k342f3f4');
-            if (posts[i]['bo_category'] != 'land') {
+            if (!posts[i]['bo_type'] || posts[i]['bo_type'] != 'land') {
                 // 첫번째 이미지
                 const $ = cheerio.load(posts[i]["bo_content"]);
                 const imageTag = $("img");
