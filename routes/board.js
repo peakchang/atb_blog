@@ -210,25 +210,35 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
             status = false;
         }
     }
-    //     delete body['st_created_at'];
-    //     delete body['st_updated_at'];
-
-    //     try {
-    //         const queryData = getQueryStr(body, 'update', 'st_updated_at');
-    //         console.log(queryData);
-    //         queryData.values.push(st_id);;
-    //         const updateLandQuery = `UPDATE site SET ${queryData.str} WHERE st_id = ?`;
-
-    //         console.log(updateLandQuery);
-    //         await sql_con.promise().query(updateLandQuery, queryData.values);
-    //     } catch (err) {
-    //         console.error(err.message);
-    //         status = false;
-    //     }
-    // }
 
     res.json({ status })
 })
+
+
+boardRouter.post('/all_list', async (req, res, next) => {
+    console.log('일단 들어오는지?');
+    let status = true;
+    const nowPage = req.body.nowPage;
+    const pageCount = 12;
+    let startCount = (nowPage - 1) * pageCount
+    let get_post_list = [];
+    let get_all_count = 0
+
+    try {
+        const getAllCountQeury = `SELECT COUNT(*) FROM board`;
+        const getAllCount = await sql_con.promise().query(getAllCountQeury);
+        get_all_count = Math.ceil(getAllCount[0][0]['COUNT(*)'] / pageCount)
+        const getPostListQuery = `SELECT * FROM board ORDER BY bo_id DESC LIMIT ${startCount}, ${pageCount}`;
+        const getPostList = await sql_con.promise().query(getPostListQuery);
+        get_post_list = getPostList[0]
+    } catch (error) {
+        status = false;
+        console.error(error.message);
+    }
+
+    res.json({ status, get_post_list, get_all_count })
+})
+
 
 
 export { boardRouter }

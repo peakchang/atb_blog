@@ -13,8 +13,6 @@ export const load = async ({ fetch, url }) => {
         const res = await axios.get(`${back_api}/main/base`)
         posts = res.data.get_post_list
 
-        console.log(posts);
-
 
         for (let i = 0; i < posts.length; i++) {
             if (posts[i]["bo_category"]) {

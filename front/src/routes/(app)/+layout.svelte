@@ -6,7 +6,7 @@
 	import { back_api, category_list, siteName } from "$src/lib/const";
 	import { page } from "$app/stores";
 	import SeoMeta from "$src/lib/components/SeoMeta.svelte";
-    import { onMount } from "svelte";
+	import { onMount } from "svelte";
 
 	let seoValue = {};
 	export let data;
@@ -19,10 +19,10 @@
 
 	onMount(() => {
 		const getAuthStatus = Cookies.get("auth_status");
-		if(getAuthStatus){
-			$authStatus = 'ok'
+		if (getAuthStatus) {
+			$authStatus = "ok";
 		}
-	})
+	});
 
 	afterNavigate(async () => {
 		const delArr = Cookies.get("del_list_cookie");
@@ -72,7 +72,6 @@
 </svelte:head>
 
 <header>
-
 	<div
 		class="mt-8 pb-4 text-4xl text-center border-b border-gray-300 title-font relative"
 		data-sveltekit-preload-data="tap"
@@ -103,7 +102,9 @@
 	</div>
 </header>
 
-<slot />
+<div class="max_screen mx-auto">
+	<slot />
+</div>
 
 <div class="border-t">
 	<div

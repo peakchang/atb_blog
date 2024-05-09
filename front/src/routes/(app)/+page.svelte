@@ -121,7 +121,7 @@
 
 <svelte:head></svelte:head>
 
-<div class="swiper my-5 relative max_screen mx-auto" bind:this={bannerSwiper}>
+<div class="swiper my-5 relative" bind:this={bannerSwiper}>
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper relative">
         {#each bannerList as banner}
@@ -150,7 +150,7 @@
     <div class="swiper-scrollbar"></div>
 </div>
 
-<div class="max_screen mx-auto px-2 pb-8 mt-2">
+<div class="px-2 pb-8 mt-2">
     <h1 class="sr-only">{siteName}</h1>
     <div class="my-6 kbo-font text-2xl text-gray-700 text-center relative">
         <div class="absolute right-0 suit-font text-sm">
@@ -213,6 +213,13 @@
                 </div>
             </a>
         {/each}
+    </div>
+    <div class="mt-2 suit-font">
+        <a href="/all_list">
+            <button class="border w-full p-2">
+                전체 글 보기 <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </button>
+        </a>
     </div>
 
     <!-- <div class="border rounded-md overflow-hidden">

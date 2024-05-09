@@ -70,27 +70,42 @@ mainRouter.post('/menu', async (req, res, next) => {
     let posts;
     const cateLink = req.body.link
 
+    console.log('일단 들어오는지?');
+    let status = true;
+    const nowPage = req.body.nowPage;
+    const pageCount = 12;
+    let startCount = (nowPage - 1) * pageCount
+    console.log(`startCount : ${startCount}`);
+    let all_pages = 0
+
     let addSqlLine = ""
     let sqlArr = []
-    
-    if(cateLink == 'land'){
+
+    if (cateLink == 'land') {
         sqlArr = [cateLink, 'news']
         addSqlLine = "bo_category = ? OR bo_category = ?"
-    }else{
+    } else {
         sqlArr = [cateLink, 'news']
         addSqlLine = "bo_category = ?"
     }
 
     try {
-        const getCategoryContentQuery = `SELECT * FROM board WHERE ${addSqlLine}`
+
+        const getAllCountQeury = `SELECT COUNT(*) FROM board WHERE ${addSqlLine}`;
+        const getAllCount = await sql_con.promise().query(getAllCountQeury, sqlArr);
+        all_pages = Math.ceil(getAllCount[0][0]['COUNT(*)'] / pageCount)
+
+
+        const getCategoryContentQuery = `SELECT * FROM board WHERE ${addSqlLine} ORDER BY bo_id DESC LIMIT ${startCount}, 12`
         const getCategoryContent = await sql_con.promise().query(getCategoryContentQuery, sqlArr);
         posts = getCategoryContent[0]
 
     } catch (error) {
+        status = false;
         console.error(error.message);
 
     }
-    res.json({ posts })
+    res.json({ status, posts, all_pages })
 })
 
 mainRouter.get('/base', async (req, res, next) => {
@@ -99,7 +114,7 @@ mainRouter.get('/base', async (req, res, next) => {
 
     try {
 
-        const getPostListQuery = "SELECT * FROM board ORDER BY bo_id DESC LIMIT 10";
+        const getPostListQuery = "SELECT * FROM board ORDER BY bo_id DESC LIMIT 12";
         const getPostList = await sql_con.promise().query(getPostListQuery);
         get_post_list = getPostList[0]
 

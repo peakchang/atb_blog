@@ -5,8 +5,11 @@ import { back_api, category_list, siteName } from "$src/lib/const";
 import moment from "moment-timezone";
 
 
-export const load = async ({ params, fetch, url }) => {
+export const load = async ({ fetch, url }) => {
 
+    let posts = []
+
+    // console.log();
     let nowPage = 1
     let pageArr = [];
 
@@ -14,29 +17,12 @@ export const load = async ({ params, fetch, url }) => {
         nowPage = url.searchParams.get('page')
     }
 
-    console.log(nowPage);
-
-
-    const { link } = params
-    let posts = []
-    let category = ""
-
-    console.log(link);
-
-    const getCategory = category_list.find(v => v.link === link);
-    category = getCategory['name']
-    console.log(category['name']);
 
     try {
-
-        const res = await axios.post(`${back_api}/main/menu`, {
-            link, nowPage
-        })
-
+        const res = await axios.post(`${back_api}/board/all_list`, { nowPage })
         if (res.data.status) {
-            posts = res.data.posts
-
-            pageArr = createPagination(nowPage, res.data.all_pages)
+            posts = res.data.get_post_list
+            pageArr = createPagination(nowPage, res.data.get_all_count)
 
             for (let i = 0; i < posts.length; i++) {
                 if (posts[i]["bo_category"]) {
@@ -47,14 +33,12 @@ export const load = async ({ params, fetch, url }) => {
                 }
             }
         }
-
-
     } catch (error) {
         console.error(error.message);
     }
 
     const seoValue = {
-        title: `${siteName} - ${category}`,
+        title: siteName,
         description: '부동산 분양의 모든것! 아파트 분양, 오피스텔 분양, 상가 분양, 지식산업센터 분양 등 현재 진행중인 분양 및 청약, 미분양 정보 안내',
         url: url.href,
         image: `${url.origin}logo.png`,
@@ -63,8 +47,13 @@ export const load = async ({ params, fetch, url }) => {
         icon: `${url.origin}favicon.png`,
     }
 
-    return { posts, seoValue, category, pageArr, nowPage }
+
+
+    return { posts, seoValue, pageArr }
 }
+
+
+
 
 function createPagination(currentPage, totalPages) {
     let startPage, endPage;
