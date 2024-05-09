@@ -220,7 +220,7 @@
 
         console.log(type);
 
-        allData['bo_category'] = "land";
+        allData['bo_category'] = "news";
 
 
         if (stImgs) {

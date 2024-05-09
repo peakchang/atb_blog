@@ -70,6 +70,7 @@ mainRouter.post('/menu', async (req, res, next) => {
     let posts;
     const cateLink = req.body.link
 
+
     console.log('일단 들어오는지?');
     let status = true;
     const nowPage = req.body.nowPage;
@@ -97,9 +98,8 @@ mainRouter.post('/menu', async (req, res, next) => {
 
 
         const getCategoryContentQuery = `SELECT * FROM board WHERE ${addSqlLine} ORDER BY bo_id DESC LIMIT ${startCount}, 12`
-        const getCategoryContent = await sql_con.promise().query(getCategoryContentQuery, sqlArr);
+        const getCategoryContent = await sql_con.promise().query(getCategoryContentQuery, [cateLink]);
         posts = getCategoryContent[0]
-
     } catch (error) {
         status = false;
         console.error(error.message);
