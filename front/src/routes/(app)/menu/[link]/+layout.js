@@ -20,17 +20,20 @@ export const load = async ({ params, fetch, url }) => {
     const { link } = params
     let posts = []
     let category = ""
+    let showType = ""
 
     console.log(link);
 
     const getCategory = category_list.find(v => v.link === link);
+    console.log(getCategory);
     category = getCategory['name']
+    showType = getCategory['db']
     console.log(category['name']);
 
     try {
 
         const res = await axios.post(`${back_api}/main/menu`, {
-            link, nowPage
+            showType, link, nowPage
         })
 
         if (res.data.status) {

@@ -46,13 +46,25 @@ CREATE TABLE IF NOT EXISTS board(
 // bo_main_img는 필요 없는 컬럼이지만 부동산 글이랑 합치기 위해서 당분간만 쓰자~ atb에서만 쓸거임!
 CREATE TABLE IF NOT EXISTS free_board(
     bo_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bo_type VARCHAR(50),
     bo_category VARCHAR(255),
     bo_subject VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     bo_content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     bo_main_img VARCHAR(50),
+    bo_show_type VARCHAR(50),
     bo_created_at DATETIME,
     bo_updated_at DATETIME
 );
+
+
+RENAME TABLE view TO land_board;
+ALTER TABLE free_board ADD COLUMN bo_show_type VARCHAR(50) AFTER bo_main_img;
+ALTER TABLE land_board ADD COLUMN bo_show_type VARCHAR(50) AFTER bo_floor_plan;
+
+UPDATE land_board SET bo_show_type = 'land_board';
+
+
+
 
 CREATE TABLE IF NOT EXISTS reply(
     re_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

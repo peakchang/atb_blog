@@ -39,22 +39,49 @@ mainRouter.post('/get_reply', async (req, res, next) => {
     res.json({ get_reply })
 })
 
-mainRouter.post('/detail', async (req, res, next) => {
+mainRouter.post('/view_detail', async (req, res, next) => {
     let status = true
     let content;
     const id = req.body.id
     let get_previous_post = []
     let get_next_post = []
     try {
-        const getContentQuery = "SELECT * FROM board WHERE bo_id = ?";
+        const getContentQuery = "SELECT * FROM land_board WHERE bo_id = ?";
         const getContent = await sql_con.promise().query(getContentQuery, [id]);
         content = getContent[0][0];
 
-        const getPreviousPostQuery = "SELECT bo_id,bo_subject FROM board WHERE bo_category = ? AND bo_id < ? ORDER BY bo_id DESC LIMIT 1";
+        const getPreviousPostQuery = "SELECT bo_id,bo_subject FROM land_board WHERE bo_category = ? AND bo_id < ? ORDER BY bo_id DESC LIMIT 1";
         const getPreviousPost = await sql_con.promise().query(getPreviousPostQuery, [content.bo_category, id]);
         get_previous_post = getPreviousPost[0]
 
-        const getNextPostQuery = "SELECT bo_id,bo_subject FROM board WHERE bo_category = ? AND bo_id > ? ORDER BY bo_id ASC LIMIT 1"
+        const getNextPostQuery = "SELECT bo_id,bo_subject FROM land_board WHERE bo_category = ? AND bo_id > ? ORDER BY bo_id ASC LIMIT 1"
+        const getNextPost = await sql_con.promise().query(getNextPostQuery, [content.bo_category, id]);
+        get_next_post = getNextPost[0]
+    } catch (error) {
+        console.error(error.message);
+        status = false;
+    }
+
+    res.json({ content, get_previous_post, get_next_post, status })
+})
+
+
+mainRouter.post('/board_detail', async (req, res, next) => {
+    let status = true
+    let content;
+    const id = req.body.id
+    let get_previous_post = []
+    let get_next_post = []
+    try {
+        const getContentQuery = "SELECT * FROM free_board WHERE bo_id = ?";
+        const getContent = await sql_con.promise().query(getContentQuery, [id]);
+        content = getContent[0][0];
+
+        const getPreviousPostQuery = "SELECT bo_id,bo_subject FROM free_board WHERE bo_category = ? AND bo_id < ? ORDER BY bo_id DESC LIMIT 1";
+        const getPreviousPost = await sql_con.promise().query(getPreviousPostQuery, [content.bo_category, id]);
+        get_previous_post = getPreviousPost[0]
+
+        const getNextPostQuery = "SELECT bo_id,bo_subject FROM free_board WHERE bo_category = ? AND bo_id > ? ORDER BY bo_id ASC LIMIT 1"
         const getNextPost = await sql_con.promise().query(getNextPostQuery, [content.bo_category, id]);
         get_next_post = getNextPost[0]
     } catch (error) {
@@ -69,6 +96,8 @@ mainRouter.post('/menu', async (req, res, next) => {
     let get_category;
     let posts;
     const cateLink = req.body.link
+    const showType = req.body.showType
+    console.log(showType);
 
 
     console.log('일단 들어오는지?');
@@ -92,12 +121,11 @@ mainRouter.post('/menu', async (req, res, next) => {
 
     try {
 
-        const getAllCountQeury = `SELECT COUNT(*) FROM board WHERE ${addSqlLine}`;
+        const getAllCountQeury = `SELECT COUNT(*) FROM ${showType} WHERE ${addSqlLine}`;
         const getAllCount = await sql_con.promise().query(getAllCountQeury, sqlArr);
         all_pages = Math.ceil(getAllCount[0][0]['COUNT(*)'] / pageCount)
-
-
-        const getCategoryContentQuery = `SELECT * FROM board WHERE ${addSqlLine} ORDER BY bo_id DESC LIMIT ${startCount}, 12`
+        
+        const getCategoryContentQuery = `SELECT * FROM ${showType} WHERE ${addSqlLine} ORDER BY bo_id DESC LIMIT ${startCount}, 12`
         const getCategoryContent = await sql_con.promise().query(getCategoryContentQuery, [cateLink]);
         posts = getCategoryContent[0]
     } catch (error) {
@@ -113,12 +141,11 @@ mainRouter.get('/base', async (req, res, next) => {
     let get_post_list;
 
     try {
-
         // const getPostListQuery = "SELECT * FROM view_board ORDER BY bo_id DESC LIMIT 12";
-        const getPostListQuery = `SELECT bo_id, bo_category, bo_subject,bo_content,bo_main_img,bo_created_at,bo_updated_at, 'land_view' AS board_type FROM land_view
+        const getPostListQuery = `SELECT bo_id, bo_category, bo_subject,bo_content,bo_main_img,bo_created_at,bo_updated_at, 'land_board' AS board_type FROM land_board
         UNION ALL
         SELECT bo_id, bo_category, bo_subject,bo_content,bo_main_img,bo_created_at,bo_updated_at, 'free_board' AS board_type FROM free_board
-        ORDER BY bo_id DESC LIMIT 12;`;
+        ORDER BY bo_created_at DESC LIMIT 12;`;
         const getPostList = await sql_con.promise().query(getPostListQuery);
         get_post_list = getPostList[0]
 

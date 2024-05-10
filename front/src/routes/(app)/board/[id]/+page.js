@@ -19,7 +19,7 @@ export const load = async ({ params, url }) => {
     let seoValue = {}
 
     try {
-        const res = await axios.post(`${back_api}/main/view_detail`, { id })
+        const res = await axios.post(`${back_api}/main/board_detail`, { id })
         if (res.data.status) {
             contentData = res.data.content
             console.log(contentData);

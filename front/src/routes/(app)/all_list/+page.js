@@ -24,11 +24,19 @@ export const load = async ({ fetch, url }) => {
             posts = res.data.get_post_list
             pageArr = createPagination(nowPage, res.data.get_all_count)
 
+            console.log(posts);
+
             for (let i = 0; i < posts.length; i++) {
-                if (posts[i]["bo_category"]) {
-                    const getCategoryObj = category_list.find(v => v.link === posts[i]["bo_category"]);
-                    posts[i]["category"] = getCategoryObj['name']
-                } else {
+
+
+                try {
+                    if (posts[i]["bo_category"]) {
+                        const getCategoryObj = category_list.find(v => v.link === posts[i]["bo_category"]);
+                        posts[i]["category"] = getCategoryObj['name']
+                    } else {
+                        posts[i]["category"] = "분양뉴스"
+                    }
+                } catch (error) {
                     posts[i]["category"] = "분양뉴스"
                 }
             }

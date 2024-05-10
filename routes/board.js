@@ -116,11 +116,14 @@ boardRouter.post('/delete', async (req, res, next) => {
 boardRouter.post('/write', async (req, res, next) => {
     let status = true;
     const body = req.body;
+
+
+
+    console.log(body);
     if (body.type == 'upload') {
         const queryData = getQueryStr(body.allData, 'insert', 'bo_created_at');
-
         try {
-            const insertBoardQuery = `INSERT INTO board (${queryData.str}) VALUES (${queryData.question})`
+            const insertBoardQuery = `INSERT INTO ${req.body.showType} (${queryData.str}) VALUES (${queryData.question})`
             await sql_con.promise().query(insertBoardQuery, queryData.values);
         } catch (error) {
             console.error(error.message);
@@ -136,7 +139,7 @@ boardRouter.post('/write', async (req, res, next) => {
         queryData.values.push(body.allData['bo_id'])
         delete body.allData['bo_id'];
         try {
-            const updateBoardQuery = `UPDATE board SET ${queryData.str} WHERE bo_id = ?`;
+            const updateBoardQuery = `UPDATE ${req.body.showType} SET ${queryData.str} WHERE bo_id = ?`;
             await sql_con.promise().query(updateBoardQuery, queryData.values);
         } catch (error) {
             status = false;
@@ -226,10 +229,14 @@ boardRouter.post('/all_list', async (req, res, next) => {
     let get_all_count = 0
 
     try {
-        const getAllCountQeury = `SELECT COUNT(*) FROM board`;
+        const getAllCountQeury = `SELECT (SELECT COUNT(*) FROM land_board) + (SELECT COUNT(*) FROM free_board) AS total_rows;`;
         const getAllCount = await sql_con.promise().query(getAllCountQeury);
-        get_all_count = Math.ceil(getAllCount[0][0]['COUNT(*)'] / pageCount)
-        const getPostListQuery = `SELECT * FROM board ORDER BY bo_id DESC LIMIT ${startCount}, ${pageCount}`;
+        get_all_count = Math.ceil(getAllCount[0][0]['total_rows'] / pageCount)
+
+        const getPostListQuery = `SELECT bo_id, bo_category, bo_subject,bo_content,bo_main_img,bo_created_at,bo_updated_at, 'land_board' AS board_type FROM land_board
+        UNION ALL
+        SELECT bo_id, bo_category, bo_subject,bo_content,bo_main_img,bo_created_at,bo_updated_at, 'free_board' AS board_type FROM free_board
+        ORDER BY bo_created_at DESC LIMIT ${startCount}, ${pageCount}`;
         const getPostList = await sql_con.promise().query(getPostListQuery);
         get_post_list = getPostList[0]
     } catch (error) {

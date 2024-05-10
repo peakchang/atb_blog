@@ -19,7 +19,7 @@
     let posts = [];
     let pageArr = [];
     let getNowPage = 1;
-    const newPath = $page.url.pathname
+    const newPath = $page.url.pathname;
     let nowPage = 1;
 
     console.log($page);
@@ -32,7 +32,7 @@
         console.log(category);
         posts = data.posts;
         pageArr = data.pageArr;
-        nowPage = data.nowPage
+        nowPage = data.nowPage;
 
         console.log(getNowPage);
     }
@@ -50,18 +50,24 @@
         class="grid grid-cols-2 md:grid-cols-4 suit-font gap-1"
     >
         {#each posts as post}
-            <a href="/view/{post.bo_id}">
+            <a
+                href={post["board_type"] == "land_board"
+                    ? `/view/${post.bo_id}`
+                    : `/board/${post.bo_id}`}
+            >
                 <div class="border rounded-md overflow-hidden">
                     <div
                         class="w-full h-32 overflow-hidden flex justify-center items-center"
                     >
                         {#if post.bo_main_img}
                             <img src={post.bo_main_img} alt="asdfasdf" />
-                        {:else}
+                        {:else if extractFirstImageSrc(post.bo_content)}
                             <img
                                 src={extractFirstImageSrc(post.bo_content)}
                                 alt="asdfasdf"
                             />
+                        {:else}
+                            <img src="/no-image.png" alt="asdfasdf" />
                         {/if}
                     </div>
 

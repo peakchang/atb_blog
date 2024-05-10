@@ -37,7 +37,6 @@
     let description;
 
     const uploadContent = async (e) => {
-        console.log(allData);
         const type = e.target.value;
         console.log(type);
         if (!allData["bo_subject"] || !allData["bo_category"]) {
@@ -45,39 +44,40 @@
             return false;
         }
 
-        console.log(allData["bo_category"]);
+        const getDbObj = category_list.find(
+            (v) => v.link === allData["bo_category"],
+        );
+        
+        const showType = getDbObj["db"];
+        allData["bo_show_type"] = getDbObj["db"];
 
-        const getDbObj = category_list.find(v => v.link === allData["bo_category"]);
-        console.log(getDbObj);
+        // 지울 목록 찾기 (에디터에 없는 항목만 배열로 남겨놓기)
+        for (let i = 0; i < contentArr.length; i++) {
+            const element = contentArr[i];
+            if (element.includes("/")) {
+                var ttt = element.split("/");
+            } else {
+                var ttt = element.split("\\");
+            }
 
-        console.log(getDbObj['db']);
+            var kkk = ttt[ttt.length - 1];
+            if (allData["bo_content"].includes(kkk)) {
+                contentArr[i] = "";
+            }
+        }
 
-        // // 지울 목록 찾기 (에디터에 없는 항목만 배열로 남겨놓기)
-        // for (let i = 0; i < contentArr.length; i++) {
-        //     const element = contentArr[i];
-        //     if (element.includes("/")) {
-        //         var ttt = element.split("/");
-        //     } else {
-        //         var ttt = element.split("\\");
-        //     }
+        const res = await axios.post(`${back_api}/board/write`, {
+            type,
+            allData,
+            showType,
+            contentArr,
+        });
 
-        //     var kkk = ttt[ttt.length - 1];
-        //     if (allData["bo_content"].includes(kkk)) {
-        //         contentArr[i] = "";
-        //     }
-        // }
-
-        // const res = await axios.post(`${back_api}/board/write`, {
-        //     type,
-        //     allData,
-        //     contentArr,
-        // });
-
-        // if (res.data.status) {
-        //     workStatus = false;
-        //     alert("글 작성이 완료 되었습니다.");
-        //     goto("/");
-        // }
+        if (res.data.status) {
+            workStatus = false;
+            alert("글 작성이 완료 되었습니다.");
+            goto("/");
+        }
     };
 
     const getEditorContent = (e) => {
@@ -120,7 +120,7 @@
     // ********************************* 위에는 일반 블로그 글쓰기
 
     let stImgs = [];
-    
+
     let tempSaveImgs = []; // 임시저장 이미지 리스트, 새로고침 / 뒤로가기시 싹 삭제됨
     const stId = $page.url.searchParams.get("bo_id");
 
@@ -226,8 +226,7 @@
 
         console.log(type);
 
-        allData['bo_category'] = "news";
-
+        allData["bo_category"] = "news";
 
         if (stImgs) {
             allData["bo_imgs"] = stImgs.join(",");
