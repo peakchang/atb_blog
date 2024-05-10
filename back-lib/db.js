@@ -25,11 +25,31 @@ CREATE TABLE IF NOT EXISTS config(
 
 INSERT INTO config (cf_base) VALUES ('base');
 
+
+land_view
+free_board
+
+이후 게시판은 계속 늘릴수 있게~
+
+예를들어서 스쿠버다이빙 게시판 (투어 후기.... 이것저것 게시판~) / 프리다이빙 게시판 / 공지 게시판
+
 CREATE TABLE IF NOT EXISTS board(
     bo_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     bo_category VARCHAR(255),
     bo_subject VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
     bo_content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    bo_created_at DATETIME,
+    bo_updated_at DATETIME
+);
+
+
+// bo_main_img는 필요 없는 컬럼이지만 부동산 글이랑 합치기 위해서 당분간만 쓰자~ atb에서만 쓸거임!
+CREATE TABLE IF NOT EXISTS free_board(
+    bo_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bo_category VARCHAR(255),
+    bo_subject VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    bo_content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+    bo_main_img VARCHAR(50),
     bo_created_at DATETIME,
     bo_updated_at DATETIME
 );

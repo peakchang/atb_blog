@@ -126,6 +126,7 @@ boardRouter.post('/write', async (req, res, next) => {
             console.error(error.message);
             status = false;
         }
+        
     } else {
 
         delete body.allData['bo_created_at'];
