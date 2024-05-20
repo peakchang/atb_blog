@@ -73,6 +73,8 @@
             contentArr,
         });
 
+        console.log(res);
+
         if (res.data.status) {
             workStatus = false;
             alert("글 작성이 완료 되었습니다.");
@@ -232,13 +234,23 @@
             allData["bo_imgs"] = stImgs.join(",");
         }
 
+        const getDbObj = category_list.find(
+            (v) => v.link === allData["bo_category"],
+        );
+        
+        const showType = getDbObj["db"];
+        allData["bo_show_type"] = getDbObj["db"];
+
         console.log(allData);
 
         try {
             const res = await axios.post(`${back_api}/board/upload_land_data`, {
                 allData,
                 type,
+                showType
             });
+
+            console.log(res);
 
             if (res.data.status) {
                 alert("업로드가 완료 되었습니다.");

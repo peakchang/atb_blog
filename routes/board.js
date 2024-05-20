@@ -187,6 +187,8 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
     let status = true;
     let body = req.body.allData;
 
+    console.log(body);
+
     const bo_id = body['bo_id'];
     const type = req.body.type;
     delete body['bo_id'];
@@ -194,7 +196,7 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
     if (type == "upload") {
         try {
             const queryData = getQueryStr(body, 'insert', 'bo_created_at');
-            const insertLandQuery = `INSERT INTO board (${queryData.str}) VALUES (${queryData.question})`
+            const insertLandQuery = `INSERT INTO ${req.body.showType} (${queryData.str}) VALUES (${queryData.question})`
             await sql_con.promise().query(insertLandQuery, queryData.values);
         } catch (err) {
             console.error(err.message);
@@ -207,7 +209,7 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
             const queryData = getQueryStr(body, 'update', 'bo_updated_at');
             queryData.values.push(bo_id);
             delete body['bo_id'];
-            const updateLandQuery = `UPDATE board SET ${queryData.str} WHERE bo_id = ?`;
+            const updateLandQuery = `UPDATE ${req.body.showType} SET ${queryData.str} WHERE bo_id = ?`;
             await sql_con.promise().query(updateLandQuery, queryData.values);
         } catch (err) {
             console.error(err.message);
