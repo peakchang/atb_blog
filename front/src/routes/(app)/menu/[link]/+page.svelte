@@ -51,7 +51,7 @@
     >
         {#each posts as post}
             <a
-                href={post["board_type"] == "land_board"
+                href={post["bo_show_type"] == "land_board"
                     ? `/view/${post.bo_id}`
                     : `/board/${post.bo_id}`}
             >
