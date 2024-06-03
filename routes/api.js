@@ -8,11 +8,39 @@ const koreaTime = moment.tz('Asia/Seoul');
 
 const apiRouter = express.Router();
 
+
+
+apiRouter.post('/update_visit_count', async (req, res, next) => {
+    let status = true;
+
+    const body = req.body;
+    console.log(body);
+
+    console.log(process.env.SERVER_IP);
+
+    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    console.log('going to chkeck~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!');
+    console.log('방문자의 IP 주소:', ipAddress);
+    console.log(body.ld_domain);
+    console.log(body.referrer);
+    if (ipAddress != process.env.SERVER_IP) {
+
+        const userAgent = req.get('user-agent');
+        console.log(userAgent);
+
+        try {
+            const now = moment().format('YYYY-MM-DD HH:mm:ss');
+            const insertVisitList = "INSERT INTO site_visit (sv_domain, sv_ip, sv_ua, sv_referrer, sv_created_at) VALUES (?,?,?,?,?)";
+            await sql_con.promise().query(insertVisitList, [body.ld_domain, ipAddress, userAgent, body.referrer, now]);
+        } catch (error) {
+            status = false;
+        }
+
+    }
+    res.json({ status })
+})
+
 apiRouter.get('/test_time', (req, res, next) => {
-
-
-
-
     const now1 = koreaTime.format('YYYY-MM-DD HH:mm:ss');
     const now2 = moment().format('YYYY-MM-DD HH:mm:ss')
     let today = new Date();

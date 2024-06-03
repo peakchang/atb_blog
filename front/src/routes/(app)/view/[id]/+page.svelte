@@ -8,6 +8,9 @@
     import { back_api } from "$lib/const";
     import moment from "moment-timezone";
     import SeoMeta from "$lib/components/SeoMeta.svelte";
+    import Cookies from "js-cookie";
+    import { onMount } from "svelte";
+
 
     export let data;
 
@@ -32,6 +35,30 @@
     let getId = $page.params.id;
     let contentArr;
     let replyContent;
+
+
+
+
+    onMount(async () => {
+        const getVisitedCookie = Cookies.get("topby_visited");
+		console.log(getVisitedCookie);
+		const referrer = document.referrer;
+		console.log(referrer);
+		if (!getVisitedCookie) {
+			console.log("쿠키 없어???");
+
+            console.log(back_api);
+            console.log($page.url.href);
+
+
+			const res = await axios.post(`${back_api}/update_visit_count`, {
+				ld_domain : $page.url.href,
+				referrer
+			});
+
+			Cookies.set("topby_visited", "ok", { expires: 1 });
+		}
+    })
 
     // 댓글달기 나중에 수정하기~~~
     async function postReply() {

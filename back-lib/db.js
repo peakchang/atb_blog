@@ -106,4 +106,13 @@ CREATE TABLE IF NOT EXISTS site(
     st_updated_at DATETIME
 );
 
+CREATE TABLE IF NOT EXISTS site_visit(
+    sv_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    sv_domain VARCHAR(255),
+    sv_ip VARCHAR(50),
+    sv_ua VARCHAR(255),
+    sv_referrer VARCHAR(255),
+    sv_created_at DATETIME
+);
+
 */
