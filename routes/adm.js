@@ -2,10 +2,29 @@ import express from "express";
 import moment from "moment-timezone";
 import bcrypt from "bcrypt";
 import { sql_con } from '../back-lib/db.js'
-import {  getQueryStr } from "../back-lib/lib.js";
+import { getQueryStr } from "../back-lib/lib.js";
 import fs from 'fs'
 
 const admRouter = express.Router();
+
+
+admRouter.post('/get_site_visit', async (req, res, next) => {
+    let status = true;
+    console.log(status);
+
+    let site_visit_list = [];
+
+    try {
+        const getSiteVisitListQuery = "SELECT * FROM site_visit ORDER BY sv_id DESC";
+        const getSiteVisitList = await sql_con.promise().query(getSiteVisitListQuery);
+        site_visit_list = getSiteVisitList[0]
+    } catch (err) {
+        console.error(err.message);
+        status = false;
+    }
+
+    res.json({ status, site_visit_list })
+})
 
 
 
@@ -42,7 +61,7 @@ admRouter.get('/get_site_main', async (req, res, next) => {
     } catch (error) {
         status = false;
     }
-    
+
     res.json({ status, site_list })
 })
 
@@ -104,7 +123,7 @@ admRouter.post('/delete_mainimg', async (req, res, next) => {
     let status = true;
     const delPath = req.body.logoUrlPath;
     const ldId = req.body.ld_id;
-    
+
     try {
         await fs.unlink(delPath, (err) => {
             console.error(err);
