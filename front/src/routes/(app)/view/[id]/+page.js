@@ -50,9 +50,13 @@ export const load = async ({ params, url }) => {
             }
             console.log(seoValue);
         }else{
+            const viewText = contentData.bo_description + contentData.bo_add_content
+            const viewTextOnly = viewText.replace(/<[^>]+>/g, ' ');
+            const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();
+
             seoValue = {
                 title: contentData.bo_subject,
-                description: `${contentData.bo_subject} 홈페이지 | ${contentData.bo_subject} 분양가 | ${contentData.bo_subject} 모델하우스 | 주소 | 견본주택 | 홍보관 안내 | ${contentData.bo_description}`,
+                description: `${contentData.bo_subject} 홈페이지 | ${contentData.bo_subject} 분양가 | ${contentData.bo_subject} 모델하우스 | 주소 | 견본주택 | 홍보관 안내 | ${truncateTextTo300Chars(viewTextOnlyFilter)}`,
                 url: url.href,
                 image: contentData.bo_main_img,
                 icon: `${url.origin}/favicon.png`,
@@ -127,6 +131,25 @@ function truncateTextTo100Chars(text) {
 
     // 100자 뒤의 가장 가까운 띄어쓰기를 찾음
     const truncatedText = text.substr(0, 200);
+    const lastSpaceIndex = truncatedText.lastIndexOf(' ');
+
+    if (lastSpaceIndex === -1) {
+        // 띄어쓰기를 찾지 못한 경우, 그냥 100자까지 자름
+        return truncatedText;
+    }
+
+    // 가장 가까운 띄어쓰기까지 잘라서 반환
+    return truncatedText.substr(0, lastSpaceIndex);
+}
+
+function truncateTextTo300Chars(text) {
+    if (text.length <= 300) {
+        return text;
+    }
+
+    // 300자 뒤의 가장 가까운 띄어쓰기를 찾음
+    const truncatedText = text.substr(0, 300);
+    console.log(truncatedText);
     const lastSpaceIndex = truncatedText.lastIndexOf(' ');
 
     if (lastSpaceIndex === -1) {
