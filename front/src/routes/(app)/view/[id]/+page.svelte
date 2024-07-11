@@ -11,7 +11,6 @@
     import Cookies from "js-cookie";
     import { onMount } from "svelte";
 
-
     export let data;
 
     let replyData = [];
@@ -36,29 +35,25 @@
     let contentArr;
     let replyContent;
 
-
-
-
     onMount(async () => {
         const getVisitedCookie = Cookies.get("topby_visited");
-		console.log(getVisitedCookie);
-		const referrer = document.referrer;
-		console.log(referrer);
-		if (!getVisitedCookie) {
-			console.log("쿠키 없어???");
+        console.log(getVisitedCookie);
+        const referrer = document.referrer;
+        console.log(referrer);
+        if (!getVisitedCookie) {
+            console.log("쿠키 없어???");
 
             console.log(back_api);
             console.log($page.url.href);
 
+            const res = await axios.post(`${back_api}/update_visit_count`, {
+                ld_domain: $page.url.href,
+                referrer,
+            });
 
-			const res = await axios.post(`${back_api}/update_visit_count`, {
-				ld_domain : $page.url.href,
-				referrer
-			});
-
-			Cookies.set("topby_visited", "ok", { expires: 1 });
-		}
-    })
+            Cookies.set("topby_visited", "ok", { expires: 1 });
+        }
+    });
 
     // 댓글달기 나중에 수정하기~~~
     async function postReply() {
@@ -301,11 +296,13 @@
     </div>
 {:else}
     <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">
-        <div class="text-4xl font-bold text-gray-600 text-center py-5 bg-gray-100">
+        <div
+            class="text-4xl font-bold text-gray-600 text-center py-5 bg-gray-100"
+        >
             {contentData.bo_subject}
         </div>
         <div class="text-center pt-5">
-            <img src="{contentData.bo_main_img}" alt="" class="w-full mx-auto">
+            <img src={contentData.bo_main_img} alt="" class="w-full mx-auto" />
         </div>
 
         <div class="pt-10 grid md:grid-cols-2 suit-font">
@@ -316,26 +313,35 @@
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">전용면적</th>
-                    <td class="border p-2 text-sm">{contentData.bo_area_size}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_area_size}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">시공예정</th>
-                    <td class="border p-2 text-sm">{contentData.bo_construct_date}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_construct_date}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">공급위치</th>
-                    <td class="border p-2 text-sm">{contentData.bo_supply_location}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_supply_location}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">분양가</th>
-                    <td class="border p-2 text-sm">{contentData.bo_parcel_price}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_parcel_price}</td
+                    >
                 </tr>
             </table>
 
             <table class="w-full mt-1 md:mt-0">
                 <tr>
                     <th class="border p-2 text-sm">세대수</th>
-                    <td class="border p-2 text-sm">{contentData.bo_housenum}</td>
+                    <td class="border p-2 text-sm">{contentData.bo_housenum}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">규모</th>
@@ -343,11 +349,15 @@
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">시행사</th>
-                    <td class="border p-2 text-sm">{contentData.bo_developer}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_developer}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">입주예정</th>
-                    <td class="border p-2 text-sm">{contentData.bo_movein_date}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_movein_date}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">문의</th>
@@ -358,15 +368,21 @@
 
         <div class="pt-5">
             <div class="border rounded-md p-5">
-                {contentData.bo_description}
+                {@html contentData.bo_description}
             </div>
         </div>
         <div class="pt-5">
-            {#each contentData.bo_imgs.split(',') as siteImg}
-            <img src="{siteImg}" alt="" class="w-full mx-auto">
+            {#each contentData.bo_imgs.split(",") as siteImg}
+                <img src={siteImg} alt="" class="w-full mx-auto" />
             {/each}
         </div>
 
-
+        <div class="w-62 h-5">
+            <div class="pt-5 w-full h-full overflow-hidden">
+                <div class="border rounded-md p-5">
+                    {@html contentData.bo_add_content}
+                </div>
+            </div>
+        </div>
     </div>
 {/if}

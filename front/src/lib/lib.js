@@ -1,5 +1,24 @@
 import { authStatus } from "$lib/store";
 
+// export function convertToParagraphs(text) {
+//     // 줄바꿈을 <p> 태그로 대체
+//     var paragraphs = text.replace(/(.+)/g, '<p>$1</p>');
+//     return paragraphs;
+// }
+
+export function convertToParagraphs(text) {
+    // 여러 줄을 <p> 태그로 감싸기
+    var paragraphs = text.split('\n').map(line => `<p>${line}</p>`).join('');
+    return paragraphs;
+}
+
+export function removePTags(text) {
+    // <p> 태그 제거
+    var plainText = text.replace(/<p>/g, '');
+    plainText = plainText.replace(/<\/p>/g, '\n'); // </p> 태그를 개행 문자로 대체
+    return plainText;
+}
+
 export const chkAuthStatus = () => {
 
     const getAuthStatus = Cookies.get('auth_status')

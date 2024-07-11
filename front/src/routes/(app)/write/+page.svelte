@@ -7,7 +7,7 @@
     import { back_api, category_list } from "$lib/const";
 
     import SortableImg from "$lib/components/SortableImg.svelte";
-    import { dataURItoBlob } from "$src/lib/lib";
+    import { dataURItoBlob, convertToParagraphs } from "$src/lib/lib";
 
     import { page } from "$app/stores";
     console.log($page.url.searchParams.get("id"));
@@ -226,6 +226,19 @@
     async function updateLandAct() {
         const type = this.value;
 
+        console.log(allData);
+        let addContent = ""
+        let description = ""
+        if(allData['bo_add_content']){
+            allData['bo_add_content'] = convertToParagraphs(allData['bo_add_content'])
+        }
+
+        if(allData['bo_description']){
+            allData['bo_description'] = convertToParagraphs(allData['bo_description'])
+        }
+
+        
+
         console.log(type);
 
         allData["bo_category"] = "news";
@@ -397,11 +410,24 @@
             <div>
                 <textarea
                     rows="7"
-                    class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md rounded-md border-gray-300"
+                    class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
                     bind:value={allData["bo_description"]}
                 ></textarea>
             </div>
         </div>
+
+        <div class="mt-5 suit-font">
+            <div class="mb-2 pl-3 text-base">※ 추가 글 (숨김글)</div>
+            <div>
+                <textarea
+                    rows="7"
+                    class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
+                    bind:value={allData["bo_add_content"]}
+                ></textarea>
+            </div>
+        </div>
+
+        
 
         <div class="mt-5 suit-font">
             <div class="mb-2 pl-3 text-base">※ 메인이미지</div>

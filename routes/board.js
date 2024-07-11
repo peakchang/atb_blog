@@ -7,17 +7,20 @@ import moment from "moment-timezone";
 
 
 boardRouter.post('/load_content', async (req, res, next) => {
+    console.log('역니느 들ㅇㅁㄴㅇ리ㅓㅁ니ㅑㅇ허ㅑㅣ멍ㄹ');
     let status = true;
     const getId = req.body.getId
+    console.log(getId);
     let all_data = {}
 
     try {
-        const getDataQuery = "SELECT * FROM board WHERE bo_id = ?"
+        const getDataQuery = "SELECT * FROM land_board WHERE bo_id = ?"
         const getData = await sql_con.promise().query(getDataQuery, [getId]);
         all_data = getData[0][0]
     } catch (error) {
 
     }
+    console.log(all_data);
     res.json({ status, all_data })
 })
 

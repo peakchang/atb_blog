@@ -61,6 +61,9 @@ RENAME TABLE view TO land_board;
 ALTER TABLE free_board ADD COLUMN bo_show_type VARCHAR(50) AFTER bo_main_img;
 ALTER TABLE land_board ADD COLUMN bo_show_type VARCHAR(50) AFTER bo_floor_plan;
 
+ALTER TABLE land_board ADD COLUMN bo_add_content TEXT AFTER bo_description;
+ALTER TABLE land_board MODIFY COLUMN bo_add_content TEXT;
+
 UPDATE land_board SET bo_show_type = 'land_board';
 
 
