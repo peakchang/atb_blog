@@ -6,6 +6,14 @@ import { authStatus } from "$lib/store";
 //     return paragraphs;
 // }
 
+
+export function convertHtmlToText(htmlContent) {
+    return htmlContent
+        .replace(/<\/p>/g, '\n') // </p> 태그를 개행으로 대체
+        .replace(/<[^>]+>/g, '') // 모든 HTML 태그 제거
+        .trim(); // 앞뒤 공백 제거
+}
+
 export function convertToParagraphs(text) {
     // 여러 줄을 <p> 태그로 감싸기
     var paragraphs = text.split('\n').map(line => `<p>${line}</p>`).join('');

@@ -7,7 +7,7 @@
     import { back_api, category_list } from "$lib/const";
 
     import SortableImg from "$lib/components/SortableImg.svelte";
-    import { dataURItoBlob, convertToParagraphs } from "$src/lib/lib";
+    import { dataURItoBlob, convertToParagraphs,convertHtmlToText } from "$src/lib/lib";
 
     import { page } from "$app/stores";
     console.log($page.url.searchParams.get("id"));
@@ -20,6 +20,10 @@
     function setData() {
         if (data.all_data) {
             allData = data.all_data;
+
+            allData['bo_description'] = convertHtmlToText(allData['bo_description'])
+            allData['bo_add_content'] = convertHtmlToText(allData['bo_add_content'])
+
             if (allData.bo_imgs) {
                 stImgs = allData.bo_imgs.split(",");
             }
