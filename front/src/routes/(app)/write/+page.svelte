@@ -7,7 +7,11 @@
     import { back_api, category_list } from "$lib/const";
 
     import SortableImg from "$lib/components/SortableImg.svelte";
-    import { dataURItoBlob, convertToParagraphs,convertHtmlToText } from "$src/lib/lib";
+    import {
+        dataURItoBlob,
+        convertToParagraphs,
+        convertHtmlToText,
+    } from "$src/lib/lib";
 
     import { page } from "$app/stores";
     console.log($page.url.searchParams.get("id"));
@@ -21,8 +25,17 @@
         if (data.all_data) {
             allData = data.all_data;
 
-            allData['bo_description'] = convertHtmlToText(allData['bo_description'])
-            allData['bo_add_content'] = convertHtmlToText(allData['bo_add_content'])
+            if (allData["bo_description"]) {
+                allData["bo_description"] = convertHtmlToText(
+                    allData["bo_description"],
+                );
+            }
+
+            if (allData["bo_add_content"]) {
+                allData["bo_add_content"] = convertHtmlToText(
+                    allData["bo_add_content"],
+                );
+            }
 
             if (allData.bo_imgs) {
                 stImgs = allData.bo_imgs.split(",");
@@ -51,7 +64,7 @@
         const getDbObj = category_list.find(
             (v) => v.link === allData["bo_category"],
         );
-        
+
         const showType = getDbObj["db"];
         allData["bo_show_type"] = getDbObj["db"];
 
@@ -231,17 +244,19 @@
         const type = this.value;
 
         console.log(allData);
-        let addContent = ""
-        let description = ""
-        if(allData['bo_add_content']){
-            allData['bo_add_content'] = convertToParagraphs(allData['bo_add_content'])
+        let addContent = "";
+        let description = "";
+        if (allData["bo_add_content"]) {
+            allData["bo_add_content"] = convertToParagraphs(
+                allData["bo_add_content"],
+            );
         }
 
-        if(allData['bo_description']){
-            allData['bo_description'] = convertToParagraphs(allData['bo_description'])
+        if (allData["bo_description"]) {
+            allData["bo_description"] = convertToParagraphs(
+                allData["bo_description"],
+            );
         }
-
-        
 
         console.log(type);
 
@@ -254,7 +269,7 @@
         const getDbObj = category_list.find(
             (v) => v.link === allData["bo_category"],
         );
-        
+
         const showType = getDbObj["db"];
         allData["bo_show_type"] = getDbObj["db"];
 
@@ -264,7 +279,7 @@
             const res = await axios.post(`${back_api}/board/upload_land_data`, {
                 allData,
                 type,
-                showType
+                showType,
             });
 
             console.log(res);
@@ -430,8 +445,6 @@
                 ></textarea>
             </div>
         </div>
-
-        
 
         <div class="mt-5 suit-font">
             <div class="mb-2 pl-3 text-base">※ 메인이미지</div>
