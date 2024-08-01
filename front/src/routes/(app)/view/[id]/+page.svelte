@@ -27,25 +27,16 @@
         contentData = data.contentData;
         previousPosts = data.previousPosts;
         nextPosts = data.nextPost;
-
-        console.log(contentData);
     }
 
     let getId = $page.params.id;
-    let contentArr;
+    let contentArr = [];
     let replyContent;
 
     onMount(async () => {
         const getVisitedCookie = Cookies.get("topby_visited");
-        console.log(getVisitedCookie);
         const referrer = document.referrer;
-        console.log(referrer);
         if (!getVisitedCookie) {
-            console.log("쿠키 없어???");
-
-            console.log(back_api);
-            console.log($page.url.href);
-
             const res = await axios.post(`${back_api}/update_visit_count`, {
                 ld_domain: $page.url.href,
                 referrer,
@@ -70,49 +61,70 @@
             });
     }
 
-    // async function deletePost() {
-    //     if (!confirm("삭제된 글은 복구 불가합니다. 삭제하시겠습니까?")) {
-    //         return false;
-    //     }
+    async function deletePost() {
+        if (!confirm("삭제된 글은 복구 불가합니다. 삭제하시겠습니까?")) {
+            return false;
+        }
 
-    //     const $ = cheerio.load(data.content.bo_content);
-    //     const imageTag = $("img");
-    //     const iframeTag = $("iframe");
+        if (contentData.bo_type == "blog") {
+            const $ = cheerio.load(contentData.bo_content);
+            const imageTag = $("img");
+            const iframeTag = $("iframe");
 
-    //     const tempImgArr = getSrcList($, imageTag);
-    //     const tempVideoArr = getSrcList($, iframeTag);
+            const tempImgArr = getSrcList($, imageTag);
+            const tempVideoArr = getSrcList($, iframeTag);
 
-    //     contentArr = [...tempImgArr, ...tempVideoArr];
+            contentArr = [...tempImgArr, ...tempVideoArr];
+        } else {
+            const tempContentArr = [
+                contentData.bo_main_img,
+                ...contentData.bo_imgs.split(","),
+            ];
 
-    //     await axios
-    //         .post(`${back_api}/board/delete`, { getId, contentArr })
-    //         .then((res) => {
-    //             goto("/");
-    //         });
-    // }
+            for (let i = 0; i < tempContentArr.length; i++) {
+                const imageUrl = tempContentArr[i];
+                const newImageUrl = imageUrl.replace(
+                    /^(https?:\/\/)?[^/]+/,
+                    "",
+                );
+                let startFolder = "public/uploads";
+                const reImgUrl = startFolder + newImageUrl;
+                if (reImgUrl) {
+                    contentArr.push(reImgUrl);
+                }
+            }
+        }
 
-    // function getSrcList($, tagList) {
-    //     const tempImgArr = tagList
-    //         .map((index, element) => {
-    //             const imageUrl = $(element).attr("src");
-    //             const newImageUrl = imageUrl.replace(
-    //                 /^(https?:\/\/)?[^/]+/,
-    //                 "",
-    //             );
+        await axios
+            .post(`${back_api}/board/delete`, { getId, contentArr })
+            .then((res) => {
+                goto("/");
+            });
+    }
 
-    //             let startFolder;
-    //             if (import.meta.env.VITE_STATUS == "dev") {
-    //                 startFolder = "front/static";
-    //             } else {
-    //                 startFolder = "public/uploads";
-    //             }
-    //             const reImgUrl = startFolder + newImageUrl;
-    //             return reImgUrl;
-    //         })
-    //         .get();
+    function getSrcList($, tagList) {
+        const tempImgArr = tagList
+            .map((index, element) => {
+                const imageUrl = $(element).attr("src");
 
-    //     return tempImgArr;
-    // }
+                const newImageUrl = imageUrl.replace(
+                    /^(https?:\/\/)?[^/]+/,
+                    "",
+                );
+
+                let startFolder;
+                if (import.meta.env.VITE_STATUS == "dev") {
+                    startFolder = "front/static";
+                } else {
+                    startFolder = "public/uploads";
+                }
+                const reImgUrl = startFolder + newImageUrl;
+                return reImgUrl;
+            })
+            .get();
+
+        return tempImgArr;
+    }
 
     function convertTextareaToPTag(text) {
         const paragraphs = text
@@ -171,12 +183,12 @@
                             <i class="fa fa-cog" aria-hidden="true"></i> 수정하기
                         </button>
                     </a>
-                    <!-- <button
-                    class="px-3 py-1 text-sm rounded-lg bg-red-500 text-white"
-                    on:click={deletePost}
-                >
-                    <i class="fa-solid fa-circle-minus" /> 삭제하기
-                </button> -->
+                    <button
+                        class="px-3 py-1 text-sm rounded-lg bg-red-500 text-white"
+                        on:click={deletePost}
+                    >
+                        <i class="fa-solid fa-circle-minus" /> 삭제하기
+                    </button>
                 {/if}
             </div>
             <div>
@@ -296,6 +308,21 @@
     </div>
 {:else}
     <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">
+        {#if $authStatus}
+            <a href="/write?id={getId}">
+                <button
+                    class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white"
+                >
+                    <i class="fa fa-cog" aria-hidden="true"></i> 수정하기
+                </button>
+            </a>
+            <button
+                class="px-3 py-1 text-sm rounded-lg bg-red-500 text-white"
+                on:click={deletePost}
+            >
+                <i class="fa-solid fa-circle-minus" /> 삭제하기
+            </button>
+        {/if}
         <div
             class="text-4xl font-bold text-gray-600 text-center py-5 bg-gray-100"
         >

@@ -56,19 +56,20 @@ function generateRandomIP() {
 
 
 
-
-
-
-
-
 boardRouter.post('/delete', async (req, res, next) => {
     const data = req.body;
 
     let delImgList = data.contentArr
     try {
-        const deletePostQuery = "DELETE FROM board WHERE bo_id = ?";
+        const deletePostQuery = "DELETE FROM land_board WHERE bo_id = ?";
         await sql_con.promise().query(deletePostQuery, [data.getId]);
     } catch (error) {
+        try {
+            const deletePostQuery = "DELETE FROM free_board WHERE bo_id = ?";
+            await sql_con.promise().query(deletePostQuery, [data.getId]);
+        } catch (error) {
+
+        }
         console.error(error.message);
     }
 
@@ -132,7 +133,7 @@ boardRouter.post('/write', async (req, res, next) => {
             console.error(error.message);
             status = false;
         }
-        
+
     } else {
 
         delete body.allData['bo_created_at'];
