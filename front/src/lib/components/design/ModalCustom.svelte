@@ -1,12 +1,15 @@
 <script>
     import { fly, scale } from "svelte/transition";
     export let open = false;
-    export let modalWidth = 600
+    export let autoClose = true;
+    export let modalWidth = 600;
 
     // 백그라운드 클릭 했을때 모달 닫힘
     function chkModalBack(e) {
-        if (e.target.classList.contains("opacity-40")) {
-            open = false;
+        if (autoClose) {
+            if (e.target.classList.contains("opacity-40")) {
+                open = false;
+            }
         }
     }
 </script>
@@ -20,7 +23,7 @@
     ></div>
     <div
         in:fly={{ y: -80, duration: 350 }}
-        class="max-w-[95%] fixed top-[100px] left-1/2 transform translate-x-[-50%]  bg-white p-3 rounded-lg text-base"
+        class="max-w-[95%] fixed top-[100px] left-1/2 transform translate-x-[-50%] bg-white p-3 rounded-lg text-base"
         style="width: {modalWidth}px; z-index: 900;"
     >
         <div class="text-right">
