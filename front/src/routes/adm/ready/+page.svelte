@@ -72,7 +72,7 @@
         const selectedDate = new Date(br_date);
         selectedDate.setHours(0, 0, 0, 0);
 
-        if (selectedDate <= today) {
+        if (selectedDate < today) {
             alert(
                 "선택한 날짜는 오늘 날짜와 같거나 이전입니다. 다른 날짜를 선택해주세요.",
             );
