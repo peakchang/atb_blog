@@ -10,6 +10,21 @@
     export let data;
     let readyList = [];
 
+    let contentModalBool = false;
+
+    let br_id = "";
+    let br_subject = "";
+    let br_category = "";
+    let br_imgs = "";
+    let br_date = "";
+
+    let imgArr = [];
+
+    let checkedList = [];
+    let checkedWrap;
+    let allChk = false;
+    let uploadStatus = false;
+
     $: data, setData();
 
     function setData() {
@@ -19,7 +34,7 @@
     $: contentModalBool, chkModalBoolFunc();
 
     async function chkModalBoolFunc() {
-        if (!contentModalBool) {
+        if (!contentModalBool && !uploadStatus) {
             let delImgArr = [];
             if (!br_id) {
                 delImgArr = imgArr;
@@ -34,7 +49,6 @@
                         `${back_api}/adm/delete_imgs`,
                         { delImgArr },
                     );
-                    
                 } catch (error) {}
             }
 
@@ -44,21 +58,9 @@
             br_imgs = "";
             br_date = "";
         }
+
+        uploadStatus = false;
     }
-
-    let contentModalBool = false;
-
-    let br_id = "";
-    let br_subject = "";
-    let br_category = "";
-    let br_imgs = "";
-    let br_date = "";
-
-    let imgArr = [];
-
-    let checkedList = [];
-    let checkedWrap;
-    let allChk = false;
 
     async function uploadReady() {
         const type = this.value;
@@ -93,7 +95,7 @@
 
             if (res.data.status) {
                 alert("적용이 완료 되었습니다.");
-
+                uploadStatus = true;
                 contentModalBool = false;
                 invalidateAll();
             }
