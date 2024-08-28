@@ -2,9 +2,49 @@
     import ModalCustom from "$components/design/ModalCustom.svelte";
     import SortableImg from "$components/SortableImg.svelte";
     import { category_list } from "$lib/const.js";
-    import axios from 'axios';
+    import axios from "axios";
+    import { back_api } from "$src/lib/const";
+    import { invalidateAll } from "$app/navigation";
+    import moment from "moment-timezone";
 
-    console.log(category_list);
+    export let data;
+    let readyList = [];
+
+    $: data, setData();
+
+    function setData() {
+        readyList = data.ready_list;
+    }
+
+    $: contentModalBool, chkModalBoolFunc();
+
+    async function chkModalBoolFunc() {
+        if (!contentModalBool) {
+            let delImgArr = [];
+            if (!br_id) {
+                delImgArr = imgArr;
+            } else {
+                const preImgArr = br_imgs.split(",");
+                delImgArr = imgArr.filter((item) => !preImgArr.includes(item));
+            }
+
+            if (delImgArr.length != 0) {
+                try {
+                    const res = await axios.post(
+                        `${back_api}/adm/delete_imgs`,
+                        { delImgArr },
+                    );
+                    
+                } catch (error) {}
+            }
+
+            br_id = "";
+            br_subject = "";
+            br_category = "";
+            br_imgs = "";
+            br_date = "";
+        }
+    }
 
     let contentModalBool = false;
 
@@ -16,18 +56,92 @@
 
     let imgArr = [];
 
-    async function uploadReady(){
-        console.log(br_id);
-        console.log(br_subject);
-        console.log(br_category);
-        console.log(br_date);
+    let checkedList = [];
+    let checkedWrap;
+    let allChk = false;
+
+    async function uploadReady() {
+        const type = this.value;
+        if (!br_subject || !br_category || !br_date || imgArr.length == 0) {
+            alert("항목을 모두 채워주세요");
+            return false;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(br_date);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        if (selectedDate <= today) {
+            alert(
+                "선택한 날짜는 오늘 날짜와 같거나 이전입니다. 다른 날짜를 선택해주세요.",
+            );
+            return false;
+        }
+
+        br_imgs = imgArr.join(",");
+
+        try {
+            const res = await axios.post(`${back_api}/adm/update_ready`, {
+                br_id,
+                br_subject,
+                br_category,
+                br_date,
+                br_imgs,
+                type,
+            });
+
+            if (res.data.status) {
+                alert("적용이 완료 되었습니다.");
+
+                contentModalBool = false;
+                invalidateAll();
+            }
+        } catch (error) {
+            alert(`에러가 발생 했습니다! ${error.message}`);
+        }
     }
 
     function updateMainImgList(e) {
         const imgList = e.detail.imgArr;
         imgArr = imgList.map((e) => e["src"]);
+    }
 
-        console.log(imgArr);
+    function openUpdateModal() {
+        const selData = readyList[this.value];
+        br_id = selData["br_id"];
+        br_subject = selData["br_subject"];
+        br_category = selData["br_category"];
+        br_imgs = selData["br_imgs"];
+        br_date = moment(selData["br_date"]).format("YYYY-MM-DD");
+        imgArr = br_imgs.split(",");
+        contentModalBool = true;
+    }
+
+    async function deleteRows() {
+        if (!confirm("Are you sure you want to delete")) {
+            return false;
+        }
+        try {
+            const res = await axios.post(`${back_api}/adm/delete_ready`, {
+                delete_list: checkedList,
+            });
+
+            if (res.data.status) {
+                alert("삭제가 완료 되었습니다.");
+                invalidateAll();
+                allChk = false;
+                checkedList = [];
+            }
+        } catch (error) {}
+    }
+
+    function allChkFunc() {
+        if (allChk) {
+            checkedList = readyList.map((item) => item.br_id);
+        } else {
+            checkedList = [];
+        }
     }
 </script>
 
@@ -64,7 +178,10 @@
             <th class="border p-1 text-sm">이미지</th>
             <td class="border p-1">
                 <div>
-                    <SortableImg on:updateImgeList={updateMainImgList} />
+                    <SortableImg
+                        bind:modifyImageList={imgArr}
+                        on:updateImgeList={updateMainImgList}
+                    />
                 </div>
             </td>
         </tr>
@@ -81,12 +198,23 @@
     </table>
 
     <div class="text-center mt-3">
-        <button
-            class="py-1 w-1/3 bg-yellow-500 active:bg-yellow-600 text-white rounded-lg mr-2 text-sm"
-            on:click={uploadReady}
-        >
-            업로드
-        </button>
+        {#if br_id}
+            <button
+                class="py-1 w-1/3 bg-yellow-500 active:bg-yellow-600 text-white rounded-lg mr-2 text-sm"
+                value="update"
+                on:click={uploadReady}
+            >
+                업데이트
+            </button>
+        {:else}
+            <button
+                class="py-1 w-1/3 bg-yellow-500 active:bg-yellow-600 text-white rounded-lg mr-2 text-sm"
+                value="upload"
+                on:click={uploadReady}
+            >
+                업로드
+            </button>
+        {/if}
     </div>
 </ModalCustom>
 
@@ -94,6 +222,7 @@
     <button
         class="py-1 px-3 bg-green-500 active:bg-green-600 text-white rounded-lg mr-2"
         on:click={() => {
+            imgArr = [];
             contentModalBool = !contentModalBool;
         }}
     >
@@ -101,6 +230,7 @@
     </button>
     <button
         class="py-1 px-3 bg-red-500 active:bg-red-600 text-white rounded-lg"
+        on:click={deleteRows}
     >
         행 삭제
     </button>
@@ -111,29 +241,55 @@
         <table class="w-full text-center">
             <tr>
                 <th class="border p-1.5">
-                    <input type="checkbox" name="" id="" />
+                    <input
+                        type="checkbox"
+                        bind:checked={allChk}
+                        on:change={allChkFunc}
+                    />
                 </th>
                 <th class="border p-1.5"> 글 제목 </th>
                 <th class="border p-1.5"> 작업일 </th>
                 <th class="border p-1.5"> 버튼 </th>
             </tr>
 
-            <tr>
-                <td class="border p-1.5">
-                    <input type="checkbox" name="" id="" />
-                </td>
-                <td class="border p-1.5">
-                    여튼 여기는 제목이요~~~~~~~~~~~~~~~
-                </td>
-                <td class="border p-1.5"> 24-08-24 </td>
-                <td class="border p-1.5">
-                    <button
-                        class="py-1 px-3 bg-blue-500 active:bg-blue-600 text-white rounded-lg"
-                    >
-                        보기 및 수정
-                    </button>
-                </td>
-            </tr>
+            {#each readyList as data, idx}
+                <tr>
+                    <td class="border p-1.5" bind:this={checkedWrap}>
+                        <input
+                            type="checkbox"
+                            value={data.br_id}
+                            bind:group={checkedList}
+                            on:change={(e) => {
+                                if (
+                                    checkedList.length == readyList.length &&
+                                    checkedList.length != 0
+                                ) {
+                                    allChk = true;
+                                } else if (
+                                    checkedList.length != readyList.length
+                                ) {
+                                    allChk = false;
+                                }
+                            }}
+                        />
+                    </td>
+                    <td class="border p-1.5">
+                        {data.br_subject}
+                    </td>
+                    <td class="border p-1.5">
+                        {moment(data.br_date).format("YY/MM/DD")}
+                    </td>
+                    <td class="border p-1.5">
+                        <button
+                            class="py-1 px-3 bg-blue-500 active:bg-blue-600 text-white rounded-lg"
+                            value={idx}
+                            on:click={openUpdateModal}
+                        >
+                            보기 및 수정
+                        </button>
+                    </td>
+                </tr>
+            {/each}
         </table>
     </div>
 </div>

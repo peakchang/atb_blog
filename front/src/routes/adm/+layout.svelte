@@ -11,14 +11,11 @@
 	let backdrop = true;
 	const width = 208;
 
-	console.log($admin_sidebar);
-
 	$: {
 		if (innerWidth < 1200) {
 			$admin_sidebar = false;
 			$admin_sidebar_width = false;
 		} else {
-			console.log("커짐요!");
 			$admin_sidebar = true;
 			$admin_sidebar_width = true;
 		}
