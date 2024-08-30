@@ -23,6 +23,8 @@
     let checkedList = [];
     let checkedWrap;
     let allChk = false;
+
+    // 창이 닫힐때 이미지가 삭제됨, 업로드 되고 창이 닫힐때도 동일 적용이므로 uploadStatus가 true 면 삭제 안되게 하기 (업로드시에는 이미지 삭제 안되게)
     let uploadStatus = false;
 
     $: data, setData();
@@ -34,7 +36,13 @@
     $: contentModalBool, chkModalBoolFunc();
 
     async function chkModalBoolFunc() {
-        if (!contentModalBool && !uploadStatus) {
+        if (!contentModalBool) {
+            br_id = "";
+            br_subject = "";
+            br_category = "";
+            br_imgs = "";
+            br_date = "";
+        } else if (!contentModalBool && !uploadStatus) {
             let delImgArr = [];
             if (!br_id) {
                 delImgArr = imgArr;
@@ -51,12 +59,6 @@
                     );
                 } catch (error) {}
             }
-
-            br_id = "";
-            br_subject = "";
-            br_category = "";
-            br_imgs = "";
-            br_date = "";
         }
 
         uploadStatus = false;

@@ -11,23 +11,6 @@ const admRouter = express.Router();
 
 // 자동 글쓰기 admin
 
-
-admRouter.post('/delete_imgs', async (req, res, next) => {
-    let status = true;
-    const delImgArr = req.body.delImgArr;
-    const currentUrl = req.protocol + '://' + req.get('host')
-    for (let i = 0; i < delImgArr.length; i++) {
-        const delPath = `public/uploads${delImgArr[i].replace(currentUrl, "")}`
-        try {
-            fs.unlinkSync(delPath)
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    res.json({ status })
-})
-
-
 admRouter.get('/write_post_ready', async (req, res, next) => {
     let status = true;
 
@@ -86,6 +69,22 @@ admRouter.get('/write_post_ready', async (req, res, next) => {
         }
     }
 
+    res.json({ status })
+})
+
+
+admRouter.post('/delete_imgs', async (req, res, next) => {
+    let status = true;
+    const delImgArr = req.body.delImgArr;
+    const currentUrl = req.protocol + '://' + req.get('host')
+    for (let i = 0; i < delImgArr.length; i++) {
+        const delPath = `public/uploads${delImgArr[i].replace(currentUrl, "")}`
+        try {
+            fs.unlinkSync(delPath)
+        } catch (error) {
+            console.error(error);
+        }
+    }
     res.json({ status })
 })
 
@@ -169,6 +168,9 @@ admRouter.post('/get_site_visit', async (req, res, next) => {
 
     res.json({ status, site_visit_list })
 })
+
+
+// chat 부분 끝~~~~
 
 
 
