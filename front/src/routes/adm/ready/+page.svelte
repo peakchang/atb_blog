@@ -36,13 +36,7 @@
     $: contentModalBool, chkModalBoolFunc();
 
     async function chkModalBoolFunc() {
-        if (!contentModalBool) {
-            br_id = "";
-            br_subject = "";
-            br_category = "";
-            br_imgs = "";
-            br_date = "";
-        } else if (!contentModalBool && !uploadStatus) {
+        if (!contentModalBool && !uploadStatus) {
             let delImgArr = [];
             if (!br_id) {
                 delImgArr = imgArr;
@@ -59,6 +53,12 @@
                     );
                 } catch (error) {}
             }
+        } else if (!contentModalBool) {
+            br_id = "";
+            br_subject = "";
+            br_category = "";
+            br_imgs = "";
+            br_date = "";
         }
 
         uploadStatus = false;
@@ -157,7 +157,7 @@
             <td class="border p-1">
                 <input
                     type="text"
-                    class="p-1 text-sm border-gray-300 w-full rounded-md"
+                    class="p-1 border text-sm border-gray-300 w-full rounded-md"
                     bind:value={br_subject}
                 />
             </td>
