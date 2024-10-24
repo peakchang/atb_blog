@@ -25,13 +25,15 @@ const upload = multer({
 editorRouter.post('/onimg_upload', upload.single('onimg'), async (req, res, next) => {
     let baseUrl
     let saveUrl
-    if (req.method === 'POST') {
+
+    try {
         const lastFolderArr = req.file.destination.split('/');
         const lastFolder = lastFolderArr[lastFolderArr.length - 1];
-        const currentUrl = req.protocol + '://' + req.get('host')
-        ;
+        const currentUrl = req.protocol + '://' + req.get('host');
         baseUrl = currentUrl + '/editor/' + lastFolder + '/' + req.file.filename;
         saveUrl = req.file.path
+    } catch (error) {
+
     }
     res.json({ baseUrl, saveUrl })
 })
@@ -44,7 +46,7 @@ editorRouter.post('/img_upload', upload.single('editorimg'), async (req, res, ne
         const lastFolderArr = req.file.destination.split('/');
         const lastFolder = lastFolderArr[lastFolderArr.length - 1];
         const currentUrl = req.protocol + '://' + req.get('host')
-        ;
+            ;
         baseUrl = currentUrl + '/editor/' + lastFolder + '/' + req.file.filename;
         saveUrl = req.file.path
     }
@@ -84,7 +86,7 @@ editorRouter.post('/delete_img', async (req, res, next) => {
     let status = true;
     const body = req.body;
     const delPath = `public\\uploads\\editor\\${body.getFolder}\\${body.getImgName}`
-    
+
     try {
         await fs.unlink(delPath, (err) => {
 

@@ -39,6 +39,7 @@ console.log(__dirname);
 app.use(express.static('public', { ignore: ['favicon.ico'] }));
 app.use('/editor', express.static(path.join(__dirname, 'public/uploads/editor')));
 app.use('/image', express.static(path.join(__dirname, 'public/uploads/image')));
+app.use('/py_img', express.static(path.join(__dirname, 'public/uploads/pyimg')));
 
 let originLink;
 

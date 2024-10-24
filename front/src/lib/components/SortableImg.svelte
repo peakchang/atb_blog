@@ -9,6 +9,7 @@
     import { createEventDispatcher } from "svelte";
     import { back_api } from "$src/lib/const";
     import cryptoRandomString from "crypto-random-string";
+    import imageCompression from "browser-image-compression";
     const dispatch = createEventDispatcher();
 
     const crypto = () => cryptoRandomString({ length: 10 });
@@ -103,86 +104,70 @@
 
         // input change
         input.onchange = async (e) => {
-            const maxWidth = 1200;
-            const img_file = e.target.files[0];
+            const imageFile = e.target.files[0];
             const options = {
-                maxSizeMB: 0.7,
-                // maxWidthOrHeight: 1920,
-                useWebWorker: true,
+                maxSizeMB: 1, // 최대 파일 크기 (MB)
+                maxWidthOrHeight: 1024, // 최대 너비 또는 높이
+                useWebWorker: true, // 웹 워커 사용
             };
 
-            const reader = new FileReader();
-            reader.readAsDataURL(img_file);
-            reader.onload = function (r) {
-                let setWidth = 0;
-                let setHeight = 0;
-                const img = new Image();
-                img.src = r.target.result;
-                img.onload = async function (e) {
-                    if (img.width >= maxWidth) {
-                        var share = img.width / maxWidth;
-                        var setHeight = Math.floor(img.height / share);
-                        var setWidth = maxWidth;
-                    } else {
-                        setWidth = img.width;
-                        setHeight = img.height;
-                    }
+            try {
+                const compressedFile = await imageCompression(
+                    imageFile,
+                    options,
+                );
+                console.log("Compressed file:", compressedFile);
+                console.log(compressedFile.name);
 
-                    var canvas = document.createElement("canvas");
-                    canvas.width = setWidth;
-                    canvas.height = setHeight;
-                    canvas.display = "inline-block";
-                    canvas
-                        .getContext("2d")
-                        .drawImage(img, 0, 0, setWidth, setHeight);
+                let imgForm = new FormData();
 
-                    var getReImgUrl = canvas.toDataURL("image/webp");
+                const timestamp = new Date().getTime();
+                const fileName = `${timestamp}${Math.random()
+                    .toString(36)
+                    .substring(2, 11)}.${compressedFile.name.split(".")[1]}`;
 
-                    const resultImage = dataURItoBlob(getReImgUrl);
+                console.log(fileName);
+                
+                imgForm.append("onimg", compressedFile, fileName);
 
-                    let imgForm = new FormData();
+                // FormData의 key 값과 value값 찾기
+                // let keys = imgForm.keys();
+                // for (const pair of keys) {
+                //     console.log(`name : ${pair}`);
+                // }
 
-                    const timestamp = new Date().getTime();
-                    const fileName = `${timestamp}${Math.random()
-                        .toString(36)
-                        .substring(2, 11)}.webp`;
-                    imgForm.append("onimg", resultImage, fileName);
+                // let values = imgForm.values();
+                // for (const pair of values) {
+                //     console.log(`value : ${pair}`);
+                // }
 
-                    // FormData의 key 값과 value값 찾기
-                    // let keys = imgForm.keys();
-                    // for (const pair of keys) {
-                    //     console.log(`name : ${pair}`);
-                    // }
+                const res = await axios.post(
+                    `${back_api}/editor/onimg_upload`,
+                    imgForm,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    },
+                );
 
-                    // let values = imgForm.values();
-                    // for (const pair of values) {
-                    //     console.log(`value : ${pair}`);
-                    // }
+                console.log(res);
+                
+                if (res.status == 200) {
+                    imgArr.push({
+                        src: res.data.baseUrl,
+                        id: crypto(),
+                    });
+                    imgArr = [...new Set(imgArr)];
+                    dispatch("updateImgeList", {
+                        imgArr,
+                    });
+                }
 
-                    // console.log(getReImgUrl);
-                    // console.log(fileName);
-
-                    axios
-                        .post(`${back_api}/editor/onimg_upload`, imgForm, {
-                            headers: {
-                                "Content-Type": "multipart/form-data",
-                            },
-                        })
-                        .then((res) => {
-                            imgArr.push({
-                                src: res.data.baseUrl,
-                                id: crypto(),
-                            });
-                            imgArr = [...new Set(imgArr)];
-                            dispatch("updateImgeList", {
-                                imgArr,
-                            });
-                        })
-                        .catch((err) => {
-                            console.error(err.message);
-                        });
-                };
-            };
+            } catch (error) {
+                console.error("Error during image compression:", error);
+                alert("이미지 업로드 오류! 다시 시도해주세요!");
+            }
         };
     };
 </script>

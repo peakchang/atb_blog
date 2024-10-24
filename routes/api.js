@@ -6,9 +6,89 @@ import cheerio from "cheerio";
 import moment from "moment-timezone";
 const koreaTime = moment.tz('Asia/Seoul');
 
+
+
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
 const apiRouter = express.Router();
 
+apiRouter.get('/', (req, res) => {
+    res.send('asldfjalisjdfliajsdf')
+})
 
+apiRouter.post('/python_writer', async (req, res) => {
+    let status = true;
+    const body = req.body;
+    console.log(body);
+
+    let content = ""
+    const now = moment().format('YYYY-MM-DD HH:mm:ss');
+    for (let i = 0; i < body.content_arr.length; i++) {
+        const line = body.content_arr[i];
+        const lineChk = line.split('|')
+        if (lineChk[0] == 'img_line') {
+            content = content + `<p class="ql-align-center"><img class="inline-block" src="${lineChk[1]}"></p><p class="ql-align-center"><br></p>`
+        } else {
+            content = content + `<p class="ql-align-center">${line}</p><p class="ql-align-center"><br></p>`
+        }
+    }
+
+    try {
+        const insertBoardQuery = "INSERT INTO land_board (bo_category, bo_subject, bo_content, bo_type, bo_created_at) VALUES (?,?,?,?,?)";
+        await sql_con.promise().query(insertBoardQuery, ['news', body.subject, content, 'blog', now]);
+    } catch (error) {
+        status = false;
+    }
+
+    res.json({ status })
+})
+
+
+apiRouter.post('/python_writer_img_uploads', upload.array('image', 10), (req, res) => {  // 최대 10개의 파일 처리
+
+    console.log('들어는 오는거니?!?!??!!');
+
+    let status = true;
+    const fileInfos = [];
+
+    const protocol = req.protocol;
+    // 현재 호스트 (localhost, 도메인 등)
+    const host = req.get('host');  // req.get('host')는 호스트와 포트를 모두 포함
+    // 현재 URL (프로토콜 + 호스트)
+    const fullUrl = `${protocol}://${host}`;
+    try {
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).send({ message: 'No files uploaded' });
+        }
+        // 파일 처리 반복문
+        req.files.forEach((file) => {
+            // 저장 경로 설정
+            const outputPath = folderChk() + `/${Date.now()}_${file.originalname}`;
+            console.log(outputPath);
+            // 파일 시스템에 저장 (메모리에서 파일로 저장)
+            fs.writeFileSync(outputPath, file.buffer);
+            const putPutHref = outputPath.replace(/^public\/uploads\/pyimg/, `${fullUrl}/py_img`);
+            fileInfos.push({ filename: file.originalname, path: outputPath, href : putPutHref });
+        });
+
+        // 파일 정보 반환
+        // res.status(200).send({ message: 'Files uploaded successfully', files: fileInfos });
+        console.log(fileInfos);
+
+
+    } catch (err) {
+        console.error(err.message);
+        status = false
+    }
+
+    res.status(200).json({ status, fileInfos })
+});
 
 apiRouter.post('/update_visit_count', async (req, res, next) => {
     let status = true;
@@ -98,5 +178,38 @@ apiRouter.post('/add_post_list', async (req, res, next) => {
 })
 
 
+
+function folderChk() {
+    let setFolder
+    const now = moment().format('YYMMDD')
+
+    try {
+        fs.readdirSync(`public`);
+    } catch (error) {
+        console.error(error.message);
+        fs.mkdirSync(`public`);
+    }
+
+    try {
+        fs.readdirSync(`public/uploads`);
+    } catch (error) {
+        fs.mkdirSync(`public/uploads`);
+    }
+
+    try {
+        fs.readdirSync(`public/uploads/pyimg`);
+    } catch (error) {
+        fs.mkdirSync(`public/uploads/pyimg`);
+    }
+
+    try {
+        fs.readdirSync(`public/uploads/pyimg/pyimg${now}`);
+    } catch (error) {
+        fs.mkdirSync(`public/uploads/pyimg/pyimg${now}`);
+    }
+    setFolder = `public/uploads/pyimg/pyimg${now}`
+
+    return setFolder;
+}
 
 export { apiRouter }
