@@ -42,6 +42,8 @@
             forceFallback: true, // 다양한 환경의 일관된 Drag&Drop(DnD)을 위해 HTML5 기본 DnD 동작을 무시하고 내장 기능을 사용합니다.
             animation: 150,
             onEnd: function (e) {
+                console.log(imgArr);
+                
                 reorder(e.oldIndex, e.newIndex);
             },
         });
