@@ -21,7 +21,7 @@ admRouter.get('/write_post_ready', async (req, res, next) => {
         'Content-Type': 'application/json'
     }
 
-    const getWritListQuery = "SELECT * FROM board_ready WHERE br_date <= CURDATE()";
+    const getWritListQuery = "SELECT * FROM board_ready WHERE br_date <= CURDATE() LIMIT 1";
     const getWritList = await sql_con.promise().query(getWritListQuery);
     const get_write_list = getWritList[0];
     for (const writeData of get_write_list) {
