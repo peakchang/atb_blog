@@ -48,10 +48,13 @@ if (process.env.NODE_ENV === 'production') {
     const whiteListStr = process.env.SITE_LINK
     console.log(whiteListStr);
     const whiteListArr = whiteListStr.split(',');
-    originLink = [/\.allthatby\.co.kr$/, 'https://allthatby.co.kr']
+    originLink = [/\.atb\.co.kr$/, 'https://atb.co.kr']
 } else {
     originLink = true;
 }
+
+console.log(originLink);
+
 
 let corsOptions = {
     // 여기는 svelte (프론트엔드) 가 돌아가는 주소

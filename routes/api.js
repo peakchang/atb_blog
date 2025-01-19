@@ -22,6 +22,30 @@ apiRouter.get('/', (req, res) => {
     res.send('asldfjalisjdfliajsdf')
 })
 
+
+apiRouter.get('/moveboard', async (req, res) => {
+    try {
+        const getLandBoardDataQuery = "SELECT * FROM land_board WHERE bo_type IS NULL or bo_type = 'blog' LIMIT 1;";
+        const [landBoardData] = await sql_con.promise().query(getLandBoardDataQuery,);
+        if (landBoardData.length > 0) {
+            const moveData = landBoardData[0];
+            const insertFreeBoardForLandBoardQuery = "INSERT INTO free_board (bo_category,bo_subject,bo_content,bo_created_at) VALUES (?,?,?,?)";
+            await sql_con.promise().query(insertFreeBoardForLandBoardQuery, [moveData.bo_category, moveData.bo_subject, moveData.bo_content, moment(moveData.bo_created_at).format('YYYY-MM-DD HH:mm:ss')]);
+
+            const deleteLandBoardQuery = "DELETE FROM land_board WHERE bo_id =?";
+            await sql_con.promise().query(deleteLandBoardQuery, [moveData.bo_id]);
+            return res.send('옮기기 작업!!!')
+        }else{
+            return res.send('작업할게 없음!!!')
+        }
+    } catch (error) {
+        console.error(error.message);
+    }
+    
+})
+
+
+
 apiRouter.post('/python_writer', async (req, res) => {
     let status = true;
     const body = req.body;
@@ -74,7 +98,7 @@ apiRouter.post('/python_writer_img_uploads', upload.array('image', 10), (req, re
             // 파일 시스템에 저장 (메모리에서 파일로 저장)
             fs.writeFileSync(outputPath, file.buffer);
             const putPutHref = outputPath.replace(/^public\/uploads\/pyimg/, `${fullUrl}/py_img`);
-            fileInfos.push({ filename: file.originalname, path: outputPath, href : putPutHref });
+            fileInfos.push({ filename: file.originalname, path: outputPath, href: putPutHref });
         });
 
         // 파일 정보 반환
