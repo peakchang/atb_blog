@@ -129,4 +129,13 @@ CREATE TABLE IF NOT EXISTS board_ready(
 );
 
 
+// 250121 추가!!!!
+
+/api/v3/moveboard
+링크로 들어가서 게시판 내용 다 옮기기!!
+
+RENAME TABLE free_board TO board;
+
+
+
 */

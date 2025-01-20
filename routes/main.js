@@ -75,7 +75,7 @@ mainRouter.get('/base', async (req, res, next) => {
 
     try {
         // const getPostListQuery = "SELECT * FROM view_board ORDER BY bo_id DESC LIMIT 12";
-        const getPostListQuery = `SELECT * FROM free_board ORDER BY bo_created_at DESC LIMIT 12`;
+        const getPostListQuery = `SELECT * FROM board ORDER BY bo_created_at DESC LIMIT 12`;
         const [getPostList] = await sql_con.promise().query(getPostListQuery);
         post_list = getPostList
 

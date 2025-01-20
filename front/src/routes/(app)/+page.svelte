@@ -24,7 +24,7 @@
 
     console.log(category_list);
 
-    console.log(getNameByLink(category_list, "health"));
+    console.log(getNameByLink(category_list, null));
 
     let chkModalVal = false;
     let pwdVal;
@@ -47,7 +47,7 @@
     function setData() {
         posts = data.posts;
         siteList = data.site_list;
-        console.log(siteList);
+        console.log(posts);
     }
 
     afterNavigate(() => {
@@ -237,6 +237,7 @@
                         </span>
                         <span class="text-xs">
                             <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                            {getNameByLink(category_list, post.bo_category)}
                             /
                             <i class="fa fa-clock-o" aria-hidden="true"></i>
                             {moment(post.bo_created_at).format(
