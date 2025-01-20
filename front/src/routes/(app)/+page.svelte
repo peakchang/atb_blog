@@ -8,25 +8,28 @@
 
     import { Modal, Button, Label, Input, Checkbox } from "flowbite-svelte";
     import axios from "axios";
-    import { onMount, tick, beforeUpdate } from "svelte";
+    import { onMount } from "svelte";
     import { afterNavigate, goto } from "$app/navigation";
     import { authStatus } from "$lib/store";
 
     import { invalidateAll } from "$app/navigation";
-    import { back_api, siteName } from "$lib/const";
+    import { back_api, siteName, category_list } from "$lib/const";
 
-    import { extractFirstImageSrc } from "$lib/lib";
+    import { extractFirstImageSrc, getNameByLink } from "$lib/lib";
     import moment from "moment-timezone";
 
     import Cookies from "js-cookie";
 
     // console.log(Cookies.get("auth_status"));
 
+    console.log(category_list);
+
+    console.log(getNameByLink(category_list, "health"));
+
     let chkModalVal = false;
     let pwdVal;
-    let postNum = 10;
-    let listStatus = true;
     let posts = [];
+    let siteList = [];
     let bannerSwiper;
     let loading = true;
 
@@ -43,7 +46,8 @@
     $: data, setData();
     function setData() {
         posts = data.posts;
-        console.log(posts);
+        siteList = data.site_list;
+        console.log(siteList);
     }
 
     afterNavigate(() => {
@@ -103,21 +107,6 @@
             goto("/write");
         }
     }
-
-    async function addPostList() {
-        axios
-            .post(`${back_api}/add_post_list`, { postNum })
-            .then((res) => {
-                const addData = res.data.posts;
-                const addStatus = res.data.listStatus;
-                data.posts = [...data.posts, ...addData];
-                postNum = postNum + 10;
-                listStatus = addStatus;
-            })
-            .catch((err) => {
-                console.error(err.message);
-            });
-    }
 </script>
 
 <svelte:head></svelte:head>
@@ -153,7 +142,7 @@
 
 <div class="px-2 pb-8 mt-2">
     <h1 class="sr-only">{siteName}</h1>
-    <div class="my-6 kbo-font text-2xl text-gray-700 text-center relative">
+    <div class="my-6 relative pb-5">
         <div class="absolute right-0 suit-font text-sm">
             <button
                 class="bg-green-500 focus:bg-green-600 text-white px-3 py-1 rounded-md flex justify-center items-center gap-2"
@@ -178,95 +167,87 @@
                 <span> 글추가하기 </span>
             </button>
         </div>
+    </div>
 
-        {siteName} 최신글 리스트
+    <div class="  text-center pb-3 relative">
+        <span class="kbo-font text-2xl text-gray-700"> 최신 현장 리스트 </span>
+
+        <button class="absolute right-0 top-0 suit-font text-sm">
+            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+            전체 현장 바로가기
+        </button>
     </div>
 
     <div
         data-sveltekit-preload-data="tap"
-        data-sveltekit-reload
-        class="grid grid-cols-2 md:grid-cols-4 suit-font gap-1"
+        class="grid grid-cols-2 md:grid-cols-3 suit-font gap-3"
     >
-        {#each posts as post}
-            <a
-                href={post["board_type"] == "land_board"
-                    ? `/view/${post.bo_id}`
-                    : `/board/${post.bo_id}`}
-            >
+        {#each siteList as site}
+            <a href={`/site/${site.st_id}`}>
                 <div class="border rounded-md overflow-hidden">
-                    <div
-                        class="w-full h-32 overflow-hidden flex justify-center items-center"
-                    >
-                        {#if post.bo_main_img}
-                            <img src={post.bo_main_img} alt="asdfasdf" />
-                        {:else if extractFirstImageSrc(post.bo_content)}
-                            <img
-                                src={extractFirstImageSrc(post.bo_content)}
-                                alt="asdfasdf"
-                            />
-                        {:else}
-                            <img src="/no-image.png" alt="asdfasdf" />
-                        {/if}
+                    <div class=" h-40 overflow-hidden">
+                        <img
+                            src={site.st_main_img}
+                            alt=""
+                            class="min-w-full min-h-full align-center"
+                        />
                     </div>
-
-                    <div class="p-2 flex flex-col gap-2">
-                        <!-- <div class="truncate">{post.bo_subject}</div> -->
-                        <div class="text-xs">
-                            {post.category} / {moment(
-                                post.bo_created_at,
-                            ).format("YY-MM-DD HH:mm")}
-                        </div>
+                    <div class="p-3">
+                        {site.st_name}
                     </div>
                 </div>
             </a>
         {/each}
     </div>
-    <div class="mt-2 suit-font">
-        <a href="/all_list">
-            <button class="border w-full p-2">
-                전체 글 보기 <i class="fa fa-plus-circle" aria-hidden="true"
-                ></i>
-            </button>
-        </a>
+
+    <div class="text-center mt-10 pb-3 relative">
+        <span class="kbo-font text-2xl text-gray-700">
+            {siteName} 최신글 리스트
+        </span>
+
+        <button class="absolute right-0 top-0 suit-font text-sm">
+            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+            게시판 바로가기
+        </button>
     </div>
-
-    <!-- <div class="border rounded-md overflow-hidden">
-        <div
-            class="w-full h-32 overflow-hidden flex justify-center items-center"
-        >
-            <img src={post.img_link} alt="asdfasdf" />
-        </div>
-
-        <div class="p-2 flex flex-col gap-2">
-            <div class="truncate">{post.bo_subject}</div>
-            <div class="text-xs">
-                {post.category} / {post.date_str}
-            </div>
-        </div>
-    </div> -->
-
-    <!-- <div class="border rounded-md overflow-hidden">
-        <div
-            class="w-full h-32 overflow-hidden flex justify-center items-center"
-        >
-            <img src={post.img_link} alt="asdfasdf" />
-        </div>
-
-        <div class="p-2 flex flex-col gap-2">
-            <div class="truncate">{post.bo_subject}</div>
-            <div class="text-xs">
-                {post.category} / {post.date_str}
-            </div>
-        </div>
-    </div> -->
-
-    {#if listStatus}
-        <div class="text-center mt-6">
-            <button class=" text-5xl text-gray-500" on:click={addPostList}>
-                <i class="fa-solid fa-circle-plus" />
-            </button>
-        </div>
-    {/if}
+    <div
+        data-sveltekit-preload-data="tap"
+        class="grid grid-cols-1 md:grid-cols-2 suit-font gap-1"
+    >
+        <!-- extractFirstImageSrc(post.bo_content) 썸네일 이미지 따는 함수 -->
+        {#each posts as post}
+            <a href={`/view/${post.bo_id}`}>
+                <div class="border flex gap-1 min-h-20">
+                    <div
+                        class="border-r h-20 w-20 flex justify-center items-center"
+                    >
+                        <img
+                            src={extractFirstImageSrc(post.bo_content)}
+                            alt=""
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div
+                        class="overflow-hidden p-3 flex flex-col justify-center gap-1"
+                    >
+                        <span
+                            class="w-full block overflow-hidden text-ellipsis whitespace-nowrap text-sm"
+                        >
+                            {post.bo_subject}
+                        </span>
+                        <span class="text-xs">
+                            <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                            /
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            {moment(post.bo_created_at).format(
+                                "YY-MM-DD hh:mm",
+                            )}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        {/each}
+    </div>
 </div>
 
 <Modal bind:open={chkModalVal} size="xs" autoclose={false} class="w-full">

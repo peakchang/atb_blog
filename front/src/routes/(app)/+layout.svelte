@@ -74,8 +74,6 @@
 <header>
 	<div
 		class="mt-8 pb-4 text-4xl text-center border-b border-gray-300 title-font relative"
-		data-sveltekit-preload-data="tap"
-		data-sveltekit-reload
 	>
 		<a href="/">
 			<div class="flex justify-center gap-2 max-w-xs mx-auto">
@@ -87,16 +85,18 @@
 		<nav>
 			<ul
 				class="flex justify-center gap-8 py-2"
-				data-sveltekit-preload-data="tap"
-				data-sveltekit-reload
 			>
-				{#each category_list as category}
+			<li class="cursor-pointer">
+				<a href="/site">
+					분양현장
+				</a>
+			</li>
 					<li class="cursor-pointer">
-						<a href="/menu/{category.link}">
-							{category.name}
+						<a href="/view">
+							게시판
 						</a>
 					</li>
-				{/each}
+
 			</ul>
 		</nav>
 	</div>
@@ -110,20 +110,7 @@
 	<div
 		class="max_screen mx-auto my-4 suit-font grid grid-cols-1 md:grid-cols-3 px-3"
 	>
-		<nav class="gnb">
-			<ul class="flex gap-2 text-xs justify-center">
-				{#each category_list as category}
-					<li class="cursor-pointer">
-						<a
-							href={category.link}
-							on:click|preventDefault={goCateMenu}
-						>
-							{category.name}
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</nav>
+
 		<div class="col-span-2 mt-2 text-center text-sm">
 			<span class="inline-block">주소 : 경기도 부천시 경인로 37 / </span>
 			<span class="inline-block">사이트명 : {siteName} / </span>

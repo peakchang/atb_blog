@@ -7,28 +7,7 @@ import moment from "moment-timezone";
 
 export const load = async ({ fetch, url }) => {
 
-    let posts = []
 
-    try {
-        const res = await axios.get(`${back_api}/main/base`)
-        posts = res.data.get_post_list
-        for (let i = 0; i < posts.length; i++) {
-            try {
-                if (posts[i]["bo_category"]) {
-                    const getCategoryObj = category_list.find(v => v.link === posts[i]["bo_category"]);
-                    posts[i]["category"] = getCategoryObj['name']
-                } else {
-                    posts[i]["category"] = "분양뉴스"
-                }
-            } catch (error) {
-                posts[i]["category"] = "분양뉴스"
-            }
-
-        }
-
-    } catch (error) {
-        console.error(error.message);
-    }
 
     const seoValue = {
         title: siteName,
@@ -40,5 +19,5 @@ export const load = async ({ fetch, url }) => {
         icon: `${url.href}favicon.png`,
     }
 
-    return { posts, seoValue }
+    return { seoValue }
 }
