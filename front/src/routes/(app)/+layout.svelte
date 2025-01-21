@@ -92,9 +92,6 @@
 					<a href="/site"> 분양현장 </a>
 				</li>
 				<li class="cursor-pointer">
-					<a href="/news"> 분양뉴스 </a>
-				</li>
-				<li class="cursor-pointer">
 					<a href="/view"> 커뮤니티 </a>
 				</li>
 			</ul>

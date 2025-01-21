@@ -6,6 +6,24 @@ import { getQueryStr } from "../back-lib/lib.js";
 import moment from "moment-timezone";
 
 
+// 새로 만든것!!!!!
+boardRouter.post('/get_post_list', async (req, res, next) => {
+    console.log('들어오지???');
+
+    let post_list = [];
+    try {
+        const getPostListQuery = "SELECT * FROM board ORDER BY bo_created_at DESC";
+        const [getPostList] = await sql_con.promise().query(getPostListQuery);
+        post_list = getPostList
+    } catch (error) {
+
+    }
+
+    res.json({ post_list })
+})
+// 여기까지!!!!
+
+
 boardRouter.post('/load_content', async (req, res, next) => {
     console.log('역니느 들ㅇㅁㄴㅇ리ㅓㅁ니ㅑㅇ허ㅑㅣ멍ㄹ');
     let status = true;

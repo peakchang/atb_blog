@@ -18,9 +18,14 @@ export const load = async ({ params, url }) => {
 
     let seoValue = {}
 
+    console.log(id);
+    
+
     try {
         const res = await axios.post(`${back_api}/main/view_detail`, { id })
-        if (res.data.status) {
+        console.log(res.data);
+        
+        if (res.status == 200) {
             contentData = res.data.content
             console.log(contentData);
             if (!contentData.bo_type) {
@@ -29,49 +34,36 @@ export const load = async ({ params, url }) => {
         }
 
         console.log(contentData);
-        if (contentData.bo_type == "blog") {
 
-            // 디스크립션 따기 위해 태그 모두 제거
-            const viewTextOnly = contentData['bo_content'].replace(/<[^>]+>/g, ' ');
-            const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();
 
-            // html 태그가 있을때 첫번째 이미지만 뽑기
-            const firstImg = extractFirstImageSrc(contentData['bo_content'])
-            const publishdTime = contentData['bo_updated_at'] ? contentData['bo_updated_at'] : contentData['bo_created_at']
+        // 디스크립션 따기 위해 태그 모두 제거
+        const viewTextOnly = contentData['bo_content'].replace(/<[^>]+>/g, ' ');
+        const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();
 
-            seoValue = {
-                title: contentData.bo_subject,
-                description: truncateTextTo100Chars(viewTextOnlyFilter),
-                url: url.href,
-                image: firstImg,
-                date: moment(publishdTime).format('YYYY-MM-DD'),
-                published_time: publishdTime,
-                icon: `${url.origin}/favicon.png`,
-            }
-            console.log(seoValue);
-        }else{
-            const viewText = contentData.bo_description + contentData.bo_add_content
-            const viewTextOnly = viewText.replace(/<[^>]+>/g, ' ');
-            const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();
+        // html 태그가 있을때 첫번째 이미지만 뽑기
+        const firstImg = extractFirstImageSrc(contentData['bo_content'])
+        const publishdTime = contentData['bo_updated_at'] ? contentData['bo_updated_at'] : contentData['bo_created_at']
 
-            seoValue = {
-                title: contentData.bo_subject,
-                description: `${contentData.bo_subject} 홈페이지 | ${contentData.bo_subject} 분양가 | ${contentData.bo_subject} 모델하우스 | 주소 | 견본주택 | 홍보관 안내 | ${truncateTextTo300Chars(viewTextOnlyFilter)}`,
-                url: url.href,
-                image: contentData.bo_main_img,
-                icon: `${url.origin}/favicon.png`,
-            }
-            console.log(seoValue);
+        seoValue = {
+            title: contentData.bo_subject,
+            description: truncateTextTo100Chars(viewTextOnlyFilter),
+            url: url.href,
+            image: firstImg,
+            date: moment(publishdTime).format('YYYY-MM-DD'),
+            published_time: publishdTime,
+            icon: `${url.origin}/favicon.png`,
         }
+        console.log(seoValue);
+
 
 
         // 카테고리
-        if (contentData["bo_category"]) {
-            const getCategoryObj = category_list.find(v => v.link === contentData["bo_category"]);
-            contentData["category"] = getCategoryObj['name']
-        } else {
-            contentData["category"] = "분양뉴스"
-        }
+        // if (contentData["bo_category"]) {
+        //     const getCategoryObj = category_list.find(v => v.link === contentData["bo_category"]);
+        //     contentData["category"] = getCategoryObj['name']
+        // } else {
+        //     contentData["category"] = "분양뉴스"
+        // }
 
 
 

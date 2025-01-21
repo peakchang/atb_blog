@@ -9,6 +9,28 @@ moment.tz.setDefault("Asia/Seoul");
 
 const siteRouter = express.Router();
 
+
+//
+
+siteRouter.post('/get_site_list', async (req, res, next) => {
+
+    console.log('여긴 들어왕?');
+
+    let site_list = [];
+
+    try {
+        const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC"
+        const [getSiteList] = await sql_con.promise().query(getSiteListQuery);
+        site_list = getSiteList
+    } catch (error) {
+        console.error(error.message);
+
+    }
+    
+
+    res.json({ site_list })
+})
+
 siteRouter.post('/get_site_info', async (req, res, next) => {
     let status = true;
     let siteInfo = {}
@@ -19,7 +41,7 @@ siteRouter.post('/get_site_info', async (req, res, next) => {
         const getSiteInfo = await sql_con.promise().query(getSiteInfoQuery, [pageId]);
         siteInfo = getSiteInfo[0][0]
     } catch (error) {
-        
+
     }
 
     res.json({ status, siteInfo })

@@ -1,1 +1,68 @@
-asdfasdfasdf
+<script>
+    import axios from "axios";
+    import { onMount } from "svelte";
+    import { afterNavigate, goto } from "$app/navigation";
+    import { authStatus } from "$lib/store";
+
+    import { invalidateAll } from "$app/navigation";
+    import { back_api, siteName, category_list } from "$lib/const";
+
+    import { extractFirstImageSrc, getNameByLink } from "$lib/lib";
+    import moment from "moment-timezone";
+
+    import Cookies from "js-cookie";
+
+    let postList = [];
+    export let data;
+    $: data, setData();
+    function setData() {
+        postList = data.post_list;
+        console.log(postList);
+    }
+</script>
+
+<div class="p-3 text-center suit-font border-b">
+    <ul class="flex justify-center gap-3">
+        <li>전체</li>
+        <li>질문/답변</li>
+        <li>자유게시판</li>
+    </ul>
+</div>
+
+<div>
+    {#each postList as post}
+        <a href={`/view`}>
+            <div
+                class="border-b mb-5 p-2 flex justify-between gap-3 suit-font h-18"
+            >
+                <div class="overflow-hidden flex flex-col justify-evenly">
+                    <span
+                        class="w-full block overflow-hidden text-ellipsis whitespace-nowrap md:text-lg"
+                    >
+                        {post.bo_subject}
+                    </span>
+                    <span class="text-xs md:text-sm">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        관리자 /
+                        <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                        {getNameByLink(category_list, post.bo_category)} /
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                        {moment(post.bo_created_at).format("YY-MM-DD hh:mm")} /
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        1,857
+                    </span>
+                </div>
+
+                <div
+                    class=" min-w-28 w-28 h-20 md:min-w-40 md:w-40 md:h-28 border bg-center bg-cover"
+                    style="background-image: url({extractFirstImageSrc(
+                        post.bo_content,
+                    )});"
+                ></div>
+            </div>
+        </a>
+    {/each}
+</div>
+
+<style>
+</style>

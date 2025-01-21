@@ -7,18 +7,19 @@ import moment from "moment-timezone";
 
 export const load = async ({ fetch, url }) => {
 
-    let site_list = [];
+    let post_list = [];
 
     try {
-        const res = await axios.post(`${back_api}/site/get_site_list`)       
+        const res = await axios.post(`${back_api}/board/get_post_list`)
         if (res.status == 200) {
-            site_list = res.data.site_list;
+            post_list = res.data.post_list;
         }
+        console.log(post_list);
     } catch (error) {
         console.error(error.message);
     }
 
 
 
-    return { site_list }
+    return { post_list }
 }
