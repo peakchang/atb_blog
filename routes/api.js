@@ -31,7 +31,7 @@ apiRouter.get('/moveboard', async (req, res) => {
         const [landBoardData] = await sql_con.promise().query(getLandBoardDataQuery,);
         if (landBoardData.length > 0) {
             const moveData = landBoardData[0];
-            const insertFreeBoardForLandBoardQuery = "INSERT INTO free_board (bo_category,bo_subject,bo_content,bo_created_at) VALUES (?,?,?,?)";
+            const insertFreeBoardForLandBoardQuery = "INSERT INTO board (bo_category,bo_subject,bo_content,bo_created_at) VALUES (?,?,?,?)";
             await sql_con.promise().query(insertFreeBoardForLandBoardQuery, [moveData.bo_category, moveData.bo_subject, moveData.bo_content, moment(moveData.bo_created_at).format('YYYY-MM-DD HH:mm:ss')]);
 
             const deleteLandBoardQuery = "DELETE FROM land_board WHERE bo_id =?";
