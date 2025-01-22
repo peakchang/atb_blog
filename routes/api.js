@@ -24,6 +24,8 @@ apiRouter.get('/', (req, res) => {
 
 
 apiRouter.get('/moveboard', async (req, res) => {
+    console.log('안들어오는거야?!?!?!');
+    
     try {
         const getLandBoardDataQuery = "SELECT * FROM land_board WHERE bo_type IS NULL or bo_type = 'blog' LIMIT 1;";
         const [landBoardData] = await sql_con.promise().query(getLandBoardDataQuery,);
@@ -41,7 +43,6 @@ apiRouter.get('/moveboard', async (req, res) => {
     } catch (error) {
         console.error(error.message);
     }
-    
 })
 
 
