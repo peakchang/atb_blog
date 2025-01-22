@@ -7,6 +7,6 @@ export const category_list = [
     { link: 'board', name: '자유게시판' },
 ]
 
-export const siteName = '분양의모든것'
+export const siteName = '올댓분양'
 
 export const back_api = `${import.meta.env.VITE_SERVER_URL}/api/v3`

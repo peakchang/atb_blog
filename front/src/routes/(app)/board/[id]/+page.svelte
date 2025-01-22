@@ -5,11 +5,14 @@
     import { goto, invalidate, invalidateAll } from "$app/navigation";
     import cheerio from "cheerio";
     import Reply from "$lib/components/Reply.svelte";
-    import { back_api } from "$lib/const";
+    import { back_api, category_list } from "$lib/const";
     import moment from "moment-timezone";
     import SeoMeta from "$lib/components/SeoMeta.svelte";
     import Cookies from "js-cookie";
     import { onMount } from "svelte";
+    import { getNameByLink } from "$lib/lib";
+
+    console.log(category_list);
 
     export let data;
 
@@ -23,8 +26,11 @@
 
     function setData() {
         seoValue = data.seoValue;
+        console.log(seoValue);
+
         replyData = data.get_reply;
         contentData = data.contentData;
+
         previousPosts = data.previousPosts;
         nextPosts = data.nextPost;
     }
@@ -133,8 +139,6 @@
             .join("");
         return paragraphs;
     }
-
-
 </script>
 
 <svelte:head>
@@ -149,7 +153,7 @@
     </div>
 
     <div class="border-b pt-3 pb-1 text-right flex justify-between">
-        <div>
+        <div data-sveltekit-preload-data="tap" data-sveltekit-reload>
             <button
                 class="px-3 py-1 text-sm rounded-lg bg-pink-500 text-white"
                 on:click={() => {
@@ -160,7 +164,7 @@
             </button>
 
             {#if $authStatus}
-                <a href="/write?id={getId}">
+                <a href="/write?id={getId}&type=board">
                     <button
                         class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white"
                     >
@@ -180,7 +184,10 @@
                 contentData["bo_updated_at"]
                     ? contentData["bo_updated_at"]
                     : contentData["bo_created_at"],
-            ).format("YYYY-MM-DD")} / {contentData.category}
+            ).format("YYYY-MM-DD")} / {getNameByLink(
+                category_list,
+                contentData.bo_category,
+            )}
         </div>
     </div>
 
@@ -290,10 +297,6 @@
         {/each}
     </div>
 </div>
-
-
-
-
 
 <!-- {:else}
     <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">

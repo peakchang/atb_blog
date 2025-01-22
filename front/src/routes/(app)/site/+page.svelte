@@ -1,15 +1,27 @@
 <script>
+    import SeoMeta from "$src/lib/components/SeoMeta.svelte";
+
     let siteList = [];
+    let seoValue = {};
     export let data;
     $: data, setData();
     function setData() {
+
+        console.log(data);
+        
         siteList = data.site_list;
-        console.log(siteList);
+        seoValue = data.seoValue;
+        console.log(seoValue);
     }
 </script>
 
+<svelte:head>
+    <SeoMeta bind:seoValue />
+</svelte:head>
+
 <div
     data-sveltekit-preload-data="tap"
+    data-sveltekit-reload
     class="grid grid-cols-2 md:grid-cols-3 suit-font gap-3 mt-8"
 >
     {#each siteList as site}

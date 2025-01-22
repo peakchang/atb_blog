@@ -17,23 +17,18 @@ export const load = async ({ params, url }) => {
     let get_reply;
 
     let seoValue = {}
-
-    console.log(id);
+    console.log(seoValue);
     
 
     try {
         const res = await axios.post(`${back_api}/main/view_detail`, { id })
-        console.log(res.data);
         
         if (res.status == 200) {
             contentData = res.data.content
-            console.log(contentData);
             if (!contentData.bo_type) {
                 contentData.bo_type = 'blog'
             }
         }
-
-        console.log(contentData);
 
 
         // 디스크립션 따기 위해 태그 모두 제거
@@ -53,7 +48,7 @@ export const load = async ({ params, url }) => {
             published_time: publishdTime,
             icon: `${url.origin}/favicon.png`,
         }
-        console.log(seoValue);
+
 
 
 
@@ -141,7 +136,6 @@ function truncateTextTo300Chars(text) {
 
     // 300자 뒤의 가장 가까운 띄어쓰기를 찾음
     const truncatedText = text.substr(0, 300);
-    console.log(truncatedText);
     const lastSpaceIndex = truncatedText.lastIndexOf(' ');
 
     if (lastSpaceIndex === -1) {

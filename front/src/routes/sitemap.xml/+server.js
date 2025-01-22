@@ -15,18 +15,6 @@ export async function GET({ url }) {
     </url>
     `
 
-    for (let i = 0; i < category_list.length; i++) {
-        const categoryTamplate = `
-        <url>
-            <loc>${url.origin}/${category_list[i]['link']}</loc>
-            <lastmod>2023-12-08</lastmod>
-            <changefreq>monthly</changefreq>
-            <priority>0.8</priority>
-        </url>
-        `
-        boardXmlStr = boardXmlStr + categoryTamplate
-    }
-
     try {
 
         const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC";
@@ -58,7 +46,7 @@ export async function GET({ url }) {
 
             let template = `
             <url>
-            <loc>${url.origin}/view/${boardList[i]['bo_id']}</loc>
+            <loc>${url.origin}/board/${boardList[i]['bo_id']}</loc>
                 <lastmod>${getDate}</lastmod>
                 <changefreq>monthly</changefreq>
                 <priority>0.5</priority>

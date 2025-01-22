@@ -180,6 +180,7 @@
 
     <div
         data-sveltekit-preload-data="tap"
+        data-sveltekit-reload
         class="grid grid-cols-2 md:grid-cols-3 suit-font gap-3"
     >
         {#each siteList as site}
@@ -212,11 +213,12 @@
     </div>
     <div
         data-sveltekit-preload-data="tap"
+        data-sveltekit-reload
         class="grid grid-cols-1 md:grid-cols-2 suit-font gap-1"
     >
         <!-- extractFirstImageSrc(post.bo_content) 썸네일 이미지 따는 함수 -->
         {#each posts as post}
-            <a href={`/view/${post.bo_id}`}>
+            <a href={`/board/${post.bo_id}`}>
                 <div class="border flex gap-1 min-h-20">
                     <div
                         class="border-r h-20 w-20 flex justify-center items-center"

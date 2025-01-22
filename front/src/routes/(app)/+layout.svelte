@@ -75,6 +75,7 @@
 	<div
 		class="mt-8 pb-4 text-4xl text-center border-b border-gray-300 title-font relative"
 		data-sveltekit-preload-data="tap"
+		data-sveltekit-reload
 	>
 		<a href="/">
 			<div class="flex justify-center gap-2 max-w-xs mx-auto">
@@ -86,13 +87,14 @@
 		<nav>
 			<ul
 				data-sveltekit-preload-data="tap"
+				data-sveltekit-reload
 				class="flex justify-center gap-8 py-2 text-lg"
 			>
 				<li class="cursor-pointer">
 					<a href="/site"> 분양현장 </a>
 				</li>
 				<li class="cursor-pointer">
-					<a href="/view"> 커뮤니티 </a>
+					<a href="/board"> 커뮤니티 </a>
 				</li>
 			</ul>
 		</nav>

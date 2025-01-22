@@ -14,7 +14,7 @@
     } from "$src/lib/lib";
 
     import { page } from "$app/stores";
-    console.log($page.url.searchParams.get("id"));
+    console.log($page.url.searchParams.get("type"));
 
     export let data;
     let allData = {};
@@ -40,6 +40,17 @@
             if (allData.bo_imgs) {
                 stImgs = allData.bo_imgs.split(",");
             }
+        }
+
+        if (data.type) {
+            allData["bo_type"] = data.type;
+        } else {
+            allData["bo_type"] = "board";
+        }
+
+        if (data.type == "land") {
+            console.log(allData["st_imgs"]);
+            stImgs = allData["st_imgs"].split(",");
         }
     }
 
@@ -204,7 +215,7 @@
                             },
                         })
                         .then((res) => {
-                            allData["bo_main_img"] = res.data.baseUrl;
+                            allData["st_main_img"] = res.data.baseUrl;
                         })
                         .catch((err) => {
                             console.error();
@@ -216,7 +227,7 @@
     };
 
     async function deleteMainImgAct() {
-        const mainImgUrlArr = allData["bo_main_img"].split("/");
+        const mainImgUrlArr = allData["st_main_img"].split("/");
         const mainImgUrlPath = `public/uploads/${mainImgUrlArr[3]}/${mainImgUrlArr[4]}/${mainImgUrlArr[5]}`;
 
         try {
@@ -226,7 +237,7 @@
             if (res.data.status) {
                 alert("로고가 삭제 되었습니다.");
                 invalidateAll();
-                allData["bo_main_img"] = "";
+                allData["st_main_img"] = "";
             } else {
                 console.log("????");
             }
@@ -246,49 +257,34 @@
         console.log(allData);
         let addContent = "";
         let description = "";
-        if (allData["bo_add_content"]) {
-            allData["bo_add_content"] = convertToParagraphs(
-                allData["bo_add_content"],
-            );
-        }
 
-        if (allData["bo_description"]) {
-            allData["bo_description"] = convertToParagraphs(
-                allData["bo_description"],
+        if (allData["st_description"]) {
+            allData["st_description"] = convertToParagraphs(
+                allData["st_description"],
             );
         }
 
         console.log(type);
 
-        allData["bo_category"] = "news";
-
         if (stImgs) {
-            allData["bo_imgs"] = stImgs.join(",");
+            allData["st_imgs"] = stImgs.join(",");
         }
-
-        const getDbObj = category_list.find(
-            (v) => v.link === allData["bo_category"],
-        );
-
-        const showType = getDbObj["db"];
-        allData["bo_show_type"] = getDbObj["db"];
-
-        console.log(allData);
 
         try {
             const res = await axios.post(`${back_api}/board/upload_land_data`, {
                 allData,
                 type,
-                showType,
             });
 
             console.log(res);
 
-            if (res.data.status) {
+            if (res.status == 200) {
                 alert("업로드가 완료 되었습니다.");
                 goto("/", { invalidateAll: true });
             }
-        } catch (error) {}
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 
     function setImgArr(imgList) {
@@ -311,15 +307,25 @@
 <!-- <input type="number" bind:value on:change={onChange}> -->
 <svelte:window on:keydown={onKeyDown} />
 <div class="max_screen mx-auto px-2 pb-8 mt-2">
-    <div class="mb-5">
-        <select
-            class="p-1 text-xs border-gray-300 rounded-sm"
-            bind:value={allData["bo_type"]}
-        >
-            <option value="blog">블로그</option>
-            <option value="land">부동산</option>
-        </select>
-    </div>
+    {#if $page.url.searchParams.get("type")}
+    .
+    {:else}
+        <div class="mb-5">
+            <select
+                class="p-1 text-xs border-gray-300 rounded-sm"
+                bind:value={allData["bo_type"]}
+                on:change={(e) => {
+                    console.log("????");
+                    console.log(e.target.value);
+                    allData = {};
+                    allData["bo_type"] = e.target.value;
+                }}
+            >
+                <option value="board">블로그</option>
+                <option value="land">부동산</option>
+            </select>
+        </div>
+    {/if}
 
     {#if allData["bo_type"] == "land"}
         <div class="w-full overflow-auto">
@@ -332,7 +338,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_subject"]}
+                                bind:value={allData["st_name"]}
                             />
                         </td>
                         <th class="border p-2">세대수</th>
@@ -340,7 +346,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_housenum"]}
+                                bind:value={allData["st_house_num"]}
                             />
                         </td>
                     </tr>
@@ -351,7 +357,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_area_size"]}
+                                bind:value={allData["st_area_size"]}
                             />
                         </td>
                         <th class="border p-2">규모</th>
@@ -359,7 +365,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_scale"]}
+                                bind:value={allData["st_scale"]}
                             />
                         </td>
                     </tr>
@@ -370,7 +376,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_construct_date"]}
+                                bind:value={allData["st_constructer"]}
                             />
                         </td>
                         <th class="border p-2">시행사</th>
@@ -378,7 +384,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_developer"]}
+                                bind:value={allData["st_developer"]}
                             />
                         </td>
                     </tr>
@@ -389,7 +395,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_supply_location"]}
+                                bind:value={allData["st_supply_location"]}
                             />
                         </td>
                         <th class="border p-2">입주예정</th>
@@ -397,7 +403,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_movein_date"]}
+                                bind:value={allData["st_movein_date"]}
                             />
                         </td>
                     </tr>
@@ -408,7 +414,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_inquiry"]}
+                                bind:value={allData["st_inquiry"]}
                             />
                         </td>
                         <th class="border p-2">분양가</th>
@@ -416,7 +422,7 @@
                             <input
                                 type="text"
                                 class="border p-2 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                                bind:value={allData["bo_parcel_price"]}
+                                bind:value={allData["st_parcel_price"]}
                             />
                         </td>
                     </tr>
@@ -430,18 +436,7 @@
                 <textarea
                     rows="7"
                     class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                    bind:value={allData["bo_description"]}
-                ></textarea>
-            </div>
-        </div>
-
-        <div class="mt-5 suit-font">
-            <div class="mb-2 pl-3 text-base">※ 추가 글 (숨김글)</div>
-            <div>
-                <textarea
-                    rows="7"
-                    class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
-                    bind:value={allData["bo_add_content"]}
+                    bind:value={allData["st_description"]}
                 ></textarea>
             </div>
         </div>
@@ -449,15 +444,15 @@
         <div class="mt-5 suit-font">
             <div class="mb-2 pl-3 text-base">※ 메인이미지</div>
             <div>
-                {#if allData["bo_main_img"]}
+                {#if allData["st_main_img"]}
                     <div class="mb-3 border p-1 rounded-md">
-                        <img src={allData["bo_main_img"]} alt="" />
+                        <img src={allData["st_main_img"]} alt="" />
                     </div>
                 {:else}
                     <div class="mb-3">이미지를 추가해주세요</div>
                 {/if}
 
-                {#if allData["bo_main_img"]}
+                {#if allData["st_main_img"]}
                     <button
                         class="py-1 px-3 text-xs text-white rounded-md bg-red-500 active:bg-red-600"
                         on:click={deleteMainImgAct}
@@ -513,7 +508,7 @@
                 }}>xptmxm</button
             >
         </div>
-    {:else if allData["bo_type"] == "blog"}
+    {:else if allData["bo_type"] == "board"}
         <input
             type="text"
             class="py-2 mb-1 w-full rounded-sm border-gray-300 text-sm"

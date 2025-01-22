@@ -1,21 +1,48 @@
 <script>
     import SeoMeta from "$lib/components/SeoMeta.svelte";
+    import { authStatus } from "$lib/store";
     export let data;
     let siteInfo = {};
     let seoValue = {};
+    let getId = "";
     $: data, setData();
     function setData() {
         siteInfo = data.siteInfo;
         console.log(siteInfo);
         seoValue = data.seoValue;
+        getId = siteInfo.st_id
     }
+
+    
+
+    async function deletePost() {}
 </script>
 
 <svelte:head>
     <SeoMeta bind:seoValue />
 </svelte:head>
 
-<div>
+<div
+    class="my-3 suit-font"
+    data-sveltekit-preload-data="tap"
+    data-sveltekit-reload
+>
+    {#if $authStatus}
+        <a href="/write?id={getId}&type=land">
+            <button class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white">
+                <i class="fa fa-cog" aria-hidden="true"></i> 수정하기
+            </button>
+        </a>
+        <button
+            class="px-3 py-1 text-sm rounded-lg bg-red-500 text-white"
+            on:click={deletePost}
+        >
+            <i class="fa-solid fa-circle-minus" /> 삭제하기
+        </button>
+    {/if}
+</div>
+
+<div class="suit-font">
     <div class="text-4xl font-bold text-gray-600 text-center py-5 bg-gray-100">
         {siteInfo.st_name}
     </div>

@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import { afterNavigate, goto } from "$app/navigation";
     import { authStatus } from "$lib/store";
+    import SeoMeta from "$src/lib/components/SeoMeta.svelte";
 
     import { invalidateAll } from "$app/navigation";
     import { back_api, siteName, category_list } from "$lib/const";
@@ -13,13 +14,19 @@
     import Cookies from "js-cookie";
 
     let postList = [];
+    let seoValue = {};
     export let data;
     $: data, setData();
     function setData() {
         postList = data.post_list;
+        seoValue = data.seoValue;
         console.log(postList);
     }
 </script>
+
+<svelte:head>
+    <SeoMeta bind:seoValue />
+</svelte:head>
 
 <div class="p-3 text-center suit-font border-b">
     <ul class="flex justify-center gap-3">
@@ -29,9 +36,9 @@
     </ul>
 </div>
 
-<div>
+<div data-sveltekit-preload-data="tap" data-sveltekit-reload>
     {#each postList as post}
-        <a href={`/view`}>
+        <a href={`/board/${post.bo_id}`}>
             <div
                 class="border-b mb-5 p-2 flex justify-between gap-3 suit-font h-18"
             >
