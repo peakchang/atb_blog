@@ -18,12 +18,14 @@ export const load = async ({ params, url }) => {
 
     let seoValue = {}
     console.log(seoValue);
-    
+
 
     try {
         const res = await axios.post(`${back_api}/main/view_detail`, { id })
-        
+
         if (res.status == 200) {
+            console.log(res.data);
+
             contentData = res.data.content
             if (!contentData.bo_type) {
                 contentData.bo_type = 'blog'
