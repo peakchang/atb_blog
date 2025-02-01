@@ -58,7 +58,7 @@ console.log(originLink);
 
 let corsOptions = {
     // 여기는 svelte (프론트엔드) 가 돌아가는 주소
-    origin: originLink,
+    origin: true,
     credentials: true
 }
 app.use(cors(corsOptions));
