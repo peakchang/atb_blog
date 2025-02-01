@@ -40,21 +40,23 @@ mainRouter.post('/get_reply', async (req, res, next) => {
 })
 
 mainRouter.post('/view_detail', async (req, res, next) => {
+    console.log('여기는 안들어오고?!?!?!');
+
     let content;
     const id = req.body.id
     console.log(id);
-    
+
     let get_previous_post = []
     let get_next_post = []
     try {
         const getContentQuery = "SELECT * FROM board WHERE bo_id = ?";
         const getContent = await sql_con.promise().query(getContentQuery, [id]);
         content = getContent[0][0];
-        
+
 
         const getPreviousPostQuery = "SELECT bo_id,bo_subject FROM board WHERE bo_category = ? AND bo_id < ? ORDER BY bo_id DESC LIMIT 1";
         console.log(getPreviousPostQuery);
-        
+
         const getPreviousPost = await sql_con.promise().query(getPreviousPostQuery, [content.bo_category, id]);
         get_previous_post = getPreviousPost[0]
         const getNextPostQuery = "SELECT bo_id,bo_subject FROM board WHERE bo_category = ? AND bo_id > ? ORDER BY bo_id ASC LIMIT 1"
@@ -62,9 +64,15 @@ mainRouter.post('/view_detail', async (req, res, next) => {
         get_next_post = getNextPost[0]
     } catch (error) {
         console.log('에러남!!!');
-        
+
         console.error(error.message);
     }
+
+    console.log(content.bo_category);
+    console.log(content.bo_subject);
+    console.log(content.bo_created_at);
+
+
 
     res.json({ content, get_previous_post, get_next_post })
 })

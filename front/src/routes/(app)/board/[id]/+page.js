@@ -24,7 +24,8 @@ export const load = async ({ params, url }) => {
         const res = await axios.post(`${back_api}/main/view_detail`, { id })
 
         if (res.status == 200) {
-            console.log(res.data);
+            console.log('res 데이터 출력!!!!!');
+            console.log(res.data)
 
             contentData = res.data.content
             if (!contentData.bo_type) {
