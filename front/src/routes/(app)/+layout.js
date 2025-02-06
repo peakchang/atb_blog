@@ -11,7 +11,7 @@ export const load = async ({ fetch, url }) => {
 
     const seoValue = {
         title: siteName,
-        description: '부동산 분양의 모든것! 아파트 분양, 오피스텔 분양, 상가 분양, 지식산업센터 분양 등 현재 진행중인 분양 및 청약, 미분양 정보 안내',
+        description: '부동산 분양의 모든것 올댓분양! 아파트 분양, 오피스텔 분양, 상가 분양, 지식산업센터 분양 등 현재 진행중인 분양 및 청약, 미분양 정보 안내 올댓분양에서 만나보세요!',
         url: url.href,
         image: `${url.href}logo.png`,
         date: '23-12-07',
