@@ -26,7 +26,7 @@ export const load = async ({ params, url }) => {
         }
 
         seoValue['title'] = siteInfo.st_name
-        seoValue['description'] = siteInfo.st_description
+        seoValue['description'] = siteInfo.st_description.replace(/<\/?p>/g, '');
         seoValue['image'] = siteInfo.st_main_img
 
 
