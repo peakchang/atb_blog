@@ -26,7 +26,7 @@ export const load = async ({ params, url }) => {
         }
 
         seoValue['title'] = siteInfo.st_name
-        seoValue['description'] = siteInfo.st_description.replace(/<\/?p>/g, '');
+        seoValue['description'] = siteInfo.st_description.replace(/<\/?p>/g, '') + '올댓분양';
         seoValue['image'] = siteInfo.st_main_img
 
 
