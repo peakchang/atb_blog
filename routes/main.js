@@ -91,7 +91,7 @@ mainRouter.get('/base', async (req, res, next) => {
         const [getPostList] = await sql_con.promise().query(getPostListQuery);
         post_list = getPostList
 
-        const getSiteListQuery = "SELECT * FROM site ORDER BY st_created_at DESC"
+        const getSiteListQuery = "SELECT * FROM site ORDER BY st_created_at DESC LIMIT 6"
         const [getSiteList] = await sql_con.promise().query(getSiteListQuery);
         site_list = getSiteList
     } catch (error) {
