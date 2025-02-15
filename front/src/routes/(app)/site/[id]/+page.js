@@ -26,7 +26,7 @@ export const load = async ({ params, url }) => {
         }
 
         seoValue['title'] = siteInfo.st_name
-        seoValue['description'] = siteInfo.st_description.replace(/<\/?p>/g, '');
+        seoValue['description'] = siteInfo.st_name + ' 모델하우스 | 분양가 | 할인조건 | 오시는길 | 특장점 | 올댓분양 | ' +siteInfo.st_description.replace(/<\/?p>/g, '');
         seoValue['image'] = siteInfo.st_main_img
 
 
