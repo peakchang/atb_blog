@@ -138,7 +138,16 @@ RENAME TABLE free_board TO board;
 
 RENAME TABLE land_board TO view;
 
+ALTER TABLE view
+ADD COLUMN bo_name varchar(255),
+AFTER bo_type;
+
+ALTER TABLE view
+RENAME COLUMN bo_housenum TO bo_house_num;
+
+
 ALTER TABLE board
+ADD COLUMN bo_name varchar(255),
 ADD COLUMN bo_housenum varchar(50),
 ADD COLUMN bo_area_size varchar(50),
 ADD COLUMN bo_scale varchar(50),
@@ -156,9 +165,41 @@ ADD COLUMN bo_floor_plan text
 AFTER bo_type;
 
 
+
+ALTER TABLE site
+RENAME COLUMN st_id TO bo_id,
+RENAME COLUMN st_name TO bo_name,
+RENAME COLUMN st_house_num TO bo_house_num,
+RENAME COLUMN st_area_size TO bo_area_size,
+RENAME COLUMN st_scale TO bo_scale,
+RENAME COLUMN st_constructer TO bo_constructer,
+RENAME COLUMN st_construct_date TO bo_construct_date,
+RENAME COLUMN st_developer TO bo_developer,
+RENAME COLUMN st_supply_location TO bo_supply_location,
+RENAME COLUMN st_movein_date TO bo_movein_date,
+RENAME COLUMN st_inquiry TO bo_inquiry,
+RENAME COLUMN st_parcel_price TO bo_parcel_price,
+RENAME COLUMN st_description TO bo_description,
+RENAME COLUMN st_main_img TO bo_main_img,
+RENAME COLUMN st_imgs TO bo_imgs,
+RENAME COLUMN st_floor_plan TO bo_floor_plan,
+RENAME COLUMN st_created_at TO bo_created_at,
+RENAME COLUMN st_updated_at TO bo_updated_at;
+
+
+ALTER TABLE site
+ADD COLUMN bo_category varchar(255),
+ADD COLUMN bo_content varchar(255)
+AFTER bo_type;
+
+
+
 ALTER TABLE site ADD COLUMN bo_type varchar(50) AFTER bo_id;
 ALTER TABLE site ADD COLUMN bo_show_type varchar(50) AFTER bo_imgs;
 
+
+UPDATE site SET bo_show_type = 'site';
+UPDATE board SET bo_show_type = 'board';
 
 
 

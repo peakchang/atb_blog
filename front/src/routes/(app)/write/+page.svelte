@@ -107,7 +107,7 @@
 
         console.log(allData);
 
-        const res = await axios.post(`${back_api}/board/write`, {
+        const res = await axios.post(`${back_api}/board/upload_content`, {
             type,
             allData,
             contentArr,

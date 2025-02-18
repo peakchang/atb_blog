@@ -126,24 +126,20 @@ boardRouter.post('/delete', async (req, res, next) => {
 
 
 
-boardRouter.post('/write', async (req, res, next) => {
+boardRouter.post('/upload_content', async (req, res, next) => {
+    console.log('들어와랏');
     let status = true;
     const body = req.body;
     const uploadData = body.allData
-
-    console.log(body);
-    
-
-
-
-    console.log(body);
     if (body.type == 'upload') {
         const table = uploadData.bo_show_type;
         delete uploadData.bo_show_type;
         const queryData = getQueryStr(uploadData, 'insert', 'bo_created_at');
-        // console.log(queryData);
+        console.log(queryData);
         try {
             const insertBoardQuery = `INSERT INTO ${table} (${queryData.str}) VALUES (${queryData.question})`
+            console.log(insertBoardQuery);
+            
             await sql_con.promise().query(insertBoardQuery, queryData.values);
         } catch (error) {
             console.error(error.message);
@@ -212,22 +208,16 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
 
     let body = req.body.allData;
 
-    console.log(body);
-
     const st_id = body['st_id'];
     const type = req.body.type;
     delete body['st_id'];
     delete body['bo_type'];
-
-    console.log(body);
-
 
     if (type == "upload") {
         try {
             const queryData = getQueryStr(body, 'insert', 'st_created_at');
             const insertLandQuery = `INSERT INTO site (${queryData.str}) VALUES (${queryData.question})`
             console.log(insertLandQuery);
-
             await sql_con.promise().query(insertLandQuery, queryData.values);
         } catch (err) {
             console.error(err.message);
