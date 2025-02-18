@@ -129,14 +129,21 @@ boardRouter.post('/delete', async (req, res, next) => {
 boardRouter.post('/write', async (req, res, next) => {
     let status = true;
     const body = req.body;
+    const uploadData = body.allData
+
+    console.log(body);
+    
 
 
 
     console.log(body);
     if (body.type == 'upload') {
-        const queryData = getQueryStr(body.allData, 'insert', 'bo_created_at');
+        const table = uploadData.bo_show_type;
+        delete uploadData.bo_show_type;
+        const queryData = getQueryStr(uploadData, 'insert', 'bo_created_at');
+        // console.log(queryData);
         try {
-            const insertBoardQuery = `INSERT INTO board (${queryData.str}) VALUES (${queryData.question})`
+            const insertBoardQuery = `INSERT INTO ${table} (${queryData.str}) VALUES (${queryData.question})`
             await sql_con.promise().query(insertBoardQuery, queryData.values);
         } catch (error) {
             console.error(error.message);
@@ -145,19 +152,21 @@ boardRouter.post('/write', async (req, res, next) => {
 
     } else {
 
-        delete body.allData['bo_created_at'];
-        delete body.allData['bo_updated_at'];
+        const table = uploadData.bo_show_type;
+        delete uploadData['bo_created_at'];
+        delete uploadData['bo_updated_at'];
+        delete uploadData['bo_show_type'];
 
         const queryData = getQueryStr(body.allData, 'update', 'bo_updated_at');
         queryData.values.push(body.allData['bo_id'])
         delete body.allData['bo_id'];
-        try {
-            const updateBoardQuery = `UPDATE board SET ${queryData.str} WHERE bo_id = ?`;
-            await sql_con.promise().query(updateBoardQuery, queryData.values);
-        } catch (error) {
-            status = false;
-            console.error(error.message);
-        }
+        // try {
+        //     const updateBoardQuery = `UPDATE ${table} SET ${queryData.str} WHERE bo_id = ?`;
+        //     await sql_con.promise().query(updateBoardQuery, queryData.values);
+        // } catch (error) {
+        //     status = false;
+        //     console.error(error.message);
+        // }
     }
 
     const imgList = body.contentArr
@@ -199,7 +208,7 @@ boardRouter.post('/delete_mainimg', async (req, res, next) => {
 boardRouter.post('/upload_land_data', async (req, res, next) => {
 
     console.log('안들어오는거야?!?!?!');
-    
+
 
     let body = req.body.allData;
 
@@ -218,7 +227,7 @@ boardRouter.post('/upload_land_data', async (req, res, next) => {
             const queryData = getQueryStr(body, 'insert', 'st_created_at');
             const insertLandQuery = `INSERT INTO site (${queryData.str}) VALUES (${queryData.question})`
             console.log(insertLandQuery);
-            
+
             await sql_con.promise().query(insertLandQuery, queryData.values);
         } catch (err) {
             console.error(err.message);

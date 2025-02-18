@@ -19,7 +19,7 @@ siteRouter.post('/get_site_list', async (req, res, next) => {
     let site_list = [];
 
     try {
-        const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC"
+        const getSiteListQuery = "SELECT * FROM site ORDER BY bo_id DESC"
         const [getSiteList] = await sql_con.promise().query(getSiteListQuery);
         site_list = getSiteList
     } catch (error) {
@@ -37,7 +37,7 @@ siteRouter.post('/get_site_info', async (req, res, next) => {
     const pageId = req.body.pageId;
 
     try {
-        const getSiteInfoQuery = "SELECT * FROM site WHERE st_id = ?"
+        const getSiteInfoQuery = "SELECT * FROM site WHERE bo_id = ?"
         const getSiteInfo = await sql_con.promise().query(getSiteInfoQuery, [pageId]);
         siteInfo = getSiteInfo[0][0]
     } catch (error) {

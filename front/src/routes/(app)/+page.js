@@ -13,6 +13,8 @@ export const load = async ({ fetch, url }) => {
     try {
         const res = await axios.get(`${back_api}/main/base`)
         if (res.status == 200) {
+            console.log(res.data);
+            
             posts = res.data.post_list
             site_list = res.data.site_list
         }

@@ -136,6 +136,31 @@ CREATE TABLE IF NOT EXISTS board_ready(
 
 RENAME TABLE free_board TO board;
 
+RENAME TABLE land_board TO view;
+
+ALTER TABLE board
+ADD COLUMN bo_housenum varchar(50),
+ADD COLUMN bo_area_size varchar(50),
+ADD COLUMN bo_scale varchar(50),
+ADD COLUMN bo_constructer varchar(50),
+ADD COLUMN bo_construct_date varchar(100),
+ADD COLUMN bo_developer varchar(50),
+ADD COLUMN bo_supply_location varchar(50),
+ADD COLUMN bo_movein_date varchar(50),
+ADD COLUMN bo_inquiry varchar(50),
+ADD COLUMN bo_parcel_price varchar(50),
+ADD COLUMN bo_description text,
+ADD COLUMN bo_add_content text,
+ADD COLUMN bo_imgs text,
+ADD COLUMN bo_floor_plan text
+AFTER bo_type;
+
+
+ALTER TABLE site ADD COLUMN bo_type varchar(50) AFTER bo_id;
+ALTER TABLE site ADD COLUMN bo_show_type varchar(50) AFTER bo_imgs;
+
+
+
 
 
 */

@@ -87,11 +87,11 @@ mainRouter.get('/base', async (req, res, next) => {
 
     try {
         // const getPostListQuery = "SELECT * FROM view_board ORDER BY bo_id DESC LIMIT 12";
-        const getPostListQuery = `SELECT * FROM board ORDER BY bo_created_at DESC LIMIT 12`;
+        const getPostListQuery = `SELECT * FROM board ORDER BY bo_created_at DESC LIMIT 8`;
         const [getPostList] = await sql_con.promise().query(getPostListQuery);
         post_list = getPostList
 
-        const getSiteListQuery = "SELECT * FROM site ORDER BY st_created_at DESC LIMIT 6"
+        const getSiteListQuery = "SELECT * FROM site ORDER BY bo_created_at DESC LIMIT 6"
         const [getSiteList] = await sql_con.promise().query(getSiteListQuery);
         site_list = getSiteList
     } catch (error) {
