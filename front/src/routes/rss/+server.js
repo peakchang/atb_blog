@@ -4,13 +4,12 @@ import moment from "moment-timezone";
 
 export async function GET({ url }) {
 
-    let boardList = [];
     let postXmlStr = ""
     let lastBuildDate = ""
 
     try {
 
-        const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC";
+        const getSiteListQuery = "SELECT * FROM site ORDER BY bo_id DESC";
         const getSiteList = await sql_con.promise().query(getSiteListQuery);
         const siteList = getSiteList[0];
 
@@ -19,10 +18,10 @@ export async function GET({ url }) {
         for (let i = 0; i < siteList.length; i++) {
             let template = `
             <item>
-                <title>${siteList[i]['st_name']}</title>
-                <link>${url.origin}/site/${siteList[i]['st_id']}</link>
-                <description>${siteList[i]['st_description']}</description>
-                <guid>${url.origin}/site/${siteList[i]['st_id']}</guid>
+                <title>${siteList[i]['bo_name']}</title>
+                <link>${url.origin}/site/${siteList[i]['bo_id']}</link>
+                <description>${siteList[i]['bo_description']}</description>
+                <guid>${url.origin}/site/${siteList[i]['bo_id']}</guid>
             </item>
             `
             postXmlStr = postXmlStr + template
@@ -31,7 +30,9 @@ export async function GET({ url }) {
 
         const getBoardListQuery = "SELECT * FROM board ORDER BY bo_id DESC";
         const getBoardList = await sql_con.promise().query(getBoardListQuery);
-        boardList = getBoardList[0]
+        const boardList = getBoardList[0]
+
+        console.log(boardList.length);
 
         for (let l = 0; l < boardList.length; l++) {
             if(l == 0){
@@ -41,10 +42,32 @@ export async function GET({ url }) {
             const template = `
             <item>
                 <title>${boardList[l]['bo_subject']}</title>
-                <link>${url.origin}/view/${boardList[l]['bo_id']}</link>
-                <description>${removeImgAndBrTags(boardList[l]['bo_content'])}</description>
-                <guid>${url.origin}/view/${boardList[l]['bo_id']}</guid>
-                
+                <link>${url.origin}/board/${boardList[l]['bo_id']}</link>
+                <description>${boardList[l]['bo_description'] ? boardList[l]['bo_description'] : removeImgAndBrTags(boardList[l]['bo_content'])}</description>
+                <guid>${url.origin}/board/${boardList[l]['bo_id']}</guid>
+            </item>
+            `
+            postXmlStr = postXmlStr + template
+        }
+
+
+        const getViewListQuery = "SELECT * FROM view ORDER BY bo_id DESC";
+        const getViewList = await sql_con.promise().query(getViewListQuery);
+        const viewList = getViewList[0]
+
+        console.log(viewList.length);
+
+        for (let l = 0; l < viewList.length; l++) {
+            if(l == 0){
+                lastBuildDate = viewList[l]['bo_created_at']
+            }
+
+            const template = `
+            <item>
+                <title>${viewList[l]['bo_subject']}</title>
+                <link>${url.origin}/view/${viewList[l]['bo_id']}</link>
+                <description>${viewList[l]['bo_description'] ? viewList[l]['bo_description'] : removeImgAndBrTags(viewList[l]['bo_content'])}</description>
+                <guid>${url.origin}/view/${viewList[l]['bo_id']}</guid>
             </item>
             `
             postXmlStr = postXmlStr + template

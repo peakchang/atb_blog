@@ -8,7 +8,6 @@
     $: data, setData();
     function setData() {
         siteInfo = data.siteInfo;
-        console.log(siteInfo);
         seoValue = data.seoValue;
         getId = siteInfo.bo_id
     }

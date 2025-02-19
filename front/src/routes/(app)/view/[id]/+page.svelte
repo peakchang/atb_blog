@@ -148,7 +148,6 @@
     <SeoMeta bind:seoValue />
 </svelte:head>
 
-
 <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">
     <div data-sveltekit-preload-data="tap" data-sveltekit-reload>
         <button
@@ -305,7 +304,7 @@
         <div
             class="text-4xl font-bold text-gray-600 text-center py-5 bg-gray-100"
         >
-            {contentData.bo_name}
+            {contentData.bo_name ? contentData.bo_name : contentData.bo_subject}
         </div>
         <div class="text-center pt-5">
             <img src={contentData.bo_main_img} alt="" class="w-full mx-auto" />
@@ -315,7 +314,7 @@
             <table class="w-full">
                 <tr>
                     <th class="border p-2 text-sm">현장명</th>
-                    <td class="border p-2 text-sm">{contentData.bo_name}</td>
+                    <td class="border p-2 text-sm">{contentData.bo_name ? contentData.bo_name : contentData.bo_subject}</td>
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">전용면적</th>
@@ -347,7 +346,7 @@
                 <tr>
                     <th class="border p-2 text-sm">세대수</th>
                     <td class="border p-2 text-sm"
-                        >{contentData.bo_house_num}</td
+                        >{contentData.bo_house_num ? contentData.bo_house_num : contentData.bo_housenum}</td
                     >
                 </tr>
                 <tr>

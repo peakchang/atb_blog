@@ -30,7 +30,7 @@
                     allData["bo_description"],
                 );
             }
-
+            
             if (allData["bo_add_content"]) {
                 allData["bo_add_content"] = convertHtmlToText(
                     allData["bo_add_content"],
@@ -45,7 +45,7 @@
         if (data.type) {
             allData["bo_type"] = data.type;
         } else {
-            allData["bo_type"] = "board";
+            allData["bo_type"] = "blog";
         }
 
         if (data.type == "land") {
@@ -97,6 +97,12 @@
             allData["bo_description"] = convertToParagraphs(
                 allData["bo_description"],
             );
+
+            if (allData["bo_add_content"]) {
+                allData["bo_add_content"] = convertToParagraphs(
+                    allData["bo_add_content"],
+                ); 
+            }
         }
 
         console.log(type);
@@ -115,48 +121,48 @@
 
         // console.log(res);
 
-        // if (res.data.status) {
-        //     workStatus = false;
-        //     alert("글 작성이 완료 되었습니다.");
-        //     goto("/");
-        // }
+        if (res.data.status) {
+            workStatus = false;
+            alert("글 작성이 완료 되었습니다.");
+            goto("/");
+        }
     };
 
-    async function updateLandAct() {
-        const type = this.value;
+    // async function updateLandAct() {
+    //     const type = this.value;
 
-        console.log(allData);
-        let addContent = "";
-        let description = "";
+    //     console.log(allData);
+    //     let addContent = "";
+    //     let description = "";
 
-        if (allData["bo_description"]) {
-            allData["bo_description"] = convertToParagraphs(
-                allData["bo_description"],
-            );
-        }
+    //     if (allData["bo_description"]) {
+    //         allData["bo_description"] = convertToParagraphs(
+    //             allData["bo_description"],
+    //         );
+    //     }
 
-        console.log(type);
+    //     console.log(type);
 
-        if (stImgs) {
-            allData["bo_imgs"] = stImgs.join(",");
-        }
+    //     if (stImgs) {
+    //         allData["bo_imgs"] = stImgs.join(",");
+    //     }
 
-        try {
-            const res = await axios.post(`${back_api}/board/upload_land_data`, {
-                allData,
-                type,
-            });
+    //     try {
+    //         const res = await axios.post(`${back_api}/board/upload_land_data`, {
+    //             allData,
+    //             type,
+    //         });
 
-            console.log(res);
+    //         console.log(res);
 
-            if (res.status == 200) {
-                alert("업로드가 완료 되었습니다.");
-                goto("/", { invalidateAll: true });
-            }
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
+    //         if (res.status == 200) {
+    //             alert("업로드가 완료 되었습니다.");
+    //             goto("/", { invalidateAll: true });
+    //         }
+    //     } catch (error) {
+    //         console.error(error.message);
+    //     }
+    // }
 
     const getEditorContent = (e) => {
         allData["bo_content"] = e.detail.editorContent;
@@ -328,9 +334,9 @@
                 bind:value={allData["bo_show_type"]}
                 on:change={(e) => {
                     const thisVal = e.target.value;
-                    if(thisVal == 'site' && allData["bo_type"] != 'land'){
+                    if (thisVal == "site" && allData["bo_type"] != "land") {
                         alert("site 모드에서는 land만 가능합니다.");
-                        allData["bo_type"] = 'land';
+                        allData["bo_type"] = "land";
                         return;
                     }
                 }}
@@ -344,17 +350,23 @@
                 class="p-1 text-sm border-gray-300 rounded-md"
                 bind:value={allData["bo_type"]}
                 on:change={(e) => {
-                    const thisVal = e.target.value
-                    if(thisVal == 'board' && allData["bo_show_type"] == 'site'){
+                    const thisVal = e.target.value;
+                    if (
+                        thisVal == "blog" &&
+                        allData["bo_show_type"] == "site"
+                    ) {
                         alert("site 모드에서는 land만 가능합니다.");
-                        allData["bo_type"] = 'land';
+                        allData["bo_type"] = "land";
                         return;
                     }
-                    allData = {};
+
+
+
+                    allData = {bo_show_type : allData["bo_show_type"]};
                     allData["bo_type"] = e.target.value;
                 }}
             >
-                <option value="board">블로그</option>
+                <option value="blog">블로그</option>
                 <option value="land">부동산</option>
             </select>
         </div>
@@ -475,6 +487,17 @@
         </div>
 
         <div class="mt-5 suit-font">
+            <div class="mb-2 pl-3 text-base">※ 추가 글</div>
+            <div>
+                <textarea
+                    rows="7"
+                    class="border p-3 w-full focus:outline-none focus:border-blue-500 rounded-md border-gray-300"
+                    bind:value={allData["bo_add_content"]}
+                ></textarea>
+            </div>
+        </div>
+
+        <div class="mt-5 suit-font">
             <div class="mb-2 pl-3 text-base">※ 메인이미지</div>
             <div>
                 {#if allData["bo_main_img"]}
@@ -541,7 +564,7 @@
                 }}>xptmxm</button
             >
         </div>
-    {:else if allData["bo_type"] == "board"}
+    {:else if allData["bo_type"] == "blog"}
         <input
             type="text"
             class="py-2 mb-1 w-full rounded-sm border-gray-300 text-sm"

@@ -13,6 +13,8 @@ import { editorRouter } from "./routes/editor.js"
 import { apiRouter } from "./routes/api.js"
 import { admRouter } from "./routes/adm.js"
 import { boardRouter } from "./routes/board.js"
+import { viewRouter } from "./routes/view.js"
+
 import { mainRouter } from "./routes/main.js"
 import { resRouter } from './routes/res.js';
 
@@ -73,6 +75,7 @@ app.use('/api/v3/site', siteRouter);
 app.use('/api/v3/res', resRouter);
 app.use('/api/v3/adm', admRouter);
 app.use('/api/v3/board', boardRouter);
+app.use('/api/v3/view', viewRouter);
 app.use('/api/v3/editor', editorRouter);
 app.use('/api/v3/main', mainRouter);
 app.use('/api/v3', apiRouter);

@@ -6,11 +6,8 @@
     export let data;
     $: data, setData();
     function setData() {
-
-        
         siteList = data.site_list;
         seoValue = data.seoValue;
-        console.log(seoValue);
     }
 </script>
 

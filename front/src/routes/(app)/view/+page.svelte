@@ -38,7 +38,7 @@
 
 <div data-sveltekit-preload-data="tap" data-sveltekit-reload>
     {#each postList as post}
-        <a href={`/board/${post.bo_id}`}>
+        <a href={`/view/${post.bo_id}`}>
             <div
                 class="border-b mb-5 p-2 flex justify-between gap-3 suit-font h-18"
             >

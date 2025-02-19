@@ -139,7 +139,7 @@ RENAME TABLE free_board TO board;
 RENAME TABLE land_board TO view;
 
 ALTER TABLE view
-ADD COLUMN bo_name varchar(255),
+ADD COLUMN bo_name varchar(255)
 AFTER bo_type;
 
 ALTER TABLE view
@@ -187,15 +187,30 @@ RENAME COLUMN st_created_at TO bo_created_at,
 RENAME COLUMN st_updated_at TO bo_updated_at;
 
 
+
 ALTER TABLE site
 ADD COLUMN bo_category varchar(255),
 ADD COLUMN bo_content varchar(255)
 AFTER bo_type;
 
+ALTER TABLE site ADD COLUMN bo_add_content TEXT;
 
 
 ALTER TABLE site ADD COLUMN bo_type varchar(50) AFTER bo_id;
 ALTER TABLE site ADD COLUMN bo_show_type varchar(50) AFTER bo_imgs;
+
+ALTER TABLE board
+ADD COLUMN bo_name varchar(255)
+AFTER bo_type;
+
+ALTER TABLE board
+ADD COLUMN bo_name varchar(255)
+AFTER bo_type;
+
+ALTER TABLE board
+RENAME COLUMN bo_housenum TO bo_house_num;
+
+ALTER TABLE board MODIFY bo_main_img VARCHAR(255);
 
 
 UPDATE site SET bo_show_type = 'site';

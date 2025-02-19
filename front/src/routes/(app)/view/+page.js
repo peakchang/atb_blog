@@ -7,21 +7,24 @@ import moment from "moment-timezone";
 
 export const load = async ({ fetch, url }) => {
 
-    let site_list = [];
+    let post_list = [];
 
     try {
-        const res = await axios.post(`${back_api}/site/get_site_list`)       
+        const res = await axios.post(`${back_api}/view/get_post_list`)
         if (res.status == 200) {
-            site_list = res.data.site_list;
+            post_list = res.data.post_list;
+            console.log(post_list);
+            
         }
+        console.log(post_list);
     } catch (error) {
         console.error(error.message);
     }
-    
-    
+
+    console.log(url);
 
     const seoValue = {
-        title: '분양현장',
+        title: '커뮤니티',
         description: '부동산 분양의 모든것! 아파트 분양, 오피스텔 분양, 상가 분양, 지식산업센터 분양 등 현재 진행중인 분양 및 청약, 미분양 정보 안내',
         url: url.href,
         image: `${url.origin}/logo.png`,
@@ -30,8 +33,9 @@ export const load = async ({ fetch, url }) => {
         icon: `${url.href}favicon.png`,
     }
     
+    
 
 
 
-    return { site_list, seoValue }
+    return { post_list, seoValue }
 }

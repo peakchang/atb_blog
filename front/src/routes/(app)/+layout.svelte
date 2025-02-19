@@ -43,7 +43,6 @@
 	}
 
 	function testTimeFunc() {
-		console.log(`${back_api}/test_time`);
 		axios
 			.get(`${back_api}/test_time`)
 			.then((res) => {
@@ -92,6 +91,9 @@
 			>
 				<li class="cursor-pointer">
 					<a href="/site"> 분양현장 </a>
+				</li>
+				<li class="cursor-pointer">
+					<a href="/view"> 게시판 </a>
 				</li>
 				<li class="cursor-pointer">
 					<a href="/board"> 커뮤니티 </a>

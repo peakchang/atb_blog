@@ -18,7 +18,7 @@ export const load = async ({ params, url }) => {
 
     let seoValue = {}
 
-    const table = 'board'
+    const table = 'view'
     try {
         const res = await axios.post(`${back_api}/main/view_detail`, { id, table })
         console.log(res.data);
@@ -39,7 +39,7 @@ export const load = async ({ params, url }) => {
             firstImg = extractFirstImageSrc(contentData['bo_content'])
         }else{
             firstImg = contentData.bo_main_img
-            viewTextOnly = title + ' 모델하우스 | 분양가 | 특장점 | 할인조건 | 오시는길 | 특장점 | 올댓분양 | ' +contentData['bo_description'].replace(/<[^>]+>/g, ' ');
+            viewTextOnly = title + ' 모델하우스 | 분양가 | 할인조건 | 오시는길 | 특장점 | 올댓분양 | ' +contentData['bo_description'].replace(/<[^>]+>/g, ' ');
         }
 
         const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();

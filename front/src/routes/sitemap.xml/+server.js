@@ -17,36 +17,60 @@ export async function GET({ url }) {
 
     try {
 
-        const getSiteListQuery = "SELECT * FROM site ORDER BY st_id DESC";
-        const getSiteList = await sql_con.promise().query(getSiteListQuery);
-        const siteList = getSiteList[0];
+        
+        // const getSiteListQuery = "SELECT * FROM site ORDER BY bo_id DESC";
+        // const getSiteList = await sql_con.promise().query(getSiteListQuery);
+        // const siteList = getSiteList[0];
 
-        for (let i = 0; i < siteList.length; i++) {
-            let template = `
-            <url>
-            <loc>${url.origin}/site/${siteList[i]['st_id']}</loc>
-                <changefreq>monthly</changefreq>
-                <priority>0.5</priority>
-            </url>
-            `
-            boardXmlStr = boardXmlStr + template
-        }
+        // for (let i = 0; i < siteList.length; i++) {
+        //     let template = `
+        //     <url>
+        //     <loc>${url.origin}/site/${siteList[i]['st_id']}</loc>
+        //         <changefreq>monthly</changefreq>
+        //         <priority>0.5</priority>
+        //     </url>
+        //     `
+        //     boardXmlStr = boardXmlStr + template
+        // }
 
 
-        const getBoardListQuery = "SELECT * FROM board ORDER BY bo_id DESC";
-        const getBoardList = await sql_con.promise().query(getBoardListQuery);
-        const boardList = getBoardList[0]
+        // const getBoardListQuery = "SELECT * FROM board ORDER BY bo_id DESC";
+        // const getBoardList = await sql_con.promise().query(getBoardListQuery);
+        // const boardList = getBoardList[0]
 
-        for (let i = 0; i < boardList.length; i++) {
+        // for (let i = 0; i < boardList.length; i++) {
+        //     // published_time
+        //     const getTimeStr = boardList[i]['bo_updated_at'] ? boardList[i]['bo_updated_at'] : boardList[i]['bo_created_at']
+        //     const dateStr = moment.tz(getTimeStr, 'Asia/Seoul');
+        //     const getDate = dateStr.format('YYYY-MM-DD');
+        //     // const getDate = dateStr.format('YYYY-MM-DDTHH:mm:ssZ');
+
+        //     let template = `
+        //     <url>
+        //     <loc>${url.origin}/board/${boardList[i]['bo_id']}</loc>
+        //         <lastmod>${getDate}</lastmod>
+        //         <changefreq>monthly</changefreq>
+        //         <priority>0.5</priority>
+        //     </url>
+        //     `
+        //     boardXmlStr = boardXmlStr + template
+        // }
+
+
+        const getViewListQuery = "SELECT * FROM view ORDER BY bo_id DESC";
+        const getViewList = await sql_con.promise().query(getViewListQuery);
+        const viewList = getViewList[0]
+
+        for (let i = 0; i < viewList.length; i++) {
             // published_time
-            const getTimeStr = boardList[i]['bo_updated_at'] ? boardList[i]['bo_updated_at'] : boardList[i]['bo_created_at']
+            const getTimeStr = viewList[i]['bo_updated_at'] ? viewList[i]['bo_updated_at'] : viewList[i]['bo_created_at']
             const dateStr = moment.tz(getTimeStr, 'Asia/Seoul');
             const getDate = dateStr.format('YYYY-MM-DD');
             // const getDate = dateStr.format('YYYY-MM-DDTHH:mm:ssZ');
 
             let template = `
             <url>
-            <loc>${url.origin}/board/${boardList[i]['bo_id']}</loc>
+            <loc>${url.origin}/view/${viewList[i]['bo_id']}</loc>
                 <lastmod>${getDate}</lastmod>
                 <changefreq>monthly</changefreq>
                 <priority>0.5</priority>

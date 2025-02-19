@@ -20,16 +20,11 @@
 
     import Cookies from "js-cookie";
 
-    // console.log(Cookies.get("auth_status"));
-
-    console.log(category_list);
-
-    console.log(getNameByLink(category_list, null));
-
     let chkModalVal = false;
     let pwdVal;
     let posts = [];
     let siteList = [];
+    let viewList = [];
     let bannerSwiper;
     let loading = true;
 
@@ -47,9 +42,7 @@
     function setData() {
         posts = data.posts;
         siteList = data.site_list;
-        console.log(siteList);
-        
-        console.log(posts);
+        viewList = data.view_list;
     }
 
     afterNavigate(() => {
@@ -205,7 +198,58 @@
 
     <div class="text-center mt-10 pb-3 relative">
         <span class="kbo-font text-2xl text-gray-700">
-            {siteName} 최신글 리스트
+            {siteName} 게시판 리스트
+        </span>
+
+        <button class="absolute right-0 top-0 suit-font text-sm">
+            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+            게시판 바로가기
+        </button>
+    </div>
+    <div
+        data-sveltekit-preload-data="tap"
+        data-sveltekit-reload
+        class="grid grid-cols-1 md:grid-cols-2 suit-font gap-1"
+    >
+        <!-- extractFirstImageSrc(post.bo_content) 썸네일 이미지 따는 함수 -->
+        {#each viewList as view}
+            <a href={`/view/${view.bo_id}`}>
+                <div class="border flex gap-1 min-h-20">
+                    <div
+                        class="border-r h-20 w-20 flex justify-center items-center"
+                    >
+                        <img
+                            src={view.bo_main_img ? view.bo_main_img : extractFirstImageSrc(view.bo_content)}
+                            alt=""
+                            class="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div
+                        class="overflow-hidden p-3 flex flex-col justify-center gap-1"
+                    >
+                        <span
+                            class="w-full block overflow-hidden text-ellipsis whitespace-nowrap text-sm"
+                        >
+                            {view.bo_subject ? view.bo_subject : view.bo_name}
+                        </span>
+                        <span class="text-xs">
+                            <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                            {getNameByLink(category_list, view.bo_category)}
+                            /
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            {moment(view.bo_created_at).format(
+                                "YY-MM-DD hh:mm",
+                            )}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        {/each}
+    </div>
+
+    <div class="text-center mt-10 pb-3 relative">
+        <span class="kbo-font text-2xl text-gray-700">
+            {siteName} 커뮤니티 리스트
         </span>
 
         <button class="absolute right-0 top-0 suit-font text-sm">
@@ -226,7 +270,7 @@
                         class="border-r h-20 w-20 flex justify-center items-center"
                     >
                         <img
-                            src={extractFirstImageSrc(post.bo_content)}
+                            src={post.bo_content ? extractFirstImageSrc(post.bo_content) : post.bo_main_img}
                             alt=""
                             class="w-full h-full object-cover"
                         />
@@ -237,7 +281,7 @@
                         <span
                             class="w-full block overflow-hidden text-ellipsis whitespace-nowrap text-sm"
                         >
-                            {post.bo_subject}
+                            {post.bo_subject ? post.bo_subject : post.bo_name}
                         </span>
                         <span class="text-xs">
                             <i class="fa fa-bookmark-o" aria-hidden="true"></i>
