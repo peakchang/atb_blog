@@ -189,6 +189,10 @@ RENAME COLUMN st_updated_at TO bo_updated_at;
 
 
 ALTER TABLE site
+ADD COLUMN bo_type varchar(10)
+AFTER bo_id;
+
+ALTER TABLE site
 ADD COLUMN bo_category varchar(255),
 ADD COLUMN bo_content varchar(255)
 AFTER bo_type;
