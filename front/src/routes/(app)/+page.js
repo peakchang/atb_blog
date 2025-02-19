@@ -24,11 +24,6 @@ export const load = async ({ fetch, url }) => {
     } catch (error) {
         console.error(error.message);
     }
-
-    console.log(view_list);
     
-
-
-
     return { posts, site_list, view_list }
 }

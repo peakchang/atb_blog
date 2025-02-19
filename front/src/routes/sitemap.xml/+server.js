@@ -4,7 +4,6 @@ import moment from "moment-timezone";
 
 export async function GET({ url }) {
 
-    console.log(category_list);
 
     let boardXmlStr = `
     <url>

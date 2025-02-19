@@ -20,7 +20,6 @@
     function setData() {
         postList = data.post_list;
         seoValue = data.seoValue;
-        console.log(postList);
     }
 </script>
 

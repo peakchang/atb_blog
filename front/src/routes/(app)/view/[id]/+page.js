@@ -21,7 +21,6 @@ export const load = async ({ params, url }) => {
     const table = 'view'
     try {
         const res = await axios.post(`${back_api}/main/view_detail`, { id, table })
-        console.log(res.data);
         
         if (res.status == 200) {
             contentData = res.data.content

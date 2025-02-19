@@ -22,12 +22,9 @@
     let seoValue = {};
     const path = $page.url.pathname.split("/")[1];
 
-    console.log($page);
-
     $: data, setData();
 
     function setData() {
-        console.log(data);
         seoValue = data.seoValue;
         replyData = data.get_reply;
 

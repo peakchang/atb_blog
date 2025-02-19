@@ -14,12 +14,9 @@ export const load = async ({ fetch, url }) => {
         if (res.status == 200) {
             post_list = res.data.post_list;
         }
-        console.log(post_list);
     } catch (error) {
         console.error(error.message);
     }
-
-    console.log(url);
 
     const seoValue = {
         title: '커뮤니티',

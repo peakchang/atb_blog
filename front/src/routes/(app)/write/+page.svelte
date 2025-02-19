@@ -14,7 +14,6 @@
     } from "$src/lib/lib";
 
     import { page } from "$app/stores";
-    console.log($page.url.searchParams.get("type"));
 
     export let data;
     let allData = {};
@@ -49,7 +48,6 @@
         }
 
         if (data.type == "land") {
-            console.log(allData["bo_imgs"]);
             stImgs = allData["bo_imgs"].split(",");
         }
     }
@@ -66,7 +64,6 @@
 
     const uploadContent = async (e) => {
         const type = e.target.value;
-        console.log(type);
         if (type == "blog") {
             if (!allData["bo_subject"] || !allData["bo_category"]) {
                 alert("제목 or 카테고리 미선택! 선택해주세여");
@@ -105,21 +102,15 @@
             }
         }
 
-        console.log(type);
-
         if (stImgs) {
             allData["bo_imgs"] = stImgs.join(",");
         }
-
-        console.log(allData);
 
         const res = await axios.post(`${back_api}/board/upload_content`, {
             type,
             allData,
             contentArr,
         });
-
-        // console.log(res);
 
         if (res.data.status) {
             workStatus = false;
@@ -130,8 +121,6 @@
 
     // async function updateLandAct() {
     //     const type = this.value;
-
-    //     console.log(allData);
     //     let addContent = "";
     //     let description = "";
 
@@ -140,21 +129,14 @@
     //             allData["bo_description"],
     //         );
     //     }
-
-    //     console.log(type);
-
     //     if (stImgs) {
     //         allData["bo_imgs"] = stImgs.join(",");
     //     }
-
     //     try {
     //         const res = await axios.post(`${back_api}/board/upload_land_data`, {
     //             allData,
     //             type,
     //         });
-
-    //         console.log(res);
-
     //         if (res.status == 200) {
     //             alert("업로드가 완료 되었습니다.");
     //             goto("/", { invalidateAll: true });
@@ -557,12 +539,6 @@
                     업로드
                 </button>
             {/if}
-
-            <button
-                on:click={() => {
-                    console.log(stImgs);
-                }}>xptmxm</button
-            >
         </div>
     {:else if allData["bo_type"] == "blog"}
         <input

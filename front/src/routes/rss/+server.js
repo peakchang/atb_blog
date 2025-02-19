@@ -13,8 +13,6 @@ export async function GET({ url }) {
         const getSiteList = await sql_con.promise().query(getSiteListQuery);
         const siteList = getSiteList[0];
 
-        console.log(siteList);
-
         for (let i = 0; i < siteList.length; i++) {
             let template = `
             <item>
@@ -32,7 +30,6 @@ export async function GET({ url }) {
         const getBoardList = await sql_con.promise().query(getBoardListQuery);
         const boardList = getBoardList[0]
 
-        console.log(boardList.length);
 
         for (let l = 0; l < boardList.length; l++) {
             if(l == 0){
@@ -54,8 +51,6 @@ export async function GET({ url }) {
         const getViewListQuery = "SELECT * FROM view ORDER BY bo_id DESC";
         const getViewList = await sql_con.promise().query(getViewListQuery);
         const viewList = getViewList[0]
-
-        console.log(viewList.length);
 
         for (let l = 0; l < viewList.length; l++) {
             if(l == 0){
