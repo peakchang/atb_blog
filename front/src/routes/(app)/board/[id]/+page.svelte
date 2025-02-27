@@ -189,7 +189,7 @@
                     contentData["bo_updated_at"]
                         ? contentData["bo_updated_at"]
                         : contentData["bo_created_at"],
-                ).format("YYYY-MM-DD hh:mm")} / {getNameByLink(
+                ).tz('Asia/Seoul').format("YYYY-MM-DD hh:mm")} / {getNameByLink(
                     category_list,
                     contentData.bo_category,
                 )}
