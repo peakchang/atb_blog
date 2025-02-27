@@ -157,7 +157,7 @@
         </button>
 
         {#if $authStatus}
-            <a href="/write?table={path}?id={getId}">
+            <a href="/write?table={path}&id={getId}">
                 <button
                     class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white"
                 >

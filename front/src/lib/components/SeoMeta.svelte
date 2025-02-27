@@ -1,5 +1,8 @@
 <script>
     export let seoValue;
+
+    console.log(seoValue);
+    
 </script>
 
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />

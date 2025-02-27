@@ -30,6 +30,8 @@
         replyData = data.get_reply;
 
         contentData = data.contentData;
+        console.log(contentData);
+        
         viewType = contentData.bo_type;
 
         previousPosts = data.previousPosts;
@@ -159,7 +161,7 @@
         </button>
 
         {#if $authStatus}
-            <a href="/write?table={path}?id={getId}">
+            <a href="/write?table={path}&id={getId}">
                 <button
                     class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white"
                 >

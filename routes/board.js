@@ -25,15 +25,14 @@ boardRouter.post('/get_post_list', async (req, res, next) => {
 
 
 
-boardRouter.post('/load_modify_land_content', async (req, res, next) => {
-    console.log('역니느 들ㅇㅁㄴㅇ리ㅓㅁ니ㅑㅇ허ㅑㅣ멍ㄹ');
+boardRouter.post('/load_modify_content', async (req, res, next) => {
     let status = true;
     const getId = req.body.getId
-    console.log(getId);
+    const table = req.body.table
     let all_data = {}
 
     try {
-        const getDataQuery = "SELECT * FROM site WHERE st_id = ?"
+        const getDataQuery = `SELECT * FROM ${table} WHERE bo_id = ?`
         const getData = await sql_con.promise().query(getDataQuery, [getId]);
         all_data = getData[0][0]
     } catch (error) {
@@ -43,23 +42,6 @@ boardRouter.post('/load_modify_land_content', async (req, res, next) => {
     res.json({ status, all_data })
 })
 
-boardRouter.post('/load_modify_board_content', async (req, res, next) => {
-    console.log('역니느 들ㅇㅁㄴㅇ리ㅓㅁ니ㅑㅇ허ㅑㅣ멍ㄹ');
-    let status = true;
-    const getId = req.body.getId
-    console.log(getId);
-    let all_data = {}
-
-    try {
-        const getDataQuery = "SELECT * FROM board WHERE bo_id = ?"
-        const getData = await sql_con.promise().query(getDataQuery, [getId]);
-        all_data = getData[0][0]
-    } catch (error) {
-
-    }
-    console.log(all_data);
-    res.json({ status, all_data })
-})
 
 
 boardRouter.post('/reply_regist', async (req, res, next) => {

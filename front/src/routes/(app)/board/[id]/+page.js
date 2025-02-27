@@ -24,6 +24,8 @@ export const load = async ({ params, url }) => {
         
         if (res.status == 200) {
             contentData = res.data.content
+            console.log(contentData);
+            
             if (!contentData.bo_type) {
                 contentData.bo_type = 'blog'
             }
@@ -44,8 +46,10 @@ export const load = async ({ params, url }) => {
         const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();
 
         // html 태그가 있을때 첫번째 이미지만 뽑기
-        const publishdTime = contentData['bo_updated_at'] ? contentData['bo_updated_at'] : contentData['bo_created_at']
-
+        const publishdTimeTemp = contentData['bo_updated_at'] ? contentData['bo_updated_at'] : contentData['bo_created_at']
+        const publishdTime = moment(publishdTimeTemp).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+        console.log(publishdTime);
+        
         seoValue = {
             title: title,
             description: truncateTextTo100Chars(viewTextOnlyFilter),

@@ -51,10 +51,16 @@ export const load = async ({ params, url }) => {
             description: truncateTextTo100Chars(viewTextOnlyFilter),
             url: url.href,
             image: firstImg,
-            date: moment(publishdTime).format('YYYY-MM-DD'),
-            published_time: publishdTime,
             icon: `${url.origin}/favicon.png`,
         }
+
+        if(contentData['bo_type'] == 'blog'){
+            seoValue['date'] = moment(publishdTime).format('YYYY-MM-DD')
+            seoValue['published_time'] = publishdTime
+        }
+
+        console.log(seoValue);
+        
     } catch (error) {
         console.error(error.message);
     }

@@ -27,7 +27,7 @@
     data-sveltekit-reload
 >
     {#if $authStatus}
-        <a href="/write?id={getId}&type=land">
+        <a href="/write?table=site&id={getId}">
             <button class="px-3 py-1 text-sm rounded-lg bg-blue-500 text-white">
                 <i class="fa fa-cog" aria-hidden="true"></i> 수정하기
             </button>

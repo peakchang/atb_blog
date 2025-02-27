@@ -17,12 +17,15 @@
 
     export let data;
     let allData = {};
+    let getId;
 
     $: data, setData();
 
     function setData() {
         if (data.all_data) {
             allData = data.all_data;
+            console.log(allData);
+            
 
             if (allData["bo_description"]) {
                 allData["bo_description"] = convertHtmlToText(
@@ -39,12 +42,8 @@
             if (allData.bo_imgs) {
                 stImgs = allData.bo_imgs.split(",");
             }
-        }
-
-        if (data.type) {
-            allData["bo_type"] = data.type;
-        } else {
-            allData["bo_type"] = "blog";
+            getId = data.getId;
+            console.log(getId);
         }
 
         if (data.type == "land") {
@@ -54,6 +53,7 @@
 
     let contentArr;
     let content;
+    
 
     let workStatus = false; // 값이 true 면 새로고침시 체크
 
@@ -307,9 +307,7 @@
 <!-- <input type="number" bind:value on:change={onChange}> -->
 <svelte:window on:keydown={onKeyDown} />
 <div class="max_screen mx-auto px-2 pb-8 mt-2 suit-font">
-    {#if $page.url.searchParams.get("type")}
-        .
-    {:else}
+    {#if !getId}
         <div class="mb-5">
             <select
                 class="p-1 text-sm border-gray-300 rounded-md"
