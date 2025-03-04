@@ -20,6 +20,7 @@
     let previousPosts = [];
     let nextPosts = [];
     let seoValue = {};
+    let publishdTime = ''
     const path = $page.url.pathname.split("/")[1];
 
     $: data, setData();
@@ -29,6 +30,7 @@
         replyData = data.get_reply;
 
         contentData = data.contentData;
+        publishdTime = data.publishdTime
         console.log(contentData);
 
         viewType = contentData.bo_type;
@@ -183,13 +185,7 @@
 
         <div class="border-b pt-3 pb-1 text-right">
             <div>
-                {moment.tz(
-                    contentData["bo_updated_at"]
-                        ? contentData["bo_updated_at"]
-                        : contentData["bo_created_at"],
-                    "YYYY-MM-DD hh:mm",
-                    "Asia/Seoul",
-                )} / {getNameByLink(category_list, contentData.bo_category)}
+                {publishdTime} / {getNameByLink(category_list, contentData.bo_category)}
             </div>
         </div>
 
