@@ -1,7 +1,5 @@
 <script>
     export let seoValue;
-
-    console.log(seoValue);
     
 </script>
 

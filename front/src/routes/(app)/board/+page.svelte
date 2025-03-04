@@ -19,6 +19,11 @@
     $: data, setData();
     function setData() {
         postList = data.post_list;
+        for (let i = 0; i < postList.length; i++) {
+            const con = postList[i];
+            console.log(con);
+            
+        }
         seoValue = data.seoValue;
     }
 </script>
