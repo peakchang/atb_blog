@@ -22,6 +22,11 @@
         for (let i = 0; i < postList.length; i++) {
             const con = postList[i];
             console.log(con);
+
+            const published = moment(con.bo_created_at).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+            console.log(published);
+            
+            postList[i]['published'] = published
             
         }
         seoValue = data.seoValue;
