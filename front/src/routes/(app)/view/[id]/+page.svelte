@@ -311,31 +311,51 @@
             <table class="w-full">
                 <tr>
                     <th class="border p-2 text-sm">현장명</th>
-                    <td class="border p-2 text-sm">{contentData.bo_name ? contentData.bo_name : contentData.bo_subject}</td>
+                    <td class="border p-2 text-sm"
+                        >{contentData.bo_name
+                            ? contentData.bo_name
+                            : contentData.bo_subject}</td
+                    >
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">전용면적</th>
-                    <td class="border p-2 text-sm"
-                        >{contentData.bo_area_size}</td
-                    >
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_area_size}
+                            {contentData.bo_area_size}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">시공예정</th>
-                    <td class="border p-2 text-sm"
-                        >{contentData.bo_construct_date}</td
-                    >
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_construct_date}
+                            {contentData.bo_construct_date}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">공급위치</th>
-                    <td class="border p-2 text-sm"
-                        >{contentData.bo_supply_location}</td
-                    >
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_supply_location}
+                            {contentData.bo_supply_location}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">분양가</th>
-                    <td class="border p-2 text-sm"
-                        >{contentData.bo_parcel_price}</td
-                    >
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_parcel_price}
+                            {contentData.bo_parcel_price}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
             </table>
 
@@ -343,7 +363,9 @@
                 <tr>
                     <th class="border p-2 text-sm">세대수</th>
                     <td class="border p-2 text-sm"
-                        >{contentData.bo_house_num ? contentData.bo_house_num : contentData.bo_housenum}</td
+                        >{contentData.bo_house_num
+                            ? contentData.bo_house_num
+                            : contentData.bo_housenum}</td
                     >
                 </tr>
                 <tr>
@@ -352,19 +374,33 @@
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">시행사</th>
-                    <td class="border p-2 text-sm"
-                        >{contentData.bo_developer}</td
-                    >
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_developer}
+                            {contentData.bo_developer}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">입주예정</th>
-                    <td class="border p-2 text-sm"
-                        >{contentData.bo_movein_date}</td
-                    >
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_movein_date}
+                            {contentData.bo_movein_date}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
                 <tr>
                     <th class="border p-2 text-sm">문의</th>
-                    <td class="border p-2 text-sm">{contentData.bo_inquiry}</td>
+                    <td class="border p-2 text-sm">
+                        {#if contentData.bo_inquiry}
+                            {contentData.bo_inquiry}
+                        {:else}
+                            <span>하단 이미지 확인</span>
+                        {/if}
+                    </td>
                 </tr>
             </table>
         </div>

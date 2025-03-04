@@ -22,7 +22,7 @@ export const load = async ({ params, url }) => {
         if (res.data.status) {
             siteInfo = res.data.siteInfo
         }
-        
+
         seoValue['title'] = siteInfo.bo_name
         seoValue['description'] = siteInfo.bo_name + ' 모델하우스 | 분양가 | 할인조건 | 오시는길 | 특장점 | 올댓분양 | ' + siteInfo.bo_description.replace(/<\/?p>/g, '');
         seoValue['image'] = siteInfo.bo_main_img
@@ -31,9 +31,7 @@ export const load = async ({ params, url }) => {
         console.error(err.message);
 
     }
-
-
-
+    
     return { siteInfo, seoValue }
 }
 

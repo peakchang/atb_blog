@@ -17,6 +17,7 @@ export const load = async ({ params, url }) => {
     let get_reply;
 
     let seoValue = {}
+    let publishdTime = ''
 
     const table = 'board'
     try {
@@ -89,7 +90,7 @@ export const load = async ({ params, url }) => {
         console.error(error.message);
     }
 
-    return { contentData, seoValue, get_reply, nextPosts, previousPosts }
+    return { contentData, seoValue, get_reply, nextPosts, previousPosts, publishdTime }
 }
 
 

@@ -22,7 +22,6 @@
     let seoValue = {};
     const path = $page.url.pathname.split("/")[1];
 
-
     $: data, setData();
 
     function setData() {
@@ -31,7 +30,7 @@
 
         contentData = data.contentData;
         console.log(contentData);
-        
+
         viewType = contentData.bo_type;
 
         previousPosts = data.previousPosts;
@@ -148,7 +147,6 @@
     <SeoMeta bind:seoValue />
 </svelte:head>
 
-
 <div class="container px-3.5 max-w-4xl mx-auto my-7 suit-font">
     <div data-sveltekit-preload-data="tap" data-sveltekit-reload>
         <button
@@ -185,14 +183,13 @@
 
         <div class="border-b pt-3 pb-1 text-right">
             <div>
-                {moment(
+                {moment.tz(
                     contentData["bo_updated_at"]
                         ? contentData["bo_updated_at"]
                         : contentData["bo_created_at"],
-                ).tz('Asia/Seoul').format("YYYY-MM-DD hh:mm")} / {getNameByLink(
-                    category_list,
-                    contentData.bo_category,
-                )}
+                    "YYYY-MM-DD hh:mm",
+                    "Asia/Seoul",
+                )} / {getNameByLink(category_list, contentData.bo_category)}
             </div>
         </div>
 
