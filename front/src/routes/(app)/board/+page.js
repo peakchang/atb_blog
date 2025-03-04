@@ -18,6 +18,15 @@ export const load = async ({ fetch, url }) => {
         console.error(error.message);
     }
 
+    for (let i = 0; i < post_list.length; i++) {
+        const con = post_list[i];
+        console.log(con);
+        const published = moment(con.bo_created_at).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+        console.log(published);
+        post_list[i]['published'] = published
+        
+    }
+
     const seoValue = {
         title: '커뮤니티',
         description: '부동산 분양의 모든것! 아파트 분양, 오피스텔 분양, 상가 분양, 지식산업센터 분양 등 현재 진행중인 분양 및 청약, 미분양 정보 안내',
