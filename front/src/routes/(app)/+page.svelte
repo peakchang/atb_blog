@@ -219,7 +219,9 @@
                         class="border-r h-20 w-20 flex justify-center items-center"
                     >
                         <img
-                            src={view.bo_main_img ? view.bo_main_img : extractFirstImageSrc(view.bo_content)}
+                            src={view.bo_main_img
+                                ? view.bo_main_img
+                                : extractFirstImageSrc(view.bo_content)}
                             alt=""
                             class="w-full h-full object-cover"
                         />
@@ -237,9 +239,7 @@
                             {getNameByLink(category_list, view.bo_category)}
                             /
                             <i class="fa fa-clock-o" aria-hidden="true"></i>
-                            {moment(view.bo_created_at).format(
-                                "YY-MM-DD hh:mm",
-                            )}
+                            {view.published}
                         </span>
                     </div>
                 </div>
@@ -270,7 +270,9 @@
                         class="border-r h-20 w-20 flex justify-center items-center"
                     >
                         <img
-                            src={post.bo_content ? extractFirstImageSrc(post.bo_content) : post.bo_main_img}
+                            src={post.bo_content
+                                ? extractFirstImageSrc(post.bo_content)
+                                : post.bo_main_img}
                             alt=""
                             class="w-full h-full object-cover"
                         />
@@ -288,9 +290,7 @@
                             {getNameByLink(category_list, post.bo_category)}
                             /
                             <i class="fa fa-clock-o" aria-hidden="true"></i>
-                            {moment(post.bo_created_at).format(
-                                "YY-MM-DD hh:mm",
-                            )}
+                            {post.published}
                         </span>
                     </div>
                 </div>
