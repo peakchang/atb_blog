@@ -21,10 +21,10 @@ export const load = async ({ fetch, url }) => {
     for (let i = 0; i < post_list.length; i++) {
         const con = post_list[i];
         console.log(con);
-        const published = moment(con.bo_created_at).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+        const published = moment(con.bo_created_at ? con.bo_created_at : con.bo_updated_at).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
         console.log(published);
         post_list[i]['published'] = published
-        
+
     }
 
     const seoValue = {
@@ -36,8 +36,8 @@ export const load = async ({ fetch, url }) => {
         published_time: '2023-12-07T11:46:53+00:00',
         icon: `${url.href}favicon.png`,
     }
-    
-    
+
+
 
 
 

@@ -53,7 +53,7 @@
                         <i class="fa fa-bookmark-o" aria-hidden="true"></i>
                         {getNameByLink(category_list, post.bo_category)} /
                         <i class="fa fa-clock-o" aria-hidden="true"></i>
-                        {moment(post.bo_created_at).format("YY-MM-DD hh:mm")} /
+                        {post.published} /
                         <i class="fa fa-eye" aria-hidden="true"></i>
                         1,857
                     </span>
