@@ -22,11 +22,11 @@ export const load = async ({ params, url }) => {
     const table = 'board'
     try {
         const res = await axios.post(`${back_api}/main/view_detail`, { id, table })
-        
+
         if (res.status == 200) {
             contentData = res.data.content
             console.log(contentData);
-            
+
             if (!contentData.bo_type) {
                 contentData.bo_type = 'blog'
             }
@@ -36,12 +36,12 @@ export const load = async ({ params, url }) => {
         let firstImg = ""
         const title = contentData.bo_subject ? contentData.bo_subject : contentData.bo_name
         // 디스크립션 따기 위해 태그 모두 제거
-        if(contentData['bo_type'] == 'blog'){
+        if (contentData['bo_type'] == 'blog') {
             viewTextOnly = contentData['bo_content'].replace(/<[^>]+>/g, ' ');
             firstImg = extractFirstImageSrc(contentData['bo_content'])
-        }else{
+        } else {
             firstImg = contentData.bo_main_img
-            viewTextOnly = title + ' 모델하우스 | 분양가 | 특장점 | 할인조건 | 오시는길 | 특장점 | 올댓분양 | ' +contentData['bo_description'].replace(/<[^>]+>/g, ' ');
+            viewTextOnly = title + ' 모델하우스 | 분양가 | 특장점 | 할인조건 | 오시는길 | 특장점 | 올댓분양 | ' + contentData['bo_description'].replace(/<[^>]+>/g, ' ');
         }
 
         const viewTextOnlyFilter = viewTextOnly.replace(/\s+/g, ' ').trim();
@@ -50,7 +50,9 @@ export const load = async ({ params, url }) => {
         const publishdTimeTemp = contentData['bo_updated_at'] ? contentData['bo_updated_at'] : contentData['bo_created_at']
         const publishdTime = moment(publishdTimeTemp).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
         console.log(publishdTime);
-        
+
+        contentData['publishdTime'] = publishdTime
+
         seoValue = {
             title: title,
             description: truncateTextTo100Chars(viewTextOnlyFilter),
@@ -90,7 +92,7 @@ export const load = async ({ params, url }) => {
         console.error(error.message);
     }
 
-    return { contentData, seoValue, get_reply, nextPosts, previousPosts, publishdTime }
+    return { contentData, seoValue, get_reply, nextPosts, previousPosts }
 }
 
 
