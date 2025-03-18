@@ -222,5 +222,31 @@ UPDATE board SET bo_show_type = 'board';
 
 
 
+CREATE TABLE IF NOT EXISTS write_reserve(
+    bo_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bo_category        	varchar(255),
+    bo_subject         	varchar(255),
+    bo_content         	text, 
+    bo_type            	varchar(10),
+    bo_name            	varchar(255),
+    bo_house_num       	varchar(50),
+    bo_area_size       	varchar(50),
+    bo_scale           	varchar(50),
+    bo_constructer     	varchar(50),
+    bo_construct_date  	varchar(100),
+    bo_developer       	varchar(50),
+    bo_supply_location 	varchar(50),
+    bo_movein_date     	varchar(50),
+    bo_inquiry         	varchar(50),
+    bo_parcel_price    	varchar(50),
+    bo_description     	text,
+    bo_add_content     	text,
+    bo_main_img        	varchar(255),
+    bo_imgs            	text,
+    bo_floor_plan      	text,
+    bo_table_name   varchar(10),
+    bo_memo   varchar(255)
+);
+
 
 */

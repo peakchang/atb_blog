@@ -104,8 +104,65 @@ boardRouter.post('/delete', async (req, res, next) => {
     res.json({ status: 'success' });
 })
 
+boardRouter.get('/load_reserve', async (req, res, next) => {
+    console.log('안들어와?!?!');
+    
+    let reserve_list = [];
+    try {
+        const loadReserveListQuery = "SELECT bo_id, bo_name, bo_subject, bo_table_name, bo_memo FROM write_reserve";
+        const [loadReserveList] = await sql_con.promise().query(loadReserveListQuery);
+        reserve_list = loadReserveList
+    } catch (error) {
+    }
+    res.json({ reserve_list })
+})
 
 
+boardRouter.post('/upload_reserve_content', async (req, res, next) => {
+    console.log('들어와랏');
+    let status = true;
+    const body = req.body;
+    const uploadData = body.allData
+    if (body.type == 'upload') {
+        const queryData = getQueryStr(uploadData, 'insert');
+        console.log(queryData);
+        try {
+            const insertReserveQuery = `INSERT INTO write_reserve (${queryData.str}) VALUES (${queryData.question})`
+            console.log(insertReserveQuery);
+
+            await sql_con.promise().query(insertReserveQuery, queryData.values);
+        } catch (error) {
+            console.error(error.message);
+            status = false;
+        }
+
+    } else {
+        const table = uploadData.bo_show_type;
+        delete uploadData['bo_created_at'];
+        delete uploadData['bo_updated_at'];
+        delete uploadData['bo_show_type'];
+
+        const queryData = getQueryStr(body.allData, 'update', 'bo_updated_at');
+        queryData.values.push(body.allData['bo_id'])
+        delete body.allData['bo_id'];
+    }
+
+    const imgList = body.contentArr
+    if (imgList) {
+        for (let i = 0; i < imgList.length; i++) {
+            if (imgList[i]) {
+                try {
+                    fs.unlinkSync(imgList[i]);
+                } catch (error) {
+                    console.error(error);
+
+                }
+            }
+        }
+    }
+
+    res.json({ status })
+})
 
 
 boardRouter.post('/upload_content', async (req, res, next) => {
@@ -121,7 +178,7 @@ boardRouter.post('/upload_content', async (req, res, next) => {
         try {
             const insertBoardQuery = `INSERT INTO ${table} (${queryData.str}) VALUES (${queryData.question})`
             console.log(insertBoardQuery);
-            
+
             await sql_con.promise().query(insertBoardQuery, queryData.values);
         } catch (error) {
             console.error(error.message);
@@ -129,7 +186,6 @@ boardRouter.post('/upload_content', async (req, res, next) => {
         }
 
     } else {
-
         const table = uploadData.bo_show_type;
         delete uploadData['bo_created_at'];
         delete uploadData['bo_updated_at'];
@@ -138,13 +194,6 @@ boardRouter.post('/upload_content', async (req, res, next) => {
         const queryData = getQueryStr(body.allData, 'update', 'bo_updated_at');
         queryData.values.push(body.allData['bo_id'])
         delete body.allData['bo_id'];
-        // try {
-        //     const updateBoardQuery = `UPDATE ${table} SET ${queryData.str} WHERE bo_id = ?`;
-        //     await sql_con.promise().query(updateBoardQuery, queryData.values);
-        // } catch (error) {
-        //     status = false;
-        //     console.error(error.message);
-        // }
     }
 
     const imgList = body.contentArr
