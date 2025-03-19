@@ -113,6 +113,24 @@
 			<span>글 예약</span>
 		</div>
 	</a>
+
+	<a href="/adm/reserve">
+		<div class="p-2 text-base cursor-pointer mb-1.5">
+			<span class="mr-2">
+				<i class="fa fa-calendar" aria-hidden="true"></i>
+			</span>
+			<span>예약 글 작성</span>
+		</div>
+	</a>
+
+	<a href="/adm/reserve_list">
+		<div class="p-2 text-base cursor-pointer mb-1.5">
+			<span class="mr-2">
+				<i class="fa fa-calendar" aria-hidden="true"></i>
+			</span>
+			<span>예약 글 리스트</span>
+		</div>
+	</a>
 </DrawerCustom>
 
 <div

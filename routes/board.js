@@ -104,9 +104,53 @@ boardRouter.post('/delete', async (req, res, next) => {
     res.json({ status: 'success' });
 })
 
+
+
+
+boardRouter.post('/real_set_reserve_content', async (req, res, next) => {
+    const getId = req.body.id;
+    console.log(getId);
+    
+    try {
+        const getContentDataQuery = "SELECT * FROM write_reserve WHERE bo_id = ?";
+        const [getContentData] = await sql_con.promise().query(getContentDataQuery, [getId]);
+        console.log(getContentData[0]);
+        const contentData = removeNullValues(getContentData[0])
+        
+
+        const table = contentData.bo_table_name;
+        const deleteId = contentData.bo_id
+        delete contentData.bo_table_name
+        delete contentData.bo_id
+        delete contentData.bo_memo
+
+        console.log(contentData);
+        
+        const queryData = getQueryStr(contentData, 'insert', 'bo_created_at')
+        console.log(queryData);
+
+        const insertQuery = `INSERT INTO ${table} (${queryData.str}) VALUES (${queryData.question})`;
+        await sql_con.promise().query(insertQuery, queryData.values); 
+        
+        const deleteQuery = "DELETE FROM write_reserve WHERE bo_id =?"
+        await sql_con.promise().query(deleteQuery, [deleteId]);
+        
+    } catch (error) {
+        
+    }
+
+    res.json({})
+})
+
+function removeNullValues(obj) {
+    return Object.fromEntries(
+        Object.entries(obj).filter(([_, value]) => value !== null)
+    );
+}
+
 boardRouter.get('/load_reserve', async (req, res, next) => {
     console.log('안들어와?!?!');
-    
+
     let reserve_list = [];
     try {
         const loadReserveListQuery = "SELECT bo_id, bo_name, bo_subject, bo_table_name, bo_memo FROM write_reserve";

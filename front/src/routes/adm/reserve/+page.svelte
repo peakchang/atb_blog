@@ -109,7 +109,7 @@
 
         if (res.data.status) {
             workStatus = false;
-            alert("글 작성이 완료 되었습니다.");
+            alert("예약 글 작성이 완료 되었습니다.");
             goto("/adm/reserve_list");
         }
     };
