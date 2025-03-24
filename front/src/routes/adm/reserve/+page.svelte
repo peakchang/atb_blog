@@ -101,16 +101,19 @@
             allData["bo_imgs"] = stImgs.join(",");
         }
 
-        const res = await axios.post(`${back_api}/board/upload_reserve_content`, {
-            type,
-            allData,
-            contentArr,
-        });
+        const res = await axios.post(
+            `${back_api}/board/upload_reserve_content`,
+            {
+                type,
+                allData,
+                contentArr,
+            },
+        );
 
         if (res.data.status) {
             workStatus = false;
             alert("예약 글 작성이 완료 되었습니다.");
-            goto("/adm/reserve_list");
+            goto("/adm/reserve_list", { invalidateAll: true });
         }
     };
 
