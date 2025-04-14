@@ -22,10 +22,26 @@ apiRouter.get('/', (req, res) => {
     res.send('asldfjalisjdfliajsdf')
 })
 
+apiRouter.post('/get_latest_list', async (req, res) => {
+    const body = req.body;
+    let latest_list = [];
+    let status = true;
+    try {
+        const getLatestListQuery = `SELECT bo_id, bo_subject FROM ${body.board} ORDER BY bo_id DESC LIMIT ${body.link_count}`;
+        const [getLatestList] = await sql_con.promise().query(getLatestListQuery);
+        latest_list = getLatestList
+    } catch (error) {
+        status = false;
+    }
+
+    res.json({ latest_list, status })
+})
+
+
 
 apiRouter.get('/moveboard', async (req, res) => {
     console.log('안들어오는거야?!?!?!');
-    
+
     try {
         const getLandBoardDataQuery = "SELECT * FROM land_board WHERE bo_type IS NULL or bo_type = 'blog' LIMIT 1;";
         const [landBoardData] = await sql_con.promise().query(getLandBoardDataQuery,);
@@ -37,7 +53,7 @@ apiRouter.get('/moveboard', async (req, res) => {
             const deleteLandBoardQuery = "DELETE FROM land_board WHERE bo_id =?";
             await sql_con.promise().query(deleteLandBoardQuery, [moveData.bo_id]);
             return res.send('옮기기 작업!!!')
-        }else{
+        } else {
             return res.send('작업할게 없음!!!')
         }
     } catch (error) {
