@@ -23,11 +23,15 @@ apiRouter.get('/', (req, res) => {
 })
 
 apiRouter.post('/get_latest_list', async (req, res) => {
+    console.log('들어옴?!?!');
+    
     const body = req.body;
     let latest_list = [];
     let status = true;
     try {
         const getLatestListQuery = `SELECT bo_id, bo_subject FROM ${body.board} ORDER BY bo_id DESC LIMIT ${body.link_count}`;
+        console.log(getLatestListQuery);
+        
         const [getLatestList] = await sql_con.promise().query(getLatestListQuery);
         latest_list = getLatestList
     } catch (error) {
