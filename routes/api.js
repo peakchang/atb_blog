@@ -35,7 +35,7 @@ apiRouter.post('/get_latest_list', async (req, res) => {
     let latest_list = [];
     let status = true;
     try {
-        const getLatestListQuery = `SELECT bo_id, bo_subject FROM ${body.board} ORDER BY bo_id DESC LIMIT ${body.link_count}`;
+        const getLatestListQuery = `SELECT bo_id, bo_subject, bo_name FROM ${body.board} ORDER BY bo_id DESC LIMIT ${body.link_count}`;
         console.log(getLatestListQuery);
 
         const [getLatestList] = await sql_con.promise().query(getLatestListQuery);
