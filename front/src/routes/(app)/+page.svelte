@@ -178,25 +178,25 @@
         data-sveltekit-reload
         class="grid grid-cols-2 md:grid-cols-3 suit-font gap-3"
     >
-        {#each siteList as site}
-            <a href={`/site/${site.bo_id}`}>
+        {#each viewList as view}
+            <a href={`/view/${view.bo_id}`}>
                 <div class="border rounded-md overflow-hidden">
                     <div class=" h-40 overflow-hidden">
                         <img
-                            src={site.bo_main_img}
+                            src={view.bo_main_img}
                             alt=""
                             class="min-w-full min-h-full align-center"
                         />
                     </div>
                     <div class="p-3">
-                        {site.bo_name}
+                        {view.bo_name}
                     </div>
                 </div>
             </a>
         {/each}
     </div>
 
-    <div class="text-center mt-10 pb-3 relative">
+    <!-- <div class="text-center mt-10 pb-3 relative">
         <span class="kbo-font text-2xl text-gray-700">
             {siteName} 게시판 리스트
         </span>
@@ -205,13 +205,15 @@
             <i class="fa fa-plus-square-o" aria-hidden="true"></i>
             게시판 바로가기
         </button>
-    </div>
-    <div
+    </div> -->
+
+
+    <!-- <div
         data-sveltekit-preload-data="tap"
         data-sveltekit-reload
         class="grid grid-cols-1 md:grid-cols-2 suit-font gap-1"
     >
-        <!-- extractFirstImageSrc(post.bo_content) 썸네일 이미지 따는 함수 -->
+        extractFirstImageSrc(post.bo_content) 썸네일 이미지 따는 함수
         {#each viewList as view}
             <a href={`/view/${view.bo_id}`}>
                 <div class="border flex gap-1 min-h-20">
@@ -245,7 +247,7 @@
                 </div>
             </a>
         {/each}
-    </div>
+    </div> -->
 
     <div class="text-center mt-10 pb-3 relative">
         <span class="kbo-font text-2xl text-gray-700">
