@@ -16,6 +16,7 @@
 
     let listsEl; // sortable.js wrapper
     let sortableLists; // sortable.js 지정하는거 (걍 몰랑~~)
+    let addLink = "";
 
     export let modifyImageList = [];
     export let maxImgCount = 9999999;
@@ -43,7 +44,7 @@
             animation: 150,
             onEnd: function (e) {
                 console.log(imgArr);
-                
+
                 reorder(e.oldIndex, e.newIndex);
             },
         });
@@ -129,7 +130,7 @@
                     .substring(2, 11)}.${compressedFile.name.split(".")[1]}`;
 
                 console.log(fileName);
-                
+
                 imgForm.append("onimg", compressedFile, fileName);
 
                 // FormData의 key 값과 value값 찾기
@@ -154,7 +155,7 @@
                 );
 
                 console.log(res);
-                
+
                 if (res.status == 200) {
                     imgArr.push({
                         src: res.data.baseUrl,
@@ -165,13 +166,30 @@
                         imgArr,
                     });
                 }
-
             } catch (error) {
                 console.error("Error during image compression:", error);
                 alert("이미지 업로드 오류! 다시 시도해주세요!");
             }
         };
     };
+
+    function onLinkUpdate() {
+        if (!addLink) {
+            alert("링크를 추가 해주세요");
+            return;
+        }
+
+        imgArr.push({
+            src: addLink,
+            id: crypto(),
+        });
+        imgArr = [...new Set(imgArr)];
+        dispatch("updateImgeList", {
+            imgArr,
+        });
+
+        addLink = "";
+    }
 </script>
 
 <div class="p-2">
@@ -203,13 +221,28 @@
 
 <div id="app" class="pretendard mt-3">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="flex items-center">
+    <div class="flex items-center gap-3">
         <button
-            class="flex justify-center items-center gap-1 bg-green-600 py-1 px-3 rounded-md text-white text-sm"
+            class="flex justify-center items-center gap-1 bg-green-600 py-1.5 px-3 rounded-md text-white text-xs"
             on:click={onFileSelected}
         >
             <i class="fa fa-file-image-o" aria-hidden="true"></i>
             이미지 업로드
         </button>
+
+        <div class="flex gap-1">
+            <input
+                type="text"
+                class="py-1 px-2 text-sm rounded-md"
+                bind:value={addLink}
+            />
+            <button
+                class="flex justify-center items-center gap-1 bg-blue-600 py-1.5 px-3 rounded-md text-white text-xs"
+                on:click={onLinkUpdate}
+            >
+                <i class="fa fa-file-image-o" aria-hidden="true"></i>
+                이미지 링크
+            </button>
+        </div>
     </div>
 </div>
