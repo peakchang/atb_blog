@@ -2,6 +2,7 @@ import express from "express";
 import { sql_con } from '../back-lib/db.js'
 import bcrypt from "bcrypt";
 import cheerio from "cheerio";
+import axios from "axios"
 
 import moment from "moment-timezone";
 const koreaTime = moment.tz('Asia/Seoul');
@@ -18,9 +19,29 @@ const upload = multer({ storage: storage });
 
 const apiRouter = express.Router();
 
-apiRouter.get('/', (req, res) => {
+apiRouter.get('/', async (req, res) => {
+
+    try {
+        const res = await axios.post("http://localhost:3000", { valuekey : 'value!!!!!' })
+        console.log(res.status);
+        
+    } catch (err) {
+        console.error(err.message);
+
+    }
+    console.log('들어오긴 해?');
+
+    res.send('45456457567567456456456')
+})
+
+apiRouter.post('/test', (req, res) => {
+    const body = req.body;
+    console.log(body);
+
     res.send('asldfjalisjdfliajsdf')
 })
+
+
 
 
 apiRouter.get('/get_latest_list', async (req, res) => {
