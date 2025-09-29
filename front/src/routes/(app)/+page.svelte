@@ -181,9 +181,10 @@
         </button>
     </div>
 
+    <!-- data-sveltekit-reload -->
     <div
         data-sveltekit-preload-data="tap"
-        data-sveltekit-reload
+        
         class="grid grid-cols-2 md:grid-cols-3 suit-font gap-3"
     >
         {#each viewList as view}
