@@ -5,16 +5,15 @@
 	import Cookies from "js-cookie";
 	import { back_api, category_list, siteName } from "$src/lib/const";
 	import { page } from "$app/stores";
-	import SeoMeta from "$src/lib/components/SeoMeta.svelte";
+	
 	import { onMount } from "svelte";
 
-	let seoValue = {};
+	
 	export let data;
 
 	$: data, setData();
 
 	function setData() {
-		seoValue = data.seoValue;
 	}
 
 	onMount(() => {
@@ -55,9 +54,7 @@
 </script>
 
 <svelte:head>
-	{#if $page.url.pathname == "/"}
-		<SeoMeta bind:seoValue />
-	{/if}
+	
 
 	<!-- SUIT 폰트 CSS -->
 	<link

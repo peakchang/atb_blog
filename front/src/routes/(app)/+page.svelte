@@ -14,6 +14,7 @@
 
     import { invalidateAll } from "$app/navigation";
     import { back_api, siteName, category_list } from "$lib/const";
+    import SeoMeta from "$src/lib/components/SeoMeta.svelte";
 
     import { extractFirstImageSrc, getNameByLink } from "$lib/lib";
     import moment from "moment-timezone";
@@ -36,10 +37,15 @@
         { src: "/banner/bn_5.webp" },
     ];
 
+    let seoValue = {};
+
     export let data;
+
+
 
     $: data, setData();
     function setData() {
+        seoValue = data.seoValue;
         posts = data.posts;
         siteList = data.site_list;
         viewList = data.view_list;
@@ -104,7 +110,9 @@
     }
 </script>
 
-<svelte:head></svelte:head>
+<svelte:head>
+		<SeoMeta bind:seoValue />
+</svelte:head>
 
 <div class="swiper my-5 relative" bind:this={bannerSwiper}>
     <!-- Additional required wrapper -->
